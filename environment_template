@@ -1,0 +1,11 @@
+# rename this file to .env
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+SESSION_SECRET=
+STRIPE_API_KEY=
+BASE_URL=                      # example.com
+PROTOCOL=                      # http or https
+NODE_ENV=                      # empty or production
+SUBSCRIPTION_PRICE_ID_1=
+SUBSCRIPTION_PRICE_ID_2=
+SUBSCRIPTION_PRICE_ID_3=
