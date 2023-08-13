@@ -6,7 +6,7 @@ var logger = require('morgan');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var session = require('express-session');
-const csurf = require('csurf');
+const csurf = require('csrf-csrf');
 const helmet = require('helmet');
 require('dotenv').config();
 
