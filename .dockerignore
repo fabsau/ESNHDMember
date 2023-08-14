@@ -1,0 +1,7 @@
+.github
+.idea
+.env
+.gitignore
+node_modules
+environment_template
+README.md
