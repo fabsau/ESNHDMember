@@ -20,11 +20,23 @@ block content
             .alert.alert-success
                 strong Success!
                 p= cancelMessage
+        if upgradeMessage
+            .alert.alert-success
+                strong Success!
+                p= upgradeMessage
         h1 Hello, #{firstName} #{lastName}!
 
         if subscription
-            p You are currently #{subscription.plan.nickname} (#{subscription.plan.amount / 100} #{subscription.plan.currency} every 6 Months).
-            a(class='btn btn-info', href=customerUrl) Manage Your Membership
+            p You are currently a #{subscription.plan.nickname} (#{subscription.plan.amount / 100}€ every 6 Months).
+            a(class='btn btn-info', href=customerUrl) Change Personal Details
+            p
+            form(method='POST', action='/change-subscription')
+                select(name='newPlanId')
+                    each plan in plans
+                        option(value=plan.id)
+                            = plan.nickname
+                input(type='hidden', name='_csrf', value=csrfToken)
+                button(type='submit') Change Plan
             p
             form(action='/cancel-subscription', method='POST')
                 input(type='hidden', name='_csrf', value=csrfToken)
@@ -37,39 +49,29 @@ block content
                 thead
                     tr
                         th(scope="col")
-                        th(scope="col") New Member
-                        th(scope="col") Existing Member
+                        th(scope="col") Member
                         th(scope="col") Alumni
                 tbody
                     tr
-                        th(scope="row") First 6 Months free:
-                        td Yes
-                        td No
-                        td No
-                    tr
                         th(scope="row") Renewal Period:
-                        td Every 6 months
                         td Every 6 months
                         td Annual
                     tr
                         th(scope="row") Price:
                         td 5€
-                        td 5€
-                        td 10€+
+                        td 10€
                     tr
-                        th(scope="row") Join:
+                        th(scope="row")
                         td
                             form(action='/create-checkout-session', method='post')
-                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_1)
+                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_MEMBER)
                                 input(type='hidden', name='_csrf', value=csrfToken)
+                                div.form-check
+                                    input.form-check-input(type='checkbox', name='trialEnabled', id='trialEnabled1')
+                                    label.form-check-label(for='trialEnabled1') New Member Discount
                                 button.btn.btn-primary(type="submit") Join
                         td
                             form(action='/create-checkout-session', method='post')
-                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_2)
-                                input(type='hidden', name='_csrf', value=csrfToken)
-                                button.btn.btn-primary(type="submit") Join
-                        td
-                            form(action='/create-checkout-session', method='post')
-                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_3)
+                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_ALUMNI)
                                 input(type='hidden', name='_csrf', value=csrfToken)
                                 button.btn.btn-primary(type="submit") Join

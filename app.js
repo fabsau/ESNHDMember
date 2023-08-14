@@ -139,6 +139,9 @@ app.get('/', (req, res) => {
 app.get('/home', ensureAuthenticated, async function (req, res) {
     // Destructure details of the user from the Google Signin
     const {givenName, familyName, email} = req.user;
+    // defined subscription ids allowed to see
+    const allowedSubscriptions = [process.env.SUBSCRIPTION_PRICE_ID_MEMBER,
+        process.env.SUBSCRIPTION_PRICE_ID_ALUMNI];
     try {
         // Fetch customer details from Stripe based on email
         const customer = await stripe.customers.list({
@@ -157,6 +160,7 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             // If subscription data is present, select the first subscription
             if (subscriptions.data.length > 0) {
                 subscription = subscriptions.data[0];
+                currentPlan = subscriptions.data[0].items.data[0].price.id;
             }
             // Create a billing portal session for the customer
             const session = await stripe.billingPortal.sessions.create({
@@ -167,6 +171,7 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
         }
         let successMessage = null;
         let cancelMessage = null;
+        let upgradeMessage = null;
         // Check if the query parameter exists and set the corresponding message
         if (req.query.purchase === 'success') {
             successMessage = 'Purchase was successful!';
@@ -174,6 +179,14 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
         if (req.query.cancel === 'success') {
             cancelMessage = 'Cancellation was successful!';
         }
+        if (req.query.upgrade === 'success') {
+            upgradeMessage = 'Plan was successful changed!';
+        }
+        // get all plans except the current one
+        let prices = await stripe.prices.list({ limit: 10 });
+        let plans = prices.data.filter(plan => plan.id !== currentPlan && allowedSubscriptions.includes(plan.id));
+        plans = plans.map(plan => ({ id: plan.id, nickname: plan.nickname }));
+
         // Define details to be passed to the front-end
         const renderOptions = {
             user: req.user,
@@ -183,7 +196,9 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             customerUrl: customerUrl,
             subscription: subscription,
             successMessage: successMessage,
-            cancelMessage: cancelMessage
+            cancelMessage: cancelMessage,
+            upgradeMessage: upgradeMessage,
+            plans: plans
         };
         // Render the homepage with the details
         res.render('home', renderOptions);
@@ -193,6 +208,7 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
         res.redirect('/');
     }
 });
+
 
 // Define route for Google OAuth
 app.get('/login',
@@ -261,10 +277,10 @@ app.post('/create-checkout-session', ensureAuthenticated, async (req, res) => {
         });
         customerId = customer.id;
     }
+    // Define trial period for new member plan for first time subscribers
     let trial_period_days = null;
-    // Define trial period for new member plan
-    if (priceId === process.env.SUBSCRIPTION_PRICE_ID_1) {
-        trial_period_days = 180; // 6 months trial period
+    if (req.body.trialEnabled === 'on') {
+        trial_period_days = 180 /* 6 months trial period */;
     }
     // Prepare the session data for creating the checkout session
     const sessionData = {
@@ -292,6 +308,44 @@ app.post('/create-checkout-session', ensureAuthenticated, async (req, res) => {
     res.redirect(303, session.url);
 });
 
+
+// Define route to change subscription
+app.post('/change-subscription', ensureAuthenticated, async (req, res) => {
+    const {email} = req.user;
+    const newPlanId = req.body.newPlanId;
+
+    try {
+        const customers = await stripe.customers.list({ email: email, limit: 1 });
+
+        if (customers.data.length > 0) {
+            const customerId = customers.data[0].id;
+            const subscriptions = await stripe.subscriptions.list({ customer: customerId });
+
+            if (subscriptions.data.length > 0) {
+                const currentSubscription = subscriptions.data[0];
+                const currentPlanId = currentSubscription.items.data[0].price.id;
+
+                if (newPlanId === currentPlanId) {
+                    return res.redirect('/home?message=Same subscription selected.');
+                }
+
+                await stripe.subscriptions.update(currentSubscription.id, {
+                    cancel_at_period_end: false,
+                    proration_behavior: 'create_prorations',
+                    items: [{
+                        id: currentSubscription.items.data[0].id,
+                        price: newPlanId,
+                    }]
+                });
+            }
+        }
+
+        res.redirect('/home?upgrade=success');
+    } catch (error) {
+        console.error('Error upgrading subscription:', error);
+        res.redirect('/home');
+    }
+});
 // Define route to cancel a subscription
 app.post('/cancel-subscription', ensureAuthenticated, async (req, res) => {
     const {email} = req.user;
@@ -339,7 +393,6 @@ app.use(function (err, req, res) {
 });
 
 // ========================================
-// Error handling (404 and other errors)
-// ========================================
 // Start application
+// ========================================
 module.exports = app;
