@@ -2,6 +2,7 @@
 .idea
 .gitignore
 .env
+.images
 node_modules
 Dockerfile
 environment_template

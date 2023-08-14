@@ -1,6 +1,18 @@
-# ESN Heidelberg Membership Management
+# ESN Heidelberg Member Portal
+The ESN Heidelberg Member Portal is a Node.js web application running on the `Express.js` framework. It's been crafted for the members of ESN Heidelberg to manage their membership payments and integrate with Google Oauth and Stripe. They can handle their membership plans and personal information, while also enabling non-members to join.
 
-This repository contains the code for the ESN Heidelberg Membership Management system. This application is developed using Node.js, Express.js, and Pug frames. With Google account support, the application provides the user signin feature with Google OAuth 2.0. All the data including user profiles, customers, and subscriptions are managed by using the Stripe API.
+## Key Functionality
+
+1. **Authentication**: The application configures Google OAuth for user authentication, allowing users to sign in securely using their ESN Heidelberg Google profiles. It retrieves the email from the user's Google profile and designates it as a Stripe customer.
+
+2. **Secure Payments and Subscriptions**: Leveraging `Stripe` integration, this application facilitates management and handling of payments and subscriptions. Users can comfortably create, change, or cancel their subscriptions via the Stripe Portal.
+
+3. **Security**: Standard security measures are incorporated into the platform, including HTTP header, Content Security Policy (CSP), and Cross-Site Request Forgery (CSRF) protections. Importantly, the server doesn't retain any data, user information is dynamically fetched from Google and Stripe and stored on the users Browser Session.
+
+![Signin](https://screen.sauna.re/pora0/xumonADo49.png)
+![Overview without any subscription](https://screen.sauna.re/pora0/NivUsoHO73.png)
+![Paying](https://screen.sauna.re/pora0/kOYiBaPi36.png)
+![Overview with a subscription active](https://screen.sauna.re/pora0/siDaCoGE71.png)
 
 ## Table of Contents
 
@@ -15,19 +27,17 @@ This repository contains the code for the ESN Heidelberg Membership Management s
 
 ## Docker Run and Compose <a name="docker-run-compose"></a>
 
-Running this application with Docker simplifies the installation process and provides better scalability.
-
 1. To start with Docker, ensure you have Docker installed on your machine. For installation instructions, check: Docker: https://docs.docker.com/install/
 
 2. Pull the Docker image from Docker Hub:
 
 ```bash
-docker pull fabsau/esn-hd-member:v1
+docker pull fabsau/esn-hd-member:latest
 ```
 3. Run the Docker image:
 
 ```bash
-docker run -d --name esnmember -p 3000:3000 --env-file .env --restart unless-stopped fabsau/esn-hd-member:v1
+docker run -d --name esnmember -p 3000:3000 --env-file .env --restart unless-stopped fabsau/esn-hd-member:latest
 ```
 Replace the `.env` in the `--env-file .env` command with the name of your environment configuration file. You can find the variables below or in the environment_template file
 
@@ -41,7 +51,7 @@ Replace the `.env` in the `--env-file .env` command with the name of your enviro
 version: '3'
 services:
   esnmember:  
-    image: fabsau/esn-hd-member:v1
+    image: fabsau/esn-hd-member:latest
     container_name: esnmember
     hostname: esnmember
     restart: unless-stopped
@@ -64,7 +74,7 @@ If you want to build the Docker image yourself, follow these steps:
 1. Clone the repository
 
 ```bash
-git clone https://github.com/fabsau24/membership-management.git
+git clone https://github.com/fabsau/ESNHDMember.git
 ```
 
 2. Navigate into the directory
@@ -90,14 +100,17 @@ Follow these instructions to get a copy of the project up and running on your lo
 2. You would also need to create a `.env` file in your project directory and use these variables:
 
 ```
-GOOGLE_CLIENT_ID=<Obtain Google Client Id via Google Cloud>
-GOOGLE_CLIENT_SECRET=<Obtain Google Client Secret>
-SESSION_SECRET=<For the session Cookie generate a Secret Key>
-STRIPE_API_KEY=<Your Stripe API Key>
-SUBSCRIPTION_PRICE_ID_1=<Stripe Subscription Price Id>
-PROTOCOL=<'http' or 'https'>
-BASE_URL=<Your Website Base URL>
-NODE_ENV=<'development' or 'production'>
+# rename this file to .env
+GOOGLE_CLIENT_ID=              # google cloud credential client id
+GOOGLE_CLIENT_SECRET=          # google cloud credential oauth secret
+SESSION_SECRET=                # generate long secret
+STRIPE_API_KEY=                # your stripe key
+BASE_URL=                      # example.com
+PROTOCOL=                      # http or https
+COOKIE_SECURE=                 # TRUE or FALSE sets cookie source to HTTPS
+COOKIE_SAMESITE_STRICT=        # TRUE or FALSE sets cookie sameSite to strict
+SUBSCRIPTION_PRICE_ID_MEMBER=  # price id of a subscription
+SUBSCRIPTION_PRICE_ID_ALUMNI=  # second price id
 ```
 
 ## Installation <a name="install"></a>
@@ -107,13 +120,13 @@ To get this project running on your local machine for development and testing, f
 1. Clone the repository
 
 ```bash
-git clone https://github.com/fabsau24/membership-management.git
+git clone https://github.com/fabsau/ESNHDMember.git
 ```
 
 2. Navigate into the repository
 
 ```bash
-cd membership-management
+cd ESNHDMember
 ```
 
 3. Install all the dependencies
