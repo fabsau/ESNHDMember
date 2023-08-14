@@ -56,7 +56,7 @@ passport.use(new GoogleStrategy({
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         httpOnly: true, // Only accessible through HTTP(S)
         secure: process.env.PROTOCOL === 'https', // Only set in production
@@ -134,6 +134,26 @@ app.get('/', (req, res) => {
     }
 });
 
+// Define route for Google OAuth
+app.get('/login',
+    // Invoke Google strategy from Passport.js
+    passport.authenticate('google', {scope: ['profile', 'email']}));
+
+// Callback route for Google OAuth
+app.get('/auth/google/callback',
+    passport.authenticate('google', {failureRedirect: '/login'}),
+    function (req, res) {
+        // On successful authentication, redirect to home
+        res.redirect('/home');
+    });
+
+// Check if user is authenticated otherwise redirect to
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
+}
 // Define route for home page '/home'
 app.get('/home', ensureAuthenticated, async function (req, res) {
     // Destructure details of the user from the Google Signin
@@ -171,41 +191,13 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             });
             customerUrl = session.url;
         }
-        let successMessage = null;
-        let cancelMessage = null;
-        let upgradeMessage = null;
-        // Check if the query parameter exists and set the corresponding message
-        if (req.query.purchase === 'success') {
-            successMessage = 'Purchase was successful!';
-        }
-        if (req.query.cancel === 'success') {
-            cancelMessage = 'Cancellation was successful!';
-        }
-        if (req.query.upgrade === 'success') {
-            upgradeMessage = 'Plan was successful changed!';
-        }
+
         // get all plans except the current one
         let prices = await stripe.prices.list({limit: 10});
         let plans = prices.data.filter(plan => plan.id !== currentPlan && allowedSubscriptions.includes(plan.id));
         plans = plans.map(plan => ({id: plan.id, nickname: plan.nickname}));
 
-        // Checking which alert message needs to be shown with its severity
-        let alertMessage = null;
-        let severity = 'success';
-        if (req.query.purchase === 'success') {
-            alertMessage = 'Purchase was successful!';
-            severity = 'success';
-        }
-        if (req.query.cancel === 'success') {
-            alertMessage = 'Cancellation was successful!';
-            severity = 'success';
-        }
-        if (req.query.upgrade === 'success') {
-            alertMessage = 'Plan was successful changed!';
-            severity = 'info';
-        }
-
-        // passing the message and severity to renderOptions
+        // passing the renderOptions
         const renderOptions = {
             user: req.user,
             firstName: givenName,
@@ -213,10 +205,10 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             email: email,
             customerUrl: customerUrl,
             subscription: subscription,
-            alertMessage: alertMessage,
-            severity: severity,
             plans: plans
         };
+        renderOptions.message = req.session.message;
+        req.session.message = null;
         res.render('home', renderOptions);
     } catch (error) {
         console.log('Error retrieving customer:', error);
@@ -224,48 +216,8 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
     }
 });
 
-
-// Define route for Google OAuth
-app.get('/login',
-    // Invoke Google strategy from Passport.js
-    passport.authenticate('google', {scope: ['profile', 'email']}));
-
-// Callback route for Google OAuth
-app.get('/auth/google/callback',
-    passport.authenticate('google', {failureRedirect: '/login'}),
-    function (req, res) {
-        // On successful authentication, redirect to home
-        res.redirect('/home');
-    });
-
-// Check if user is authenticated otherwise redirect to
-function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/');
-}
-
-// Define route for logout
-app.post('/logout', function (req, res) {
-    // Terminate user session
-    req.logout(function (err) {
-        if (err) {
-            console.log(err);
-        }
-        // Destroy session
-        req.session.destroy(function (err) {
-            if (err) {
-                console.log(err);
-            }
-            // Upon logout, redirect to the index page
-            res.redirect('/');
-        });
-    });
-});
-
 // Define route for creating a checkout session for Stripe payments
-app.post('/create-checkout-session', ensureAuthenticated, async (req, res) => {
+app.post('/buy', ensureAuthenticated, async (req, res) => {
     const {email} = req.user;
     const {priceId} = req.body;
     // Look for an existing customer
@@ -308,8 +260,8 @@ app.post('/create-checkout-session', ensureAuthenticated, async (req, res) => {
             },
         ],
         customer: customerId,
-        success_url: `${process.env.PROTOCOL}://${process.env.BASE_URL}/home?purchase=success`,
-        cancel_url: `${process.env.PROTOCOL}://${process.env.BASE_URL}/home`,
+        success_url: `${process.env.PROTOCOL}://${process.env.BASE_URL}/checkout_success`,
+        cancel_url: `${process.env.PROTOCOL}://${process.env.BASE_URL}/checkout_error`,
     };
     // Add trial period to session data if applicable
     if (trial_period_days !== null) {
@@ -321,6 +273,17 @@ app.post('/create-checkout-session', ensureAuthenticated, async (req, res) => {
     const session = await stripe.checkout.sessions.create(sessionData);
     // Redirect user to the checkout page
     res.redirect(303, session.url);
+});
+// Route for checkout success
+app.get('/checkout_success', ensureAuthenticated, (req, res) => {
+    req.session.message = {type: 'success', text: 'Purchase was successful!'};
+    res.redirect('/home/');
+});
+
+// Route for checkout error
+app.get('/checkout_error', ensureAuthenticated, (req, res) => {
+    req.session.message = {type: 'error', text: 'Something went wrong, please retry!'};
+    res.redirect('/home/');
 });
 
 
@@ -340,10 +303,11 @@ app.post('/change-subscription', ensureAuthenticated, async (req, res) => {
                 const currentSubscription = subscriptions.data[0];
                 const currentPlanId = currentSubscription.items.data[0].price.id;
 
-                if (newPlanId === currentPlanId) {
-                    return res.redirect('/home?message=Same subscription selected.');
+                if (req.body.newPlanId === req.user.currentPlanId) {
+                    req.session.message = {type: 'info', text: 'You selected the same subscription as your current one.'};
+                    res.redirect('/home/');
+                    return;
                 }
-
                 await stripe.subscriptions.update(currentSubscription.id, {
                     cancel_at_period_end: false,
                     proration_behavior: 'create_prorations',
@@ -354,10 +318,11 @@ app.post('/change-subscription', ensureAuthenticated, async (req, res) => {
                 });
             }
         }
-
-        res.redirect('/home?upgrade=success');
+        req.session.message = {type: 'success', text: 'Plan was successful changed!'};
+        res.redirect('/home/');
     } catch (error) {
         console.error('Error upgrading subscription:', error);
+        req.session.message = {type: 'error', text: 'Error upgrading subscription, please refresh the page!'};
         res.redirect('/home');
     }
 });
@@ -381,14 +346,33 @@ app.post('/cancel-subscription', ensureAuthenticated, async (req, res) => {
             }
         }
         // Redirect to the home page with a successful cancellation message
-        res.redirect('/home?cancel=success');
+        req.session.message = {type: 'success', text: 'Cancellation was successful!'};
+        res.redirect('/home/');
     } catch (error) {
-        console.error('Error canceling subscription:', error);
+        console.error('Error cancelling subscription:', error);
         // On error, redirect to the home page
+        req.session.message = {type: 'error', text: 'Error cancelling subscription, please refresh the page!'};
         res.redirect('/home');
     }
 });
 
+// Define route for logout
+app.post('/logout', function (req, res) {
+    // Terminate user session
+    req.logout(function (err) {
+        if (err) {
+            console.log(err);
+        }
+        // Destroy session
+        req.session.destroy(function (err) {
+            if (err) {
+                console.log(err);
+            }
+            // Upon logout, redirect to the index page
+            res.redirect('/');
+        });
+    });
+});
 // ========================================
 // Error handling (404 and other errors)
 // ========================================

@@ -12,9 +12,10 @@ block content
                         input(type='hidden', name='_csrf', value=csrfToken)
                         button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Sign Out
     .container.mt-5
-        if alertMessage
-            div(class="alert alert-" + severity)
-                p= alertMessage
+        if message
+            div(class="alert alert-" + message.type)
+                p= message.text
+                button.close-alert(type='button') Ok
         h1 Hello, #{firstName} #{lastName}!
 
         if subscription
@@ -54,7 +55,7 @@ block content
                     tr
                         th(scope="row")
                         td
-                            form(action='/create-checkout-session', method='post')
+                            form(action='/buy', method='post')
                                 input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_MEMBER)
                                 input(type='hidden', name='_csrf', value=csrfToken)
                                 div.form-check
@@ -62,7 +63,9 @@ block content
                                     label.form-check-label(for='trialEnabled1') New Member Discount
                                 button.btn.btn-primary(type="submit") Join
                         td
-                            form(action='/create-checkout-session', method='post')
+                            form(action='/buy', method='post')
                                 input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_ALUMNI)
                                 input(type='hidden', name='_csrf', value=csrfToken)
                                 button.btn.btn-primary(type="submit") Join
+    block scripts
+        script(src="/javascripts/alerts.js")
