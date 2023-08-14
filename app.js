@@ -60,7 +60,7 @@ app.use(session({
     cookie: {
         httpOnly: true, // Only accessible through HTTP(S)
         secure: process.env.PROTOCOL === 'https', // Only set in production
-        sameSite: process.env.PROTOCOL === 'https' ? 'strict' : 'lax' // Set to 'strict' in production
+        sameSite: process.env.COOKIE_HTTPS === 'https' ? 'strict' : 'lax' // Set to 'strict' in production
     }
 }));
 
