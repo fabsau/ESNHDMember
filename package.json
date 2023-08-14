@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@dr.pogodin/csurf": "^1.13.0",
     "cookie-parser": "^1.4.6",
     "csrf-csrf": "^2.3.0",
     "dotenv": "^16.3.1",

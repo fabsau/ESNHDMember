@@ -9,6 +9,7 @@ block content
       ul.navbar-nav.ml-auto
         li.nav-item.active
           form(action="/logout", method="POST").form-inline.my-2.my-lg-0
+            input(type='hidden', name='_csrf', value=csrfToken)
             button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Sign Out
   .container.mt-5
     if successMessage
@@ -25,7 +26,8 @@ block content
       p You are currently #{subscription.plan.nickname} (#{subscription.plan.amount / 100} #{subscription.plan.currency} every 6 Months).
       a(class='btn btn-info', href=customerUrl) Manage Your Membership
       p
-      form(action="/cancel-subscription", method="POST")
+      form(action='/cancel-subscription', method='POST')
+        input(type='hidden', name='_csrf', value=csrfToken)
         button.btn.btn-danger(type="submit") Cancel Membership
     else
       p
@@ -57,11 +59,17 @@ block content
           tr
             th(scope="row") Join:
             td
-              a(class='btn btn-primary', href=`/create-checkout-session?priceId=price_1NegOQAbFvOFrBtb2C8m9smW`)
-                | Join
+              form(action='/create-checkout-session', method='post')
+                input(type='hidden', name='priceId', value='price_1NegOQAbFvOFrBtb2C8m9smW')
+                input(type='hidden', name='_csrf', value=csrfToken)
+                button.btn.btn-primary(type="submit") Join
             td
-              a(class='btn btn-primary', href=`/create-checkout-session?priceId=price_1NegOQAbFvOFrBtb2C8m9smW`)
-                | Join
+            form(action='/create-checkout-session', method='post')
+              input(type='hidden', name='priceId', value='price_1NegOQAbFvOFrBtb2C8m9smW')
+              input(type='hidden', name='_csrf', value=csrfToken)
+              button.btn.btn-primary(type="submit") Join
             td
-              a(class='btn btn-primary', href=`/create-checkout-session?priceId=price_1NegOQAbFvOFrBtb4Zh1b0bs`)
-                | Join
+              form(action='/create-checkout-session', method='post')
+                input(type='hidden', name='priceId', value='price_1NegOQAbFvOFrBtb4Zh1b0bs')
+                input(type='hidden', name='_csrf', value=csrfToken)
+                button.btn.btn-primary(type="submit") Join

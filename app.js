@@ -6,7 +6,8 @@ var logger = require('morgan');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var session = require('express-session');
-const csurf = require('csrf-csrf');
+var csurf = require('@dr.pogodin/csurf');
+
 const helmet = require('helmet');
 require('dotenv').config();
 
@@ -26,9 +27,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(helmet()); // Add security-related HTTP headers
-    app.use(csurf()); // Enable CSRF protection breaks logout
+if (process.env.CSP === 'TRUE') {
+    app.use(helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'", 'https:', "'unsafe-inline'", "data:"],
+                scriptSrc: ["'self'", 'https:', "'unsafe-inline'", 'cdn.jsdelivr.net'],
+                imgSrc: ["'self'", 'https:', "'unsafe-inline'"],
+                styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
+                fontSrc: ["'self'", 'https:', "'unsafe-inline'", 'fonts.gstatic.com', "data:"],
+                objectSrc: ["'none'"],
+                upgradeInsecureRequests: [],
+            },
+        },
+    }));
 }
 
 passport.use(new GoogleStrategy({
@@ -57,11 +69,18 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         httpOnly: true, // Only accessible through HTTP(S)
-        secure: process.env.NODE_ENV === 'production', // Only set in production
-        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' // Set to 'strict' in production
+        secure: process.env.PROTOCOL === 'https', // Only set in production
+        sameSite: process.env.PROTOCOL === 'https' ? 'strict' : 'lax' // Set to 'strict' in production
     }
 }));
 
+if (process.env.CSRF === 'TRUE') {
+    app.use(csurf());
+    app.use((req, res, next) => {
+        res.locals.csrfToken = req.csrfToken();
+        next();
+    });
+}
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -122,7 +141,7 @@ app.get('/home', ensureAuthenticated, async function(req, res) {
             cancelMessage = 'Cancellation was successful!';
         }
 
-        res.render('home', {
+        const renderOptions = {
             user: req.user,
             firstName: givenName,
             lastName: familyName,
@@ -133,7 +152,8 @@ app.get('/home', ensureAuthenticated, async function(req, res) {
             subscription: subscription,
             successMessage: successMessage,
             cancelMessage: cancelMessage
-        });
+        };
+        res.render('home', renderOptions);
 
     } catch (error) {
         console.log('Error retrieving customer:', error);
@@ -166,9 +186,9 @@ app.post('/logout', function(req, res) {
     });
 });
 
-app.get('/create-checkout-session', ensureAuthenticated, async (req, res) => {
+app.post('/create-checkout-session', ensureAuthenticated, async (req, res) => {
     const { email } = req.user;
-    const { priceId } = req.query;
+    const { priceId } = req.body;
 
     // Look for an existing customer
     const customers = await stripe.customers.list({
@@ -267,6 +287,7 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res) {
+
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -274,6 +295,7 @@ app.use(function(err, req, res) {
     // render the error page
     res.status(err.status || 500);
     res.render('error');
+
 });
 
 module.exports = app;
