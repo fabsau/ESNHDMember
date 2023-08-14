@@ -14,17 +14,16 @@ The ESN Heidelberg Member Portal is a Node.js web application running on the `Ex
 
 ## Table of Contents
 
-1. [Docker Run and Compose](#docker-run-compose)
-2. [Docker Build](#docker-build)
-3. [Getting Started](#getting-started)
-4. [Prerequisites](#prerequisites)
-5. [Installation](#install)
-6. [Usage](#usage)
-7. [Contributing](#contributing)
-8. [License](#license)
+1. [Docker](#docker)
+    - [Docker Run](#docker-run)
+    - [Docker Compose](#docker-compose)
+    - [Docker Build](#docker-build)
+2. [Running locally without Docker](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
 
-## Docker Run and Compose <a name="docker-run-compose"></a>
-
+## Docker<a name="docker"></a>
+### Docker Run
 1. To start with Docker, ensure you have Docker installed on your machine. For installation instructions, check: Docker: https://docs.docker.com/install/
 
 2. Pull the Docker image from Docker Hub:
@@ -65,7 +64,7 @@ Replace the `.env` in the `--env-file .env` command with the name of your enviro
 docker-compose up -d
 ```
 
-## Build Docker Image <a name="docker-build"></a>
+### Build Docker Image <a name="docker-build"></a>
 
 If you want to build the Docker image yourself, follow these steps:
 
@@ -91,7 +90,7 @@ docker build -t <your-name>/<your-image-name>:<tag> .
 
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
-## Prerequisites <a name="prerequisites"></a>
+### Prerequisites <a name="prerequisites"></a>
 
 1. You need to have Node.js and npm installed in your system. You can download Node.js from here: https://nodejs.org/
 
@@ -111,7 +110,7 @@ SUBSCRIPTION_PRICE_ID_MEMBER=  # price id of a subscription
 SUBSCRIPTION_PRICE_ID_ALUMNI=  # second price id
 ```
 
-## Installation <a name="install"></a>
+### Installation <a name="install"></a>
 
 To get this project running on your local machine for development and testing, follow these instructions:
 
@@ -138,15 +137,3 @@ npm install
 ```bash
 npm start
 ```
-
-## Usage <a name="usage"></a>
-
-The main entry point for the application is the `app.js` file. This file handles the main setup for the Express.js app - setting up middleware, routes, and error handling. The majority of functionality resides within named routes for user signup/login, session handling, as well as Stripe's subscription handling.
-
-## Contributing <a name="contributing"></a>
-
-Contributions of all sizes are welcome. Please read the contribution guideline for instructions on how to contribute to the codebase.
-
-## License <a name="license"></a>
-
-This project is licensed under the MIT License - see the LICENSE.md file for details.
