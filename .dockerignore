@@ -1,7 +1,8 @@
 .github
 .idea
-.env
 .gitignore
+.env
 node_modules
+Dockerfile
 environment_template
 README.md
