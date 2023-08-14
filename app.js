@@ -119,7 +119,6 @@ if (process.env.CSRF === 'TRUE') {
         next();
     });
 }
-
 // ========================================
 // Define Routes
 // ========================================
@@ -140,8 +139,10 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
     // Destructure details of the user from the Google Signin
     const {givenName, familyName, email} = req.user;
     // defined subscription ids allowed to see
-    const allowedSubscriptions = [process.env.SUBSCRIPTION_PRICE_ID_MEMBER,
-        process.env.SUBSCRIPTION_PRICE_ID_ALUMNI];
+    const allowedSubscriptions = [
+        process.env.SUBSCRIPTION_PRICE_ID_MEMBER,
+        process.env.SUBSCRIPTION_PRICE_ID_ALUMNI
+    ];
     try {
         // Fetch customer details from Stripe based on email
         const customer = await stripe.customers.list({
@@ -150,17 +151,18 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
         });
         let customerUrl;
         let subscription;
+        let currentPlan;
         // Check if customer data is present
         if (customer.data.length > 0) {
             const customerId = customer.data[0].id;
+            const subscriptions = await stripe.subscriptions.list({ customer: customerId });
             // Retrieve the list of subscriptions of the customer
-            const subscriptions = await stripe.subscriptions.list({
-                customer: customerId
-            });
-            // If subscription data is present, select the first subscription
             if (subscriptions.data.length > 0) {
                 subscription = subscriptions.data[0];
                 currentPlan = subscriptions.data[0].items.data[0].price.id;
+            } else {
+                // set currentPlan to null if no subscriptions
+                currentPlan = null;
             }
             // Create a billing portal session for the customer
             const session = await stripe.billingPortal.sessions.create({
@@ -183,11 +185,27 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             upgradeMessage = 'Plan was successful changed!';
         }
         // get all plans except the current one
-        let prices = await stripe.prices.list({ limit: 10 });
+        let prices = await stripe.prices.list({limit: 10});
         let plans = prices.data.filter(plan => plan.id !== currentPlan && allowedSubscriptions.includes(plan.id));
-        plans = plans.map(plan => ({ id: plan.id, nickname: plan.nickname }));
+        plans = plans.map(plan => ({id: plan.id, nickname: plan.nickname}));
 
-        // Define details to be passed to the front-end
+        // Checking which alert message needs to be shown with its severity
+        let alertMessage = null;
+        let severity = 'success';
+        if (req.query.purchase === 'success') {
+            alertMessage = 'Purchase was successful!';
+            severity = 'success';
+        }
+        if (req.query.cancel === 'success') {
+            alertMessage = 'Cancellation was successful!';
+            severity = 'success';
+        }
+        if (req.query.upgrade === 'success') {
+            alertMessage = 'Plan was successful changed!';
+            severity = 'info';
+        }
+
+        // passing the message and severity to renderOptions
         const renderOptions = {
             user: req.user,
             firstName: givenName,
@@ -195,16 +213,13 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             email: email,
             customerUrl: customerUrl,
             subscription: subscription,
-            successMessage: successMessage,
-            cancelMessage: cancelMessage,
-            upgradeMessage: upgradeMessage,
+            alertMessage: alertMessage,
+            severity: severity,
             plans: plans
         };
-        // Render the homepage with the details
         res.render('home', renderOptions);
     } catch (error) {
         console.log('Error retrieving customer:', error);
-        // On error, redirect to the index page
         res.redirect('/');
     }
 });
@@ -315,11 +330,11 @@ app.post('/change-subscription', ensureAuthenticated, async (req, res) => {
     const newPlanId = req.body.newPlanId;
 
     try {
-        const customers = await stripe.customers.list({ email: email, limit: 1 });
+        const customers = await stripe.customers.list({email: email, limit: 1});
 
         if (customers.data.length > 0) {
             const customerId = customers.data[0].id;
-            const subscriptions = await stripe.subscriptions.list({ customer: customerId });
+            const subscriptions = await stripe.subscriptions.list({customer: customerId});
 
             if (subscriptions.data.length > 0) {
                 const currentSubscription = subscriptions.data[0];

@@ -12,18 +12,9 @@ block content
                         input(type='hidden', name='_csrf', value=csrfToken)
                         button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Sign Out
     .container.mt-5
-        if successMessage
-            .alert.alert-success
-                strong Success!
-                p= successMessage
-        if cancelMessage
-            .alert.alert-success
-                strong Success!
-                p= cancelMessage
-        if upgradeMessage
-            .alert.alert-success
-                strong Success!
-                p= upgradeMessage
+        if alertMessage
+            div(class="alert alert-" + severity)
+                p= alertMessage
         h1 Hello, #{firstName} #{lastName}!
 
         if subscription
