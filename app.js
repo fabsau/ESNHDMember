@@ -27,19 +27,30 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-if (process.env.CSP === 'TRUE') {
-    app.use(helmet({
-        contentSecurityPolicy: {
-            directives: {
-                defaultSrc: ["'self'", 'https:', "'unsafe-inline'", "data:"],
-                scriptSrc: ["'self'", 'https:', "'unsafe-inline'", 'cdn.jsdelivr.net'],
-                imgSrc: ["'self'", 'https:', "'unsafe-inline'"],
-                styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
-                fontSrc: ["'self'", 'https:', "'unsafe-inline'", 'fonts.gstatic.com', "data:"],
-                objectSrc: ["'none'"],
-                upgradeInsecureRequests: [],
-            },
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'", 'https:', "'unsafe-inline'", "data:"],
+            scriptSrc: ["'self'", 'https:', "'unsafe-inline'", 'cdn.jsdelivr.net'],
+            imgSrc: ["'self'", 'https:', "'unsafe-inline'"],
+            styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
+            fontSrc: ["'self'", 'https:', "'unsafe-inline'", 'fonts.gstatic.com', "data:"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: [],
         },
+        referrerPolicy: { policy: 'no-referrer' },
+        xssFilter: true, // adds X-XSS-Protection
+        noSniff: true, // adds X-Content-Type-Options
+    },
+    frameguard: { action: 'deny' }, // adds X-Frame-Options
+    hidePoweredBy: true, // hides X-Powered-By
+}));
+
+if (process.env.PROTOCOL === 'https') {
+    app.use(helmet.hsts({ // adds Strict-Transport-Security
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+        includeSubDomains: true,
+        preload: true
     }));
 }
 
