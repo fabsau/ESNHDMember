@@ -7,7 +7,6 @@ var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var session = require('express-session');
 var csurf = require('@dr.pogodin/csurf');
-
 const helmet = require('helmet');
 require('dotenv').config();
 
@@ -30,12 +29,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
-            defaultSrc: ["'self'", 'https:', "'unsafe-inline'", "data:"],
-            scriptSrc: ["'self'", 'https:', "'unsafe-inline'", 'cdn.jsdelivr.net'],
-            imgSrc: ["'self'", 'https:', "'unsafe-inline'"],
-            styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
-            fontSrc: ["'self'", 'https:', "'unsafe-inline'", 'fonts.gstatic.com', "data:"],
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'checkout.stripe.com'],
+            imgSrc: ["'self'", 'data:', 'checkout.stripe.com'],
+            styleSrc: ["'self'", 'cdn.jsdelivr.net', 'checkout.stripe.com'],
+            fontSrc: ["'self'", 'fonts.gstatic.com', "data:"],
+            frameSrc: ["'self'", 'checkout.stripe.com', 'accounts.google.com'],
+            connectSrc: ["'self'", 'api.stripe.com', 'accounts.google.com'],
             objectSrc: ["'none'"],
+            formAction: ["'self'", `${process.env.PROTOCOL}://${process.env.BASE_URL}`],
             upgradeInsecureRequests: [],
         },
         referrerPolicy: { policy: 'no-referrer' },
