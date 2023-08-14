@@ -1,75 +1,75 @@
 extends layout
 
 block content
-  nav.navbar.navbar-expand-lg.navbar-light.bg-light
-    a.navbar-brand(href='/home') ESN Heidelberg Member Portal
-    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav')
-      span.navbar-toggler-icon
-    div.collapse.navbar-collapse#navbarNav
-      ul.navbar-nav.ml-auto
-        li.nav-item.active
-          form(action="/logout", method="POST").form-inline.my-2.my-lg-0
-            input(type='hidden', name='_csrf', value=csrfToken)
-            button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Sign Out
-  .container.mt-5
-    if successMessage
-      .alert.alert-success
-        strong Success!
-        p= successMessage
-    if cancelMessage
-      .alert.alert-success
-        strong Success!
-        p= cancelMessage
-    h1 Hello, #{firstName} #{lastName}!
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+        a.navbar-brand(href='/home') ESN Heidelberg Member Portal
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav')
+            span.navbar-toggler-icon
+        div.collapse.navbar-collapse#navbarNav
+            ul.navbar-nav.ml-auto
+                li.nav-item.active
+                    form(action="/logout", method="POST").form-inline.my-2.my-lg-0
+                        input(type='hidden', name='_csrf', value=csrfToken)
+                        button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Sign Out
+    .container.mt-5
+        if successMessage
+            .alert.alert-success
+                strong Success!
+                p= successMessage
+        if cancelMessage
+            .alert.alert-success
+                strong Success!
+                p= cancelMessage
+        h1 Hello, #{firstName} #{lastName}!
 
-    if subscription
-      p You are currently #{subscription.plan.nickname} (#{subscription.plan.amount / 100} #{subscription.plan.currency} every 6 Months).
-      a(class='btn btn-info', href=customerUrl) Manage Your Membership
-      p
-      form(action='/cancel-subscription', method='POST')
-        input(type='hidden', name='_csrf', value=csrfToken)
-        button.btn.btn-danger(type="submit") Cancel Membership
-    else
-      p
-      p
-      p You are currently not a member.
-      table.table.table-striped.table-borderless.table-responsive-lg
-        thead
-          tr
-            th(scope="col")
-            th(scope="col") New Member
-            th(scope="col") Existing Member
-            th(scope="col") Alumni
-        tbody
-          tr
-            th(scope="row") First 6 Months free:
-            td Yes
-            td No
-            td No
-          tr
-            th(scope="row") Renewal Period:
-            td Every 6 months
-            td Every 6 months
-            td Annual
-          tr
-            th(scope="row") Price:
-            td 5€
-            td 5€
-            td 10€+
-          tr
-            th(scope="row") Join:
-            td
-              form(action='/create-checkout-session', method='post')
-                input(type='hidden', name='priceId', value='price_1NegOQAbFvOFrBtb2C8m9smW')
+        if subscription
+            p You are currently #{subscription.plan.nickname} (#{subscription.plan.amount / 100} #{subscription.plan.currency} every 6 Months).
+            a(class='btn btn-info', href=customerUrl) Manage Your Membership
+            p
+            form(action='/cancel-subscription', method='POST')
                 input(type='hidden', name='_csrf', value=csrfToken)
-                button.btn.btn-primary(type="submit") Join
-            td
-              form(action='/create-checkout-session', method='post')
-                input(type='hidden', name='priceId', value='price_1NegOQAbFvOFrBtb2C8m9smW')
-                input(type='hidden', name='_csrf', value=csrfToken)
-                button.btn.btn-primary(type="submit") Join
-            td
-              form(action='/create-checkout-session', method='post')
-                input(type='hidden', name='priceId', value='price_1NegOQAbFvOFrBtb4Zh1b0bs')
-                input(type='hidden', name='_csrf', value=csrfToken)
-                button.btn.btn-primary(type="submit") Join
+                button.btn.btn-danger(type="submit") Cancel Membership
+        else
+            p
+            p
+            p You are currently not a member.
+            table.table.table-striped.table-borderless.table-responsive-lg
+                thead
+                    tr
+                        th(scope="col")
+                        th(scope="col") New Member
+                        th(scope="col") Existing Member
+                        th(scope="col") Alumni
+                tbody
+                    tr
+                        th(scope="row") First 6 Months free:
+                        td Yes
+                        td No
+                        td No
+                    tr
+                        th(scope="row") Renewal Period:
+                        td Every 6 months
+                        td Every 6 months
+                        td Annual
+                    tr
+                        th(scope="row") Price:
+                        td 5€
+                        td 5€
+                        td 10€+
+                    tr
+                        th(scope="row") Join:
+                        td
+                            form(action='/create-checkout-session', method='post')
+                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_1)
+                                input(type='hidden', name='_csrf', value=csrfToken)
+                                button.btn.btn-primary(type="submit") Join
+                        td
+                            form(action='/create-checkout-session', method='post')
+                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_2)
+                                input(type='hidden', name='_csrf', value=csrfToken)
+                                button.btn.btn-primary(type="submit") Join
+                        td
+                            form(action='/create-checkout-session', method='post')
+                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_3)
+                                input(type='hidden', name='_csrf', value=csrfToken)
+                                button.btn.btn-primary(type="submit") Join
