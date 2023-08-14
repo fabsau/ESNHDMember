@@ -23,7 +23,7 @@ FROM node:lts-alpine as esn-hd-member
 ARG BUILD_VERSION
 ARG BUILD_DATE
 ARG VCS_REF
-ARG IMAGE_VERSION=1.0.4
+ARG IMAGE_VERSION=1.0.5
 
 ENV APP_VERSION=$IMAGE_VERSION
 LABEL maintainer="github@sauna.re"

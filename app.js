@@ -59,8 +59,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true, // Only accessible through HTTP(S)
-        secure: process.env.PROTOCOL === 'https', // Only set in production
-        sameSite: process.env.COOKIE_HTTPS === 'https' ? 'strict' : 'lax' // Set to 'strict' in production
+        secure: process.env.COOKIE_SECURE === 'TRUE', // Only set in production
+        sameSite: process.env.COOKIE_SAMESITE_STRICT === 'TRUE' ? 'strict' : 'lax' // Set to 'strict' in production
     }
 }));
 
@@ -112,13 +112,12 @@ if (process.env.PROTOCOL === 'https') {
     }));
 }
 // Set up CSRF protection
-if (process.env.CSRF === 'TRUE') {
-    app.use(csurf());
-    app.use((req, res, next) => {
-        res.locals.csrfToken = req.csrfToken();
-        next();
-    });
-}
+app.use(csurf());
+app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
+
 // ========================================
 // Define Routes
 // ========================================
