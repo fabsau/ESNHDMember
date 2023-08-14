@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     if (alertMsg && closeButton) {
         setTimeout(() => {
             alertMsg.style.display = 'none';
-        }, 10000); // hide after 10 seconds
+        }, 30000); // hide after 30 seconds
         closeButton.addEventListener('click', () => { // event listener for the close button
             alertMsg.style.display = 'none';
         });

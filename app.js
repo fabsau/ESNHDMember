@@ -276,13 +276,13 @@ app.post('/buy', ensureAuthenticated, async (req, res) => {
 // Route for checkout success
 app.get('/checkout_success', ensureAuthenticated, (req, res) => {
     req.session.message = {type: 'success', text: 'Purchase was successful!'};
-    res.redirect('/home/');
+    res.redirect('/home');
 });
 
 // Route for checkout error
 app.get('/checkout_error', ensureAuthenticated, (req, res) => {
     req.session.message = {type: 'error', text: 'Something went wrong, please retry!'};
-    res.redirect('/home/');
+    res.redirect('/home');
 });
 
 
@@ -304,7 +304,7 @@ app.post('/change-subscription', ensureAuthenticated, async (req, res) => {
 
                 if (req.body.newPlanId === req.user.currentPlanId) {
                     req.session.message = {type: 'info', text: 'You selected the same subscription as your current one.'};
-                    res.redirect('/home/');
+                    res.redirect('/home');
                     return;
                 }
                 await stripe.subscriptions.update(currentSubscription.id, {
@@ -318,7 +318,7 @@ app.post('/change-subscription', ensureAuthenticated, async (req, res) => {
             }
         }
         req.session.message = {type: 'success', text: 'Plan was successful changed!'};
-        res.redirect('/home/');
+        res.redirect('/home');
     } catch (error) {
         console.error('Error upgrading subscription:', error);
         req.session.message = {type: 'error', text: 'Error upgrading subscription, please refresh the page!'};
@@ -346,7 +346,7 @@ app.post('/cancel-subscription', ensureAuthenticated, async (req, res) => {
         }
         // Redirect to the home page with a successful cancellation message
         req.session.message = {type: 'success', text: 'Cancellation was successful!'};
-        res.redirect('/home/');
+        res.redirect('/home');
     } catch (error) {
         console.error('Error cancelling subscription:', error);
         // On error, redirect to the home page
