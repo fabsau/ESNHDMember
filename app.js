@@ -91,7 +91,6 @@ app.use(session({
     cookie: {
         httpOnly: true, // Only accessible through HTTP(S)
         secure: process.env.ENABLE_HTTPS === 'TRUE', // Only set with https enabled
-        sameSite: process.env.ENABLE_HTTPS === 'TRUE' ? 'strict' : 'lax' // Set to 'strict' with https enabled
     }
 }));
 
@@ -217,7 +216,7 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             // Create a billing portal session for the customer
             const session = await stripe.billingPortal.sessions.create({
                 customer: customerId,
-                return_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}${process.env.PORT}/home`
+                return_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}:${process.env.PORT}/home`
             });
             customerUrl = session.url;
         }
@@ -290,8 +289,8 @@ app.post('/buy', ensureAuthenticated, async (req, res) => {
             },
         ],
         customer: customerId,
-        success_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}${process.env.PORT}/checkout_success`,
-        cancel_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}${process.env.PORT}/checkout_error`,
+        success_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}:${process.env.PORT}/checkout_success`,
+        cancel_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}:${process.env.PORT}/checkout_error`,
     };
     // Add trial period to session data if applicable
     if (trial_period_days !== null) {

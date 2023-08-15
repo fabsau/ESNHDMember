@@ -1,6 +1,7 @@
 ####################################################
 #   If no value is set the default will kick in    #
 ####################################################
+
 # Basic Settings
 BASE_URL=localhost #the base URL where your application is hosted (no default)
 PORT=3000 # Port the application listens to (default: 3000)

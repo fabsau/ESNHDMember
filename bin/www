@@ -4,30 +4,60 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('esnmember3:server');
-var http = require('http');
+var app = require("../app");
+var debug = require("debug")("esnmember3:server");
+var http = require("http");
+var https = require('https');
+var selfsigned = require('selfsigned');
+var fs = require('fs');
 
-/**
- * Get port from environment and store in Express.
- */
+var port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+if (process.env.ENABLE_HTTPS === "TRUE") {
+  generateCertificates();
 
-/**
- * Create HTTP server.
- */
+  var sslOptions = {
+    key: fs.readFileSync('./cert/key.pem'),
+    cert: fs.readFileSync('./cert/cert.pem')
+  };
 
-var server = http.createServer(app);
+  var server = https.createServer(sslOptions, app);
+} else {
+  var server = http.createServer(app);
+}
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+server.listen(port, function() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
 
-server.listen(port);
+  console.log('Listening on ' + bind);
+});
+
 server.on('error', onError);
 server.on('listening', onListening);
+
+/**
+ * Certificate generation function.
+ */
+
+function generateCertificates() {
+  if (!fs.existsSync('./cert/cert.pem')) {
+    console.log("Certificate not found, generating a new one...");
+    var attrs = [{ name: 'commonName', value: 'localhost' }];
+    var pems = selfsigned.generate(attrs, { days: 365 });
+
+    if (!fs.existsSync('/cert')) fs.mkdirSync('./cert');
+
+    fs.writeFileSync('./cert/key.pem', pems.private);
+    fs.writeFileSync('./cert/cert.pem', pems.cert);
+    console.log("SSL certificate generated...");
+  } else {
+    console.log("SSL certificate found");
+  }
+}
 
 /**
  * Normalize a port into a number, string, or false.
@@ -58,9 +88,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -83,8 +111,6 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
