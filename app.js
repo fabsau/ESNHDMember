@@ -13,7 +13,9 @@ var csurf = require('@dr.pogodin/csurf');
 const helmet = require('helmet');
 require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
-
+var rateLimit = require('express-rate-limit');
+var ExpressBrute = require('express-brute');
+var Ddos = require('ddos');
 var app = express();
 
 // ========================================
@@ -29,6 +31,35 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Rate limiting
+if (process.env.ENABLE_RATE_LIMITING === 'TRUE') {
+    var limiter = rateLimit({
+        windowMs: Number(process.env.RATE_LIMIT_WINDOW) * 60 * 1000 || 15 * 60 * 1000, // default is 15 minutes
+        max: Number(process.env.RATE_LIMIT_MAX_REQUESTS) || 100 // default limit is 100 requests per windowMs
+    });
+    app.use(limiter);
+}
+
+// ExpressBrute setup
+if (process.env.ENABLE_DDOS_PROTECTION === 'TRUE') {
+    var store = new ExpressBrute.MemoryStore(); // stores state locally, you might want a different store for clustered environment
+    var bruteforce = new ExpressBrute(store, {
+        freeRetries: Number(process.env.DDOS_FREE_RETRIES) || 50,
+        minWait: Number(process.env.DDOS_MIN_WAIT) * 60 * 1000 || 5 * 60 * 1000,  // default is 5 minutes
+        maxWait: Number(process.env.DDOS_MAX_WAIT) * 60 * 1000 || 60 * 60 * 1000,  // default is 1 hour
+        failCallback: ExpressBrute.FailTooManyRequests
+    });
+    var ddosConfig = new Ddos({
+        burst: Number(process.env.DDOS_BURST) || 10,
+        limit: Number(process.env.DDOS_LIMIT) || 15
+    });
+    app.use(ddosConfig.express);
+    // Use ExpressBrute middleware just before your main routes
+    app.all('/*', bruteforce.prevent, function (req, res, next) {
+        next(); // continue to next routes
+    });
+}
 
 // ========================================
 // Setup Session and Passport for Authentication through Google
@@ -59,8 +90,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true, // Only accessible through HTTP(S)
-        secure: process.env.COOKIE_SECURE === 'TRUE', // Only set in production
-        sameSite: process.env.COOKIE_SAMESITE_STRICT === 'TRUE' ? 'strict' : 'lax' // Set to 'strict' in production
+        secure: process.env.HTTPS === 'TRUE', // Only set with https enabled
+        sameSite: process.env.HTTPS === 'TRUE' ? 'strict' : 'lax' // Set to 'strict' with https enabled
     }
 }));
 

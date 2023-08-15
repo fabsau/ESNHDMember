@@ -1,12 +1,32 @@
-# rename this file to .env
-GOOGLE_CLIENT_ID=              # google cloud credential client id
-GOOGLE_CLIENT_SECRET=          # google cloud credential oauth secret
-SESSION_SECRET=                # generate long secret
-STRIPE_API_KEY=                # your stripe key
-BASE_URL=                      # example.com
-PROTOCOL=                      # http or https
-COOKIE_SECURE=                 # TRUE or FALSE sets cookie source to HTTPS
-COOKIE_SAMESITE_STRICT=        # TRUE or FALSE sets cookie sameSite to strict
-SUBSCRIPTION_PRICE_ID_MEMBER=  # price id of a subscription
-SUBSCRIPTION_PRICE_ID_ALUMNI=  # second price id
-TRIAL_LENGTHS_DAYS=
+####################################################
+#   If no value is set the default will kick in    #
+####################################################
+# Basic Settings
+BASE_URL=localhost #the base URL where your application is hosted (no default)
+PORT=3000 # Port the application listens to (default: 3000)
+HTTPS=FALSE # Enables https if set to TRUE. Also enables cookie sameSite to strict and secure (default: FALSE)
+SESSION_SECRET=your_session_secret # Replace with a hard-to-guess string (no default)
+
+# Google OAuth Credentials
+# Replace with your own OAuth credentials from Google
+GOOGLE_CLIENT_ID=your_google_client_id (no default)
+GOOGLE_CLIENT_SECRET=your_google_client_secret (no default)
+
+# Stripe Settings
+STRIPE_API_KEY=your_stripe_api_key # Use your own stripe API key (no default)
+SUBSCRIPTION_PRICE_ID_MEMBER=your_subscription_price_id_member # Member (no default)
+SUBSCRIPTION_PRICE_ID_ALUMNI=your_subscription_price_id_alumni # Alumni (no default)
+TRIAL_LENGTHS_DAYS=180 # Trial duration in days (default: 180)
+
+# RATE LIMIT SETTINGS
+ENABLE_RATE_LIMITING=FALSE # enable rate limiting by setting to TRUE. (default: FALSE)
+RATE_LIMIT_WINDOW=15  # duration is in minutes (default: 15)
+RATE_LIMIT_MAX_REQUESTS=100  # max number of requests per RATE_LIMIT_WINDOW (default: 100)
+
+# DDOS SETTINGS
+ENABLE_DDOS_PROTECTION=FALSE # enable DDOS by setting to TRUE. (default: FALSE)
+DDOS_FREE_RETRIES=50  # number of retries before requiring a wait (default: 50)
+DDOS_MIN_WAIT=5  # minimum wait time between login attempts in minutes (default: 5)
+DDOS_MAX_WAIT=60  # max wait between login attempts in minutes (default: 60)
+DDOS_BURST=10  # number of requests allowed in burst (default: 10)
+DDOS_LIMIT=15  # limit for number of requests (default: 15)
