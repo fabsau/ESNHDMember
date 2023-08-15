@@ -1,6 +1,6 @@
 {
   "name": "esnmember3",
-  "version": "0.0.0",
+  "version": "1.0.5",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -14,6 +14,7 @@
     "express-brute": "^1.0.1",
     "express-rate-limit": "^6.9.0",
     "express-session": "^1.17.3",
+    "greenlock-express": "^4.0.3",
     "helmet": "^7.0.0",
     "http-errors": "^2.0.0",
     "morgan": "^1.10.0",

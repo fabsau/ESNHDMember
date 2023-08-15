@@ -1,9 +1,9 @@
 .github
 .idea
-.gitignore
-.env
-.images
+cert
 node_modules
+.env
+.gitignore
 Dockerfile
 environment_template
 README.md

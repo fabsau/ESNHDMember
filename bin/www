@@ -5,54 +5,87 @@
  */
 
 var app = require("../app");
-var debug = require("debug")("esnmember3:server");
+var debug = require("debug")(process.env.DEBUG || "esnmember:server");
 var http = require("http");
 var https = require('https');
 var selfsigned = require('selfsigned');
 var fs = require('fs');
+var greenlockExpress = require('greenlock-express');
+const {exec} = require("child_process");
 
 var port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
+var server;
 if (process.env.ENABLE_HTTPS === "TRUE") {
-  generateCertificates();
+  if (process.env.ENABLE_LETSENCRYPT === "TRUE") {
+    const { exec } = require('child_process');
 
-  var sslOptions = {
-    key: fs.readFileSync('./cert/key.pem'),
-    cert: fs.readFileSync('./cert/cert.pem')
-  };
+    var subject = process.env.LETSENCRYPT_SUBJECT;
+    var altnames = process.env.LETSENCRYPT_ALTNAMES;
 
-  var server = https.createServer(sslOptions, app);
+    var cmd = `npx greenlock add --subject ${subject} --altnames ${altnames}`;
+
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+    });
+    // Use greenlock express for let's encrypt
+    greenlockExpress.init({
+      packageRoot: process.env.PACKAGE_ROOT || "/usr/src/app",
+      configDir: process.env.CONFIG_DIR || "./cert/greenlock",
+      maintainerEmail: process.env.LETSENCRYPT_EMAIL,
+      cluster: false,
+    }).serve(app);
+    console.log("Greenlock's server started");
+  } else {
+    // Generate selfsigned certificates
+    generateCertificates();
+
+    var sslOptions = {
+      key: fs.readFileSync(process.env.CERT_KEY_PATH || './cert/selfsigned/key.pem'),
+      cert: fs.readFileSync(process.env.CERT_PATH || './cert/selfsigned/cert.pem'),
+      port: port
+    };
+
+    server = https.createServer(sslOptions, app);
+  }
 } else {
-  var server = http.createServer(app);
+  server = http.createServer(app);
 }
 
-server.listen(port, function() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-      ? 'pipe ' + addr
-      : 'port ' + addr.port;
+if(server) {
+  server.listen(port, function() {
+    var addr = server.address();
+    var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    console.log('Listening on ' + bind);
+  });
+  server.on('error', onError);
+  server.on('listening', onListening);
+}
 
-  console.log('Listening on ' + bind);
-});
-
-server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Certificate generation function.
  */
 
 function generateCertificates() {
-  if (!fs.existsSync('./cert/cert.pem')) {
+  if (!fs.existsSync('./cert/selfsigned/cert.pem')) {
     console.log("Certificate not found, generating a new one...");
     var attrs = [{ name: 'commonName', value: 'localhost' }];
     var pems = selfsigned.generate(attrs, { days: 365 });
 
-    if (!fs.existsSync('/cert')) fs.mkdirSync('./cert');
+    if (!fs.existsSync('/cert/selfsigned')) fs.mkdirSync('./cert/selfsigned');
 
-    fs.writeFileSync('./cert/key.pem', pems.private);
-    fs.writeFileSync('./cert/cert.pem', pems.cert);
+    fs.writeFileSync('./cert/selfsigned/key.pem', pems.private);
+    fs.writeFileSync('./cert/selfsigned/cert.pem', pems.cert);
     console.log("SSL certificate generated...");
   } else {
     console.log("SSL certificate found");
