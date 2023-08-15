@@ -4,7 +4,7 @@
 # Basic Settings
 BASE_URL=localhost #the base URL where your application is hosted (no default)
 PORT=3000 # Port the application listens to (default: 3000)
-HTTPS=FALSE # Enables https if set to TRUE. Also enables cookie sameSite to strict and secure (default: FALSE)
+ENABLE_HTTPS=FALSE # Enables https if set to TRUE. Also enables cookie sameSite to strict and secure (default: FALSE)
 SESSION_SECRET=your_session_secret # Replace with a hard-to-guess string (no default)
 
 # Google OAuth Credentials

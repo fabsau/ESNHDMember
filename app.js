@@ -90,8 +90,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true, // Only accessible through HTTP(S)
-        secure: process.env.HTTPS === 'TRUE', // Only set with https enabled
-        sameSite: process.env.HTTPS === 'TRUE' ? 'strict' : 'lax' // Set to 'strict' with https enabled
+        secure: process.env.ENABLE_HTTPS === 'TRUE', // Only set with https enabled
+        sameSite: process.env.ENABLE_HTTPS === 'TRUE' ? 'strict' : 'lax' // Set to 'strict' with https enabled
     }
 }));
 
@@ -135,7 +135,7 @@ app.use(helmet({
     hidePoweredBy: true, // hides X-Powered-By
 }));
 // Set HTTP Strict Transport Security (HSTS) if https is enabled
-if (process.env.HTTPS === 'TRUE') {
+if (process.env.ENABLE_HTTPS === 'TRUE') {
     app.use(helmet.hsts({ // adds Strict-Transport-Security
         maxAge: 60 * 60 * 24 * 365, // 1 year
         includeSubDomains: true,
@@ -217,7 +217,7 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             // Create a billing portal session for the customer
             const session = await stripe.billingPortal.sessions.create({
                 customer: customerId,
-                return_url: `${process.env.HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}/home`
+                return_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}${process.env.PORT}/home`
             });
             customerUrl = session.url;
         }
@@ -290,8 +290,8 @@ app.post('/buy', ensureAuthenticated, async (req, res) => {
             },
         ],
         customer: customerId,
-        success_url: `${process.env.HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}/checkout_success`,
-        cancel_url: `${process.env.HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}/checkout_error`,
+        success_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}${process.env.PORT}/checkout_success`,
+        cancel_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}${process.env.PORT}/checkout_error`,
     };
     // Add trial period to session data if applicable
     if (trial_period_days !== null) {
