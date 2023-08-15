@@ -9,3 +9,4 @@ COOKIE_SECURE=                 # TRUE or FALSE sets cookie source to HTTPS
 COOKIE_SAMESITE_STRICT=        # TRUE or FALSE sets cookie sameSite to strict
 SUBSCRIPTION_PRICE_ID_MEMBER=  # price id of a subscription
 SUBSCRIPTION_PRICE_ID_ALUMNI=  # second price id
+TRIAL_LENGTHS_DAYS=

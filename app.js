@@ -103,8 +103,8 @@ app.use(helmet({
     frameguard: {action: 'deny'}, // adds X-Frame-Options
     hidePoweredBy: true, // hides X-Powered-By
 }));
-// Set HTTP Strict Transport Security (HSTS) if the protocol is HTTPS
-if (process.env.PROTOCOL === 'https') {
+// Set HTTP Strict Transport Security (HSTS) if https is enabled
+if (process.env.HTTPS === 'TRUE') {
     app.use(helmet.hsts({ // adds Strict-Transport-Security
         maxAge: 60 * 60 * 24 * 365, // 1 year
         includeSubDomains: true,
@@ -186,7 +186,7 @@ app.get('/home', ensureAuthenticated, async function (req, res) {
             // Create a billing portal session for the customer
             const session = await stripe.billingPortal.sessions.create({
                 customer: customerId,
-                return_url: `${process.env.PROTOCOL}://${process.env.BASE_URL}/home`
+                return_url: `${process.env.HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}/home`
             });
             customerUrl = session.url;
         }
@@ -246,7 +246,7 @@ app.post('/buy', ensureAuthenticated, async (req, res) => {
     // Define trial period for new member plan for first time subscribers
     let trial_period_days = null;
     if (req.body.trialEnabled === 'on') {
-        trial_period_days = 180 /* 6 months trial period */;
+        trial_period_days = parseInt(process.env.TRIAL_LENGTHS_DAYS) || 0; /* map trial time */;
     }
     // Prepare the session data for creating the checkout session
     const sessionData = {
@@ -259,8 +259,8 @@ app.post('/buy', ensureAuthenticated, async (req, res) => {
             },
         ],
         customer: customerId,
-        success_url: `${process.env.PROTOCOL}://${process.env.BASE_URL}/checkout_success`,
-        cancel_url: `${process.env.PROTOCOL}://${process.env.BASE_URL}/checkout_error`,
+        success_url: `${process.env.HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}/checkout_success`,
+        cancel_url: `${process.env.HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}/checkout_error`,
     };
     // Add trial period to session data if applicable
     if (trial_period_days !== null) {
