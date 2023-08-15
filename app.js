@@ -372,6 +372,10 @@ app.post('/logout', function (req, res) {
         });
     });
 });
+
+//Healthcheck Endpoint
+app.get('/healthcheck', (req, res) => res.sendStatus(200));
+
 // ========================================
 // Error handling (404 and other errors)
 // ========================================
