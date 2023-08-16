@@ -32,7 +32,7 @@ module.exports = function(stripe, isAuthenticated) {
         // Define trial period for new member plan for first time subscribers
         let trial_period_days = null;
         if (req.body.trialEnabled === 'on') {
-            trial_period_days = parseInt(process.env.TRIAL_LENGTHS_DAYS) || 0; /* map trial time */;
+            trial_period_days = parseInt(process.env.TRIAL_LENGTHS_DAYS) || 0; /* map trial time */
         }
         // Prepare the session data for creating the checkout session
         const sessionData = {
