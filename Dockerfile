@@ -20,14 +20,14 @@ COPY --chown=node:node . .
 # Start from a clean image
 FROM node:lts-alpine as esn-hd-member
 
-# Set environment variable for port with a default value
-ARG BUILD_VERSION=1.0.6
-ENV PORT=3000
-
 # Define arguments for labels
-ENV APP_VERSION=$BUILD_VERSION
+ARG BUILD_VERSION
 ARG BUILD_DATE
 ARG VCS_REF
+
+# Set environment variable for port with a default value
+ENV APP_VERSION=$BUILD_VERSION
+ENV PORT=3000
 
 LABEL maintainer="github@sauna.re" \
       org.opencontainers.image.title="ESN-HD-Member" \
