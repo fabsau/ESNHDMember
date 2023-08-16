@@ -26,7 +26,7 @@ module.exports = {
         const certPath = './cert/selfsigned/cert.pem';
 
         const validityDays = process.env.SELFSIGNED_VALIDITY_DAYS || 365;
-        const commonName = process.env.SELFSIGNED_COMMON_NAME || 'localhost';
+        const commonName = process.env.CERT_DOMAIN || 'localhost';
 
         const attrs = [{ name: 'commonName', value: commonName }];
 

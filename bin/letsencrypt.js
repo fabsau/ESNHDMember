@@ -5,8 +5,8 @@ const parentDir = path.dirname(__dirname);
 
 module.exports = {
     init: (app) => {
-        let subject = process.env.LETSENCRYPT_SUBJECT;
-        let altnames = process.env.LETSENCRYPT_ALTNAMES;
+        let subject = process.env.CERT_DOMAIN;
+        let altnames = process.env.CERT_ALTNAMES;
         let cmd = `npx greenlock add --subject ${subject} --altnames ${altnames}`;
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
