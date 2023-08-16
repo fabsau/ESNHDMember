@@ -19,7 +19,7 @@ jobs:
       -
         name: Get the version
         id: get_version
-        run: echo "::set-output name=VERSION::$(cat VERSION)"
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       -
         name: Extract branch name
@@ -44,7 +44,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: <Docker Hub Username>/Repo:${{ steps.get_version.outputs.VERSION }}, <Docker Hub Username>/Repo:latest
-          labels: version=${{ steps.get_version.outputs.VERSION }}
-          build-args:
-            BUILD_VERSION=${{ steps.get_version.outputs.VERSION }}
+          tags: <Docker Hub Username>/Repo:${{ env.VERSION }}, <Docker Hub Username>/Repo:latest
+          labels: version=${{ env.VERSION }}
