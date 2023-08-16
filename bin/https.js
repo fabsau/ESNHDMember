@@ -1,5 +1,5 @@
 const https = require("https");
-const letsencrypt = require("./letsencrypt.js_bak");
+const letsencrypt = require("./letsencrypt.js");
 const certificates = require("./certificates");
 
 module.exports = {
