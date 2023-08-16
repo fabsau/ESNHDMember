@@ -56,7 +56,7 @@ block content
                     tr
                         th(scope="row")
                         td
-                            form(action='/buy', method='post')
+                            form(action='/purchase', method='post')
                                 input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_MEMBER)
                                 input(type='hidden', name='_csrf', value=csrfToken)
                                 div.form-check
@@ -64,7 +64,7 @@ block content
                                     label.form-check-label(for='trialEnabled1') New Member Discount
                                 button.btn.btn-primary(type="submit") Join
                         td
-                            form(action='/buy', method='post')
+                            form(action='/purchase', method='post')
                                 input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_ALUMNI)
                                 input(type='hidden', name='_csrf', value=csrfToken)
                                 button.btn.btn-primary(type="submit") Join
