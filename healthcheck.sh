@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$APP_HTTPS" = "TRUE" ]
+if [ "$ENABLE_HTTPS" = "TRUE" ]
 then
   curl -k -f https://localhost:$PORT/healthcheck || exit 1
 else
