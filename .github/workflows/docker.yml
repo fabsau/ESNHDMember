@@ -44,5 +44,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: <Docker Hub Username>/Repo:${{ env.VERSION }}, <Docker Hub Username>/Repo:latest
+          tags: fabsau/esn-hd-member:${{ env.VERSION }}, fabsau/esn-hd-member:latest
           labels: version=${{ env.VERSION }}
