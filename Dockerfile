@@ -21,7 +21,7 @@ COPY --chown=node:node . .
 FROM node:lts-alpine as esn-hd-member
 
 # Set environment variable for port with a default value
-ARG IMAGE_VERSION=1.0.5
+ARG BUILD_VERSION=1.0.6
 ENV PORT=3000
 
 # Define arguments for labels
@@ -38,7 +38,7 @@ LABEL maintainer="github@sauna.re" \
       org.opencontainers.image.documentation="https://github.com/fabsau/ESNHDMember/blob/master/README.md"
 
 # Create app directory and specify the "working directory"
-RUN mkdir -p /usr/src/app && chown -R node:node /usr/src/app && apk --no-cache add curl
+RUN mkdir -p /usr/src/app/cert && chown -R node:node /usr/src/app && apk --no-cache add curl
 WORKDIR /usr/src/app
 COPY --from=build --chown=node:node /usr/src/app .
 

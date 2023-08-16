@@ -1,0 +1,142 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+const app = require("../app");
+const debug = require("debug")(process.env.DEBUG || "esnmember:server");
+const http = require("http");
+const https = require('https');
+const selfsigned = require('selfsigned');
+const fs = require('fs');
+const greenlockExpress = require('greenlock-express');
+const { exec } = require("child_process");
+const path = require('path');
+const parentDir = path.dirname(__dirname);
+let port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
+
+let server;
+
+if (process.env.ENABLE_HTTPS === "TRUE") {
+  if (process.env.CERT_METHOD === "LETSENCRYPT") {
+    let subject = process.env.LETSENCRYPT_SUBJECT;
+    let altnames = process.env.LETSENCRYPT_ALTNAMES;
+    let cmd = `npx greenlock add --subject ${subject} --altnames ${altnames}`;
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+    });
+    greenlockExpress.init({
+      packageRoot: parentDir,
+      configDir: process.env.CONFIG_DIR || "./cert/greenlock",
+      maintainerEmail: process.env.LETSENCRYPT_EMAIL,
+      cluster: false
+    }).serve(app);
+    console.log("Greenlock's server started");
+  } else if (process.env.CERT_METHOD === "SELFSIGN") {
+    const sslOptions = generateCertificates();
+    server = https.createServer(sslOptions, app);
+  } else if (process.env.CERT_METHOD === "CUSTOM") {
+    try {
+      let sslOptions = {
+        key: fs.readFileSync(process.env.CUSTOM_CERT_KEY_FILE_PATH || './cert/custom/key.pem'),
+        cert: fs.readFileSync(process.env.CUSTOM_CERT_FILE_PATH || './cert/custom/cert.pem'),
+        port: port
+      };
+      server = https.createServer(sslOptions, app);
+    } catch (error) {
+      console.error('Unable to read HTTPS credentials:', error.message);
+      return;
+    }
+  }
+} else {
+  server = http.createServer(app);
+}
+
+if(server) {
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+} else {
+  console.error("Server cannot be initialized. Check your configurations.")
+}
+
+/**
+ * Certificate generation function.
+ */
+function generateCertificates() {
+  const keyPath = './cert/selfsigned/key.pem';
+  const certPath = './cert/selfsigned/cert.pem';
+
+  if (!fs.existsSync(certPath)) {
+    console.log("Certificate not found, generating a new one...");
+    const attrs = [{ name: 'commonName', value: 'localhost' }];
+    const pems = selfsigned.generate(attrs, { days: 365 });
+
+    if (!fs.existsSync('/cert/selfsigned')) fs.mkdirSync('./cert/selfsigned');
+
+    fs.writeFileSync(keyPath, pems.private);
+    fs.writeFileSync(certPath, pems.cert);
+    console.log("SSL certificate generated...");
+  } else {
+    console.log("SSL certificate found");
+  }
+
+  return {
+    key: fs.readFileSync(keyPath),
+    cert: fs.readFileSync(certPath)
+  }
+}
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+function normalizePort(val) {
+  let port = parseInt(val, 10);
+  if (isNaN(port)) {
+    return val;
+  }
+  if (port >= 0) {
+    return port;
+  }
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
