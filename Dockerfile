@@ -43,7 +43,9 @@ WORKDIR /usr/src/app
 COPY --from=build --chown=node:node /usr/src/app .
 
 # Define healthcheck command
-HEALTHCHECK --interval=10s --timeout=3s CMD curl -f http://localhost:$PORT/healthcheck || exit 1
+COPY healthcheck.sh /healthcheck.sh
+RUN chmod +x /healthcheck.sh
+HEALTHCHECK --interval=10s --timeout=3s CMD /healthcheck.sh
 
 # Switch to non-root user "node"
 USER node
