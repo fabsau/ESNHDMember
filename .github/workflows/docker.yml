@@ -45,13 +45,13 @@ jobs:
 
       -
         name: Build and push Docker images
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           tags: fabsau/esn-hd-member:${{ env.VERSION }}, fabsau/esn-hd-member:latest
           labels: version=${{ env.VERSION }}
-          build-args:
-            - BUILD_VERSION=${{ env.VERSION }}
-            - VCS_REF=${{ github.sha }}
-            - BUILD_DATE=${{ steps.date.outputs.date }}
+          build-args: |
+            BUILD_VERSION=${{ env.VERSION }}
+            VCS_REF=${{ github.sha }}
+            BUILD_DATE=${{ steps.date.outputs.date }}
