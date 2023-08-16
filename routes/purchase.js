@@ -45,8 +45,8 @@ module.exports = function(stripe, isAuthenticated) {
                 },
             ],
             customer: customerId,
-            success_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}:${process.env.PORT}/checkout_success`,
-            cancel_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}:${process.env.PORT}/checkout_error`,
+            success_url: `${req.protocol}://${req.get('host')}/checkout_success`,
+            cancel_url: `${req.protocol}://${req.get('host')}/checkout_error`,
         };
         // Add trial period to session data if applicable
         if (trial_period_days !== null) {

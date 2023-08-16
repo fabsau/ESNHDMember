@@ -1,4 +1,5 @@
 const http = require("http");
+const https = require("https");
 const debug = require("debug")(process.env.DEBUG || "esnmember:server");
 
 module.exports = {
@@ -17,7 +18,7 @@ module.exports = {
         return false;
     },
 
-    onError: (error) => {
+    onError: (error, port) => {
         if (error.syscall !== 'listen') {
             throw error;
         }

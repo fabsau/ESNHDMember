@@ -34,7 +34,7 @@ module.exports = function(stripe, isAuthenticated) {
                 // Create a billing portal session for the customer
                 const session = await stripe.billingPortal.sessions.create({
                     customer: customerId,
-                    return_url: `${process.env.ENABLE_HTTPS === 'TRUE' ? 'https://' : 'http://'}${process.env.BASE_URL}:${process.env.PORT}/home`
+                    return_url: `${req.protocol}://${req.get('host')}/home`
                 });
                 customerUrl = session.url;
             }
