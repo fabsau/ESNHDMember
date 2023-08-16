@@ -15,6 +15,10 @@ module.exports = function(app) {
             limit: Number(process.env.DDOS_LIMIT) || 15
         });
         app.use(ddos.express);
-        app.all('/*', bruteforce.prevent, function(req, res, next) { next(); });
+        // conditional brute force prevention
+        app.all('/*', (req, res, next) => {
+            if(req.path === '/healthcheck') return next();
+            bruteforce.prevent(req, res, next);
+        });
     }
 };

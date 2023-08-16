@@ -6,6 +6,13 @@ module.exports = function(app) {
             windowMs: 60 * 1000 * Number(process.env.RATE_LIMIT_WINDOW) || 900000,
             max: Number(process.env.RATE_LIMIT_MAX_REQUESTS) || 100
         });
-        app.use(limiter);
+
+        app.use((req, res, next) => {
+            if(req.path === '/healthcheck') {
+                return next();
+            } else {
+                return limiter(req, res, next);
+            }
+        });
     }
 };
