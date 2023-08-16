@@ -43,7 +43,8 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date --utc +'%Y-%m-%dT%H:%M:%SZ')"
 
-      - name: Build and push Docker images
+      -
+        name: Build and push Docker images
         uses: docker/build-push-action@v4
         with:
           context: .
