@@ -1,3 +1,6 @@
+const createError = require('http-errors');
+
+
 module.exports = function(app, passport, stripe, ensureAuthenticated) {
     // ========================================
 // Define Routes
