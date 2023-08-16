@@ -25,10 +25,14 @@ module.exports = {
         const keyPath = './cert/selfsigned/key.pem';
         const certPath = './cert/selfsigned/cert.pem';
 
+        const validityDays = process.env.SELFSIGNED_VALIDITY_DAYS || 365;
+        const commonName = process.env.SELFSIGNED_COMMON_NAME || 'localhost';
+
+        const attrs = [{ name: 'commonName', value: commonName }];
+
         if (!fs.existsSync(certPath)) {
             console.log("Certificate not found, generating a new one...");
-            const attrs = [{ name: 'commonName', value: 'localhost' }];
-            const pems = selfsigned.generate(attrs, { days: 365 });
+            const pems = selfsigned.generate(attrs, { days: Number(validityDays) });
 
             if (!fs.existsSync('/cert/selfsigned')) fs.mkdirSync('./cert/selfsigned');
 
@@ -44,4 +48,5 @@ module.exports = {
             cert: fs.readFileSync(certPath)
         }
     }
+
 };
