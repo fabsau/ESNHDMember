@@ -56,7 +56,7 @@ module.exports = function(stripe, isAuthenticated) {
                 });
                 // Cancel the existing subscription
                 if (subscriptions.data.length > 0) {
-                    await stripe.subscriptions.del(subscriptions.data[0].id);
+                    await stripe.subscriptions.cancel(subscriptions.data[0].id);
                 }
             }
             // Redirect to the home page with a successful cancellation message
