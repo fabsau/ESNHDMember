@@ -12,7 +12,7 @@ const dotenv = require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 const rateLimit = require('express-rate-limit');
 // const ExpressBrute = require('express-brute');
-const Ddos = require('ddos');
+// const Ddos = require('ddos');
 const createError = require('http-errors');
 
 // Initializing express app
