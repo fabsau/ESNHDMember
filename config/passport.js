@@ -23,15 +23,24 @@ module.exports = function(passport, GoogleStrategy, app, session) {
         done(null, user);
     });
 
-    app.use(session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            httpOnly: true,
-            secure: process.env.ENABLE_HTTPS === 'TRUE'
+    app.use((req, res, next) => {
+        const sessionOptions = {
+            secret: process.env.SESSION_SECRET,
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                httpOnly: true,
+                secure: false
+            }
+        };
+
+        if (req.secure) {
+            sessionOptions.cookie.secure = true;
         }
-    }));
+
+        session(sessionOptions)(req, res, next);
+    });
+
 
     app.use(passport.initialize());
     app.use(passport.session());
