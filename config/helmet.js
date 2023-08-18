@@ -3,10 +3,10 @@ module.exports = function(app, helmet) {
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                scriptSrc: ["'self'", "cdn.jsdelivr.net"],
+                scriptSrc: ["'self'", "https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js", "https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js"],
                 imgSrc: ["'self'", "data:"],
-                styleSrc: ["'self'", "cdn.jsdelivr.net"],
-                fontSrc: ["'self'", "data:"],
+                styleSrc: ["'self'", "https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css", "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"],
+                fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
                 frameSrc: ["'self'"],
                 connectSrc: ["'self'"],
                 objectSrc: ["'none'"],
