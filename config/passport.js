@@ -30,7 +30,8 @@ module.exports = function(passport, GoogleStrategy, app, session) {
             saveUninitialized: false,
             cookie: {
                 httpOnly: true,
-                secure: false
+                secure: false,
+                sameSite: 'lax'
             }
         };
 
