@@ -1,72 +1,61 @@
 extends layout
 
 block content
-    nav.navbar.navbar-expand-lg.navbar-light.bg-light
-        a.navbar-brand(href='/home') ESN Heidelberg Member Portal
-        button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
-            span.navbar-toggler-icon
-        div.collapse.navbar-collapse#navbarNav
-            ul.navbar-nav.ml-auto
-                li.nav-item.active
-                li.nav-item
-                    form(action="/logout", method="POST")
-                        input(type='hidden', name='_csrf', value=csrfToken)
-                        button.btn.btn-outline-success.my-2.my-sm-0(type="submit") Sign Out
     .container.mt-5
         if message
             div(class="alert alert-" + message.type)
                 p= message.text
                 button.close-alert(type='button') Ok
         h1 Hello, #{firstName} #{lastName}!
+        .row.justify-content-center
 
-        if subscription
-            p You are currently a #{subscription.plan.nickname} (#{subscription.plan.amount / 100}€ every 6 Months).
-            a(class='btn btn-info', href=customerUrl) Change Personal Details
-            p
-            form(method='POST', action='/change-subscription')
-                select(name='newPlanId')
-                    each plan in plans
-                        option(value=plan.id)
-                            = plan.nickname
-                input(type='hidden', name='_csrf', value=csrfToken)
-                button(type='submit') Change Plan
-            p
-            form(action='/cancel-subscription', method='POST')
-                input(type='hidden', name='_csrf', value=csrfToken)
-                button.btn.btn-danger(type="submit") Cancel Membership
-        else
-            p
-            p
-            p You are currently not a member.
-            table.table.table-striped.table-borderless.table-responsive-lg
-                thead
-                    tr
-                        th(scope="col")
-                        th(scope="col") Member
-                        th(scope="col") Alumni
-                tbody
-                    tr
-                        th(scope="row") Renewal Period:
-                        td Every 6 months
-                        td Annual
-                    tr
-                        th(scope="row") Price:
-                        td 5€
-                        td 10€
-                    tr
-                        th(scope="row")
-                        td
-                            form(action='/purchase', method='post')
-                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_MEMBER)
+            .toggle-button
+                button.btn.btn-primary(type='button', id='monthly') 6-Months
+                button.btn.btn-primary(type='button', id='annually') Annually
+
+            - var plans = ['Member', 'Alumni']
+            each plan, index in plans
+                .col-md-6.my-4
+                    .price-card
+                        h2 #{plan}
+                        if index === 0
+                            p.price(id='member-price') 10€
+                        else
+                            p.price(id='alumni-price') 20€
+                        p.period(id=(index === 0 ? 'member-period' : 'alumni-period')) /yearly
+                        if index === 0
+                            p.description Best for new and existing members
+                        else
+                            p.description For old members that wish to keep contributing
+                        ul.perks
+                            - var perks = index === 0 ? ['Full Membership'] : ['Full Membership', 'Alumni Benefit 1', 'Alumni Benefit 2']
+                            each perk in perks
+                                li= perk
+                        if !subscription
+                            form(action='/purchase', method='post', id='purchase-form')
+                                input(type='hidden', name='priceId', id='priceId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI : process.env.SUBSCRIPTION_PRICE_ID_MEMBER))
                                 input(type='hidden', name='_csrf', value=csrfToken)
-                                div.form-check
-                                    input.form-check-input(type='checkbox', name='trialEnabled', id='trialEnabled1')
-                                    label.form-check-label(for='trialEnabled1') New Member Discount
-                                button.btn.btn-primary(type="submit") Join
-                        td
-                            form(action='/purchase', method='post')
-                                input(type='hidden', name='priceId', value=process.env.SUBSCRIPTION_PRICE_ID_ALUMNI)
+                                input(type='hidden', name='paymentMethod', id='paymentMethod')
+                                if index === 0
+                                    .trial-checkbox
+                                        input.form-check-input(type='checkbox', name='trialEnabled', id='trialEnabled1')
+                                        label.form-check-label(for='trialEnabled1') Activate New Membership Discount (first 6 Months free)
+                                .payment-icons
+                                    button.btn.btn-primary.active(type='button', name='paymentMethod', class='sepa', value='SEPA') SEPA
+                                    button.btn.btn-primary(type='button', name='paymentMethod', class='visa', value='Visa') Visa
+                                button.btn Buy Now
+                        if subscription && subscription.plan.nickname == plan
+                            button.btn.active-plan Active Plan
+                            a(class='btn change-details', href=customerUrl) Manage Membership
+                            form(action='/cancel-subscription', method='POST')
                                 input(type='hidden', name='_csrf', value=csrfToken)
-                                button.btn.btn-primary(type="submit") Join
+                                button.btn.btn-danger(type="submit") Cancel Membership
+                        else if subscription
+                            form(method='POST', action='/change-subscription', id='change-subscription-form')
+                                input(type='hidden', name='newPlanId', id='newPlanId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI : process.env.SUBSCRIPTION_PRICE_ID_MEMBER))
+                                input(type='hidden', name='_csrf', value=csrfToken)
+                                button(type='submit') Switch Plan
+
     block scripts
         script(src="/javascripts/alerts.js")
+        script(src="/javascripts/planperiod.js")

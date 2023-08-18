@@ -52,7 +52,8 @@ module.exports = function(stripe, isAuthenticated) {
                 email: email,
                 customerUrl: customerUrl,
                 subscription: subscription,
-                plans: plans
+                plans: plans,
+                signedIn: true
             };
             renderOptions.message = req.session.message;
             req.session.message = null;

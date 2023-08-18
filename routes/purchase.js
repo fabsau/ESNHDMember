@@ -37,7 +37,7 @@ module.exports = function(stripe, isAuthenticated) {
         // Prepare the session data for creating the checkout session
         const sessionData = {
             mode: "subscription",
-            payment_method_types: ['sepa_debit', 'card'],
+            payment_method_types: [req.body.paymentMethod === 'sepa' ? 'sepa_debit' : 'card'],
             line_items: [
                 {
                     price: priceId,

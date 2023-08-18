@@ -1,19 +1,13 @@
 extends layout
 
 block content
-    nav.navbar.navbar-light.bg-light
-        a.navbar-brand(href='/') ESN Heidelberg Member Portal
     .container.mt-5
-        h1 ESN Heidelberg Member Portal
-        p
-        p Please sign in with your ESN Google account.
 
-        //- Display any error messages related to sign-in
-        if errorMessage
-            .alert.alert-danger(role='alert')
-                p= errorMessage
-
-        //- Google Sign-In Button
-        a.btn.btn-light(href='/login')
-            img(src="/images/Google_Logo.svg", width="20", alt="Google sign-in")
-            |  Sign in with Google
+    .container-fluid.h-100
+        .text-white.bg-primary.border.rounded.border-0.p-4.py-5
+            .row.h-100
+                .col-md-10.col-xl-8.text-center.d-flex.d-sm-flex.d-md-flex.justify-content-center.align-items-center.mx-auto.justify-content-md-start.align-items-md-center.justify-content-xl-center
+                    div
+                        h1.fw-bold.text-white.mb-3 Welcome
+                        p.mb-4 To manage your Membership payments, please sign in with your @esn-heidelberg.de Account.
+                        a.google-sign-in-button(href="/login") Sign in with Google

@@ -5,6 +5,7 @@ const purchaseRoutes = require('./purchase');
 const subscriptionRoutes = require('./subscription');
 const logoutRoutes = require('./logout');
 const healthcheckRoutes = require('./healthcheck');
+const robotsRoutes = require('./robots');
 const errorRoutes = require('./error');
 
 module.exports = function(app, passport, stripe, isAuthenticated) {
@@ -14,5 +15,6 @@ module.exports = function(app, passport, stripe, isAuthenticated) {
     app.use('/', subscriptionRoutes(stripe, isAuthenticated));
     app.use('/logout', logoutRoutes());
     app.use('/healthcheck', healthcheckRoutes());
+    app.use('/', robotsRoutes());
     app.use('/', errorRoutes(createError));
 };
