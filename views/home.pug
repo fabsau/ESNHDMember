@@ -54,7 +54,7 @@ block content
                             form(method='POST', action='/change-subscription', id='change-subscription-form')
                                 input(type='hidden', name='newPlanId', id='newPlanId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS : process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS))
                                 input(type='hidden', name='_csrf', value=csrfToken)
-                                button.btn.btn-primary(type='submit') Switch Plan
+                                button.btn.btn-primary(type='submit') Switch to #{plan}
 
     block scripts
         script(src="/javascripts/message.js")
