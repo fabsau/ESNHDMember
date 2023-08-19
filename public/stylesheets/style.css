@@ -5,6 +5,7 @@
   --bs-breakpoint-lg: 992px;
   --bs-breakpoint-xl: 1200px;
   --bs-breakpoint-xxl: 1400px;
+  --bs-primary: #2e3192;
 }
 
 :root, [data-bs-theme=light] {
@@ -135,7 +136,7 @@
 }
 
 .logout-button {
-  background: #2e3192;
+  background: var(--bs-primary);
   border-style: none;
 }
 
@@ -251,6 +252,10 @@
   text-decoration: none;
 }
 
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+}
+
 .price-card {
   background: #fff;
   border-radius: 6px;
@@ -267,19 +272,20 @@
 }
 
 .price-card .price {
-  color: #b0b0b0;
+  color: var(--bs-heading-color);
   font-size: 1.5em;
+  margin-right: 0.4em;
 }
 
 .price-card .period {
-  font-size: 1em;
+  font-size: 1.2em;
 }
 
 .price-card .description {
-  color: #b0b0b0;
+  color: var(--bs-secondary);
   font-size: 1em;
   margin: 1em 0;
-  text-align: center;
+  text-align: left;
 }
 
 .price-card .perks {
@@ -337,4 +343,10 @@
 .price-card .btn.switch-plan {
   background: #00f;
   color: #fff;
+}
+
+.trial-checkbox {
+  background-color: var(--bs-gray-300); /* Light grey background */
+  border: none;
+  outline: none;
 }

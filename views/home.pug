@@ -3,26 +3,22 @@ extends layout
 block content
     .container.mt-5
         if message
-            div(class="alert alert-" + message.type)
-                p= message.text
-                button.close-alert(type='button') Ok
+            div(class="alert alert-" + message.type + " d-flex justify-content-between align-items-center")
+                p.mb-0= message.text
+                button.btn-close(type='button', data-bs-dismiss="alert", aria-label="Close")
         h1 Hello, #{firstName} #{lastName}!
         .row.justify-content-center
-
-            .toggle-button
-                button.btn.btn-primary(type='button', id='monthly') 6-Months
-                button.btn.btn-primary(type='button', id='annually') Annually
-
             - var plans = ['Member', 'Alumni']
             each plan, index in plans
                 .col-md-6.my-4
                     .price-card
                         h2 #{plan}
-                        if index === 0
-                            p.price(id='member-price') 10€
-                        else
-                            p.price(id='alumni-price') 20€
-                        p.period(id=(index === 0 ? 'member-period' : 'alumni-period')) /yearly
+                        .d-flex.align-items-center
+                            if index === 0
+                                p.price(id='member-price', class='mb-0') 5€
+                            else
+                                p.price(id='alumni-price', class='mb-0') 10€
+                            p.period(id=(index === 0 ? 'member-period' : 'alumni-period'), class='text-secondary') (every 6 Months)
                         if index === 0
                             p.description Best for new and existing members
                         else
@@ -33,29 +29,34 @@ block content
                                 li= perk
                         if !subscription
                             form(action='/purchase', method='post', id='purchase-form')
-                                input(type='hidden', name='priceId', id='priceId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI : process.env.SUBSCRIPTION_PRICE_ID_MEMBER))
+                                input(type='hidden', name='priceId', id='priceId', value=(index === 0 ? process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS : process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS))
                                 input(type='hidden', name='_csrf', value=csrfToken)
                                 input(type='hidden', name='paymentMethod', id='paymentMethod')
                                 if index === 0
-                                    .trial-checkbox
-                                        input.form-check-input(type='checkbox', name='trialEnabled', id='trialEnabled1')
-                                        label.form-check-label(for='trialEnabled1') Activate New Membership Discount (first 6 Months free)
-                                .payment-icons
-                                    button.btn.btn-primary.active(type='button', name='paymentMethod', class='sepa', value='SEPA') SEPA
-                                    button.btn.btn-primary(type='button', name='paymentMethod', class='visa', value='Visa') Visa
-                                button.btn Buy Now
-                        if subscription && subscription.plan.nickname == plan
-                            button.btn.active-plan Active Plan
-                            a(class='btn change-details', href=customerUrl) Manage Membership
+                                    .d-flex.justify-content-start.align-items-center
+                                        input.form-check-input.trial-checkbox(type='checkbox', name='trialEnabled', id='trialEnabled1')
+                                        label.form-check-label.ml-3(for='trialEnabled1') Activate new Membership Discount (first 6 Months free)
+                                .payment-icons.d-flex.mb-3.justify-content-start
+                                    button.btn.btn-light.active(type='button', name='paymentMethod', class='sepa mr-2', value='SEPA')
+                                        img(src="/images/bank.svg", alt="SEPA")
+                                        | SEPA
+                                    button.btn.btn-light(type='button', name='paymentMethod', class='visa', value='Visa')
+                                        img(src="/images/credit-card-fill.svg", alt="Credit Card")
+                                        | Credit Card
+                                button.btn.btn-primary Pay
+                        if subscription && subscription.items.data[0].price.id == (index === 0 ? memberId : alumniId)
+                            button.btn.btn-secondary Active Plan
+                            a(class='btn btn-primary', href=customerUrl) Manage Membership
                             form(action='/cancel-subscription', method='POST')
                                 input(type='hidden', name='_csrf', value=csrfToken)
                                 button.btn.btn-danger(type="submit") Cancel Membership
                         else if subscription
                             form(method='POST', action='/change-subscription', id='change-subscription-form')
-                                input(type='hidden', name='newPlanId', id='newPlanId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI : process.env.SUBSCRIPTION_PRICE_ID_MEMBER))
+                                input(type='hidden', name='newPlanId', id='newPlanId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS : process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS))
                                 input(type='hidden', name='_csrf', value=csrfToken)
-                                button(type='submit') Switch Plan
+                                button.btn.btn-primary(type='submit') Switch Plan
 
     block scripts
-        script(src="/javascripts/alerts.js")
-        script(src="/javascripts/planperiod.js")
+        script(src="/javascripts/message.js")
+        script(src="/javascripts/paymentmethod.js")
+        script(src="/javascripts/changeSubscription.js")
