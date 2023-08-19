@@ -66,7 +66,7 @@ module.exports = function(stripe, isAuthenticated) {
     });
 
     router.get("/checkout_error", isAuthenticated, (req, res) => {
-        req.session.message = {type: 'error', text: 'Something went wrong, please retry!'};
+        req.session.message = {type: 'danger', text: 'Something went wrong, please retry!'};
         res.redirect('/home');
 
     });
