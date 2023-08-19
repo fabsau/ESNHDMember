@@ -5,17 +5,17 @@
 # Basic Settings
 PORT=3000 # Port the application listens to (default: 3000)
 SESSION_SECRET=your_session_secret # Replace with a hard-to-guess string (no default)
-BEHIND_PROXY=FALSE (default)
+BEHIND_PROXY=FALSE # If the application is behind a proxy set to TRUE otherwise FALSE (default: FALSE)
 
 # SSL Settings
 ENABLE_HTTPS=FALSE # Enables https if set to TRUE. Also enables cookie sameSite to strict and secure (default: FALSE)
 CERT_METHOD= # Options between using LETSENCRYPT (changes applications port to 80/443, above port mapping won't work anymore and it seems to be broken), SELFSIGN, CUSTOM
 LETSENCRYPT_EMAIL=test@example.com
-CERT_DOMAIN=example.com
-CERT_ALTNAMES=example.com,www.example.com # First Altname needs to be identical to CERT_DOMAIN, commaseperated (no default)
-SELFSIGNED_VALIDITY_DAYS= # default 365
-CUSTOM_CERT_KEY_FILE_PATH= (default: /cert/custom/key.pem)
-CUSTOM_CERT_FILE_PATH= (default: /cert/custom/cert.pem)
+CERT_DOMAIN=example.com # Domain for the LETSENCRYPT or SELFSIGNED certificate to be used (no default)
+CERT_ALTNAMES=example.com,www.example.com # First Altname needs to be identical to CERT_DOMAIN, comma seperated and does not apply to selfsigned option (no default)
+SELFSIGNED_VALIDITY_DAYS= # default validity in days for the selfsigned certificate (default: 365)
+CUSTOM_CERT_KEY_FILE_PATH= # Set path for a custom key.pem (default: /cert/custom/key.pem)
+CUSTOM_CERT_FILE_PATH= # Set path for a custom cert.pem (default: /cert/custom/cert.pem)
 
 # Google OAuth Credentials
 # Replace with your own OAuth credentials from Google
@@ -24,19 +24,13 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret (no default)
 
 # Stripe Settings
 STRIPE_API_KEY=your_stripe_api_key # Use your own stripe API key (no default)
-SUBSCRIPTION_PRICE_ID_MEMBER=your_subscription_price_id_member # Member (no default)
-SUBSCRIPTION_PRICE_ID_ALUMNI=your_subscription_price_id_alumni # Alumni (no default)
+SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS=
+SUBSCRIPTION_PRICE_ID_MEMBER_ANNUALLY=
+SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS=
+SUBSCRIPTION_PRICE_ID_ALUMNI_ANNUALLY=
 TRIAL_LENGTHS_DAYS=180 # Trial duration in days (default: 180)
 
 # RATE LIMIT SETTINGS
 ENABLE_RATE_LIMITING=FALSE # enable rate limiting by setting to TRUE. (default: FALSE)
 RATE_LIMIT_WINDOW=15  # duration is in minutes (default: 15)
 RATE_LIMIT_MAX_REQUESTS=100  # max number of requests per RATE_LIMIT_WINDOW (default: 100)
-
-# DDOS SETTINGS
-ENABLE_DDOS_PROTECTION=FALSE # enable DDOS by setting to TRUE. (default: FALSE)
-DDOS_FREE_RETRIES=50  # number of retries before requiring a wait (default: 50)
-DDOS_MIN_WAIT=5  # minimum wait time between login attempts in minutes (default: 5)
-DDOS_MAX_WAIT=60  # max wait between login attempts in minutes (default: 60)
-DDOS_BURST=10  # number of requests allowed in burst (default: 10)
-DDOS_LIMIT=15  # limit for number of requests (default: 15)
