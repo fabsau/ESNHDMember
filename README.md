@@ -9,8 +9,7 @@ The ESN Heidelberg Member Portal is a Node.js web application running on the `Ex
 
 3. **Security**: Standard security measures are incorporated into the platform, including HTTP header, Content Security Policy (CSP), and Cross-Site Request Forgery (CSRF) protections. Importantly, the server doesn't retain any data, user information is dynamically fetched from Google and Stripe and stored on the users Browser Session.
 
-![Overview with a subscription active](https://screen.sauna.re/pora0/yazariJi80.mp4/raw)
-*Note: The frontend is still a work in progress and changes may occur.*
+[![Overview of Functions](https://screen.sauna.re/pora0/yazariJi80.mp4/raw)](https://screen.sauna.re/pora0/yazariJi80.mp4/raw)
 
 ## Table of Contents
 
