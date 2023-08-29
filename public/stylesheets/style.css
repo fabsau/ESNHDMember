@@ -353,3 +353,8 @@
 .activate-membership {
   margin-left: 1em; /* adjust this value as needed */
 }
+
+.privacy-checkbox {
+  padding: 3px;
+  background-color: var(--bs-gray-300); /* Light grey background */
+}

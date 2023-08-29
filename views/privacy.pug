@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    .container.mt-5
+        .row
+            .col-lg-8.offset-lg-2
+                .card.bg-light
+                    .card-body
+                        h1.fw-bold.mb-3 Privacy Policy
+                        p.mb-4 This Privacy Policy describes how your personal information is collected, used, and shared when you visit or make a purchase from https://member.esn-heidelberg.de.
+                        h2.fw-bold.mb-3 Who we are
+                        p.mb-4 Erasmus Student Network Heidelberg e.V. (Postfach 12 04 31, 69066 Heidelberg) is the data controller of your personal information. If you have any questions or concerns, you may contact us at #[a(href='mailto:vorstand@esn-heidelberg.de') vorstand@esn-heidelberg.de].
+                        h2.fw-bold.mb-3 Personal Information We Collect
+                        p.mb-4 When you sign in to our Service, we retrieve your first name, last name, and email address from Google. This information is encrypted and stored in a session. The email address is passed to Stripe to facilitate transactions. The only data stored on our server is the session data. The session data is automatically deleted after 24 hours. We do not store any personal information on our servers beyond this session data.
+                        h2.fw-bold.mb-3 Data Retention
+                        p.mb-4 We retain your session data for 24 hours to provide the services you have requested. After this period, the session data is automatically deleted from our servers.
+                        h2.fw-bold.mb-3 Purpose of Data Collection
+                        p.mb-4 We collect your first name, last name, and email address for the purpose of authenticating your identity and providing our Service. Your email address is shared with Stripe for payment processing.
+                        h2.fw-bold.mb-3 Session Management
+                        p.mb-4 We use a session management system (passport expressjs) to maintain a secure connection with your browser during your visit. This system uses a cookie that is only accessible by our web server and is protected against CSRF attacks. The cookie will expire after 24 hours.
+                        h2.fw-bold.mb-3 Server Hosting and Data Storage
+                        p.mb-4 Our Service is hosted on the Microsoft Azure platform. Microsoft Azure adheres to major compliance and privacy standards. However, the data that we collect and store is limited to what is described above. We do not collect or store IP addresses or browser information on our server.
+                        h2.fw-bold.mb-3 Data Transfers
+                        p.mb-4 The email address that we pass to Stripe, which is certified under the EU-U.S. and Swiss-U.S. Privacy Shield Frameworks, may be transferred to, and stored at, a destination outside the European Economic Area ("EEA"), for the purposes described in this policy. By submitting your personal data, you agree to this transfer, storing, or processing.
+                        h2.fw-bold.mb-3 Legal Basis for Processing
+                        p.mb-4 We process personal data on the following legal bases: your consent and performance of a membership payment.
+                        h2.fw-bold.mb-3 Your Rights
+                        p.mb-4 Under the GDPR, you have the right to access, rectify, or erase any personal data we have collected. You also have the right to data portability and the right to restrict or object to our processing of personal data we have collected about you.
+                        h2.fw-bold.mb-3 Contact Us
+                        p.mb-4 For any inquiries, questions, or comments about this privacy policy, please contact us by email: #[a(href='mailto:vorstand@esn-heidelberg.de') vorstand@esn-heidelberg.de].
+                        p.mb-4 This Privacy Policy was last updated on 01.09.2023.
