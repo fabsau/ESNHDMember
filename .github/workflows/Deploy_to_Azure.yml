@@ -33,8 +33,13 @@ jobs:
             "SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS=${{ secrets.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS }}" \
             "SUBSCRIPTION_PRICE_ID_ALUMNI_ANNUALLY=${{ secrets.SUBSCRIPTION_PRICE_ID_ALUMNI_ANNUALLY }}"
 
-      - name: Deploy to Azure
-        run: az webapp up --name esn-member --resource-group ESN --plan ESN_Plan
+      - name: Create Azure webapp
+        run: |
+          az webapp create --name esn-member --resource-group ESN --plan ESN_Plan --deployment-container-image-name fabsau/esn-hd-member:${{ env.VERSION }}
 
+      - name: Start Azure webapp
+        run: |
+          az webapp start --name esn-member --resource-group ESN
+      
       - name: Set HTTPS only
         run: az webapp update --resource-group ESN --name esn-member --set httpsOnly=true
