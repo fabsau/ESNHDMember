@@ -8,38 +8,19 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to Azure
+    name: Deploy to Azure Web App
     runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
     steps:
-      - name: Login to Azure
-        uses: azure/login@v1
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Set Azure webapp
-        run: az webapp config container set --name esn-member --resource-group ESN --docker-custom-image-name fabsau/esn-hd-member:${{ needs.push_to_registry.outputs.VERSION }} --docker-registry-server-url https://hub.docker.com/
-
-      - name: Set environment variables
-        run: |
-          az webapp config appsettings set --resource-group ESN --name esn-member --settings \
-            "BEHIND_PROXY=TRUE" \
-            "PORT=3000" \
-            "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" \
-            "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" \
-            "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" \
-            "STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}" \
-            "SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS=${{ secrets.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS }}" \
-            "SUBSCRIPTION_PRICE_ID_MEMBER_ANNUALLY=${{ secrets.SUBSCRIPTION_PRICE_ID_MEMBER_ANNUALLY }}" \
-            "SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS=${{ secrets.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS }}" \
-            "SUBSCRIPTION_PRICE_ID_ALUMNI_ANNUALLY=${{ secrets.SUBSCRIPTION_PRICE_ID_ALUMNI_ANNUALLY }}"
-
-      - name: Create Azure webapp
-        run: |
-          az webapp create --name esn-member --resource-group ESN --plan ESN_Plan --deployment-container-image-name fabsau/esn-hd-member:${{ env.VERSION }}
-
-      - name: Start Azure webapp
-        run: |
-          az webapp start --name esn-member --resource-group ESN
-      
-      - name: Set HTTPS only
-        run: az webapp update --resource-group ESN --name esn-member --set httpsOnly=true
+          app-name: 'esn-member'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_b9b6dcf4dd1647d5a62f5b12a1c43b2e }}
+          images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ed36785579e34fa993482a8be5b87efc }}/esn-hd-member:${{ env.VERSION }}'
