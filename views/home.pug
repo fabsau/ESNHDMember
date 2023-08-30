@@ -39,9 +39,7 @@ block content
                                 // Add checkbox to accept privacy policy
                                 .d-flex.justify-content-start.align-items-center
                                     input.form-check-input.privacy-checkbox(type='checkbox', name='privacyPolicy', id='privacyPolicy1', required)
-                                    label.form-check-label.ml-3.activate-membership(for='privacyPolicy1') I accept the&nbsp;
-                                    // open privacy link in new tab
-                                    a(href='/privacy', target='_blank') Privacy Policy
+                                    label.form-check-label.ml-3.activate-membership(for='privacyPolicy1') I accept the #[a(href='/privacy') Privacy Policy].
                                 .payment-icons.d-flex.mb-3.justify-content-start
                                     button.btn.btn-light.active(type='button', name='paymentMethod', class='sepa mr-2', value='SEPA')
                                         img(src="/images/bank.svg", alt="SEPA")
