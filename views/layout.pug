@@ -19,7 +19,8 @@ html
         nav.navbar.navbar-expand-md.bg-body.py-3.sticky-top.navbar-border
             .container
                 a.navbar-brand.d-flex.align-items-center(href="/home")
-                    span ESN Heidelberg Member Portal
+                    img(src="/images/ESN_heidelberg.svg", alt="ESN Heidelberg Logo", class="navbar-logo")
+                    span &nbsp;ESN Heidelberg Member Portal
                 if signedIn
                     button.navbar-toggler(data-bs-toggle="collapse", data-bs-target="#navcol-3")
                         span.visually-hidden Toggle navigation

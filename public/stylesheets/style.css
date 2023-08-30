@@ -204,6 +204,12 @@
 .text-muted {
   color: rgba(108,117,125);
 }
+.navbar-logo {
+  height: auto;
+  max-height: 40px; /* Adjust as needed */
+  width: auto;
+  max-width: 100%; /* Ensures the logo will scale down if it has to */
+}
 
 .google-sign-in-button {
   cursor: pointer;
@@ -252,7 +258,7 @@
   cursor: pointer;
   transition: background-color .3s, box-shadow .3s;
 
-  padding: 12px 68px;
+  padding: 11px 68px;
   border: none;
   border-radius: 3px;
   box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
