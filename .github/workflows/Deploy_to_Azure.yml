@@ -1,0 +1,40 @@
+name: Deploy to Azure
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Images"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy to Azure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set Azure webapp
+        run: az webapp config container set --name esn-member --resource-group ESN --docker-custom-image-name fabsau/esn-hd-member:${{ needs.push_to_registry.outputs.VERSION }} --docker-registry-server-url https://hub.docker.com/
+
+      - name: Set environment variables
+        run: |
+          az webapp config appsettings set --resource-group ESN --name esn-member --settings \
+            "BEHIND_PROXY=TRUE" \
+            "PORT=3000" \
+            "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" \
+            "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" \
+            "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+            "STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}" \
+            "SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS=${{ secrets.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS }}" \
+            "SUBSCRIPTION_PRICE_ID_MEMBER_ANNUALLY=${{ secrets.SUBSCRIPTION_PRICE_ID_MEMBER_ANNUALLY }}" \
+            "SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS=${{ secrets.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS }}" \
+            "SUBSCRIPTION_PRICE_ID_ALUMNI_ANNUALLY=${{ secrets.SUBSCRIPTION_PRICE_ID_ALUMNI_ANNUALLY }}"
+
+      - name: Deploy to Azure
+        run: az webapp up --name esn-member --resource-group ESN --plan ESN_Plan
+
+      - name: Set HTTPS only
+        run: az webapp update --resource-group ESN --name esn-member --set httpsOnly=true
