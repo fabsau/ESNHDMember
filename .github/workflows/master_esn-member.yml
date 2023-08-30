@@ -48,4 +48,4 @@ jobs:
         app-name: 'esn-member'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_b9b6dcf4dd1647d5a62f5b12a1c43b2e }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ed36785579e34fa993482a8be5b87efc }}/esn-hd-member:${{ github.sha }}'
+        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_ed36785579e34fa993482a8be5b87efc }}/esn-hd-member:${{ env.VERSION }}'
