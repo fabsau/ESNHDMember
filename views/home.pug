@@ -2,6 +2,8 @@ extends layout
 
 block content
     .container.mt-5
+        input(type='hidden', id='memberId', value= process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS)
+        input(type='hidden', id='alumniId', value= process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS)
         if message
             div(class="alert alert-" + message.type + " d-flex justify-content-between align-items-center")
                 p.mb-0= message.text

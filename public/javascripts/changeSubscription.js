@@ -2,13 +2,22 @@ var changeSubscriptionForm = document.getElementById('change-subscription-form')
 
 if (changeSubscriptionForm) {
     changeSubscriptionForm.addEventListener('submit', function() {
-        var currentPlanId = '#{currentPlan}';
-        var newPlanId;
-        if (currentPlanId == process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS) {
-            newPlanId = process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS;
-        } else {
-            newPlanId = process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS;
+        var currentPlanIdElement = document.getElementById('currentPlanId');
+        var memberIdElement = document.getElementById('memberId');
+        var alumniIdElement = document.getElementById('alumniId');
+
+        if (currentPlanIdElement && memberIdElement && alumniIdElement) {
+            var currentPlanId = currentPlanIdElement.value;
+            var memberId = memberIdElement.value;
+            var alumniId = alumniIdElement.value;
+            var newPlanId;
+
+            if (currentPlanId == memberId) {
+                newPlanId = alumniId;
+            } else {
+                newPlanId = memberId;
+            }
+            document.getElementById('newPlanId').value = newPlanId;
         }
-        document.getElementById('newPlanId').value = newPlanId;
     });
 }
