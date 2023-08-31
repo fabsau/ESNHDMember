@@ -371,13 +371,19 @@ footer {
 }
 
 .price-card {
-  background: #fff;
+
+  border: 2px solid var(--bs-dark-border-subtle); /* add or adjust as needed for more contrast */
   border-radius: 6px;
-  box-shadow: 0 0 20px 0 rgba(38,38,38,.2);
   margin: 0 1em;
   padding: 2em;
   position: relative;
-  width: 100%;
+  width: calc(100% - 2em); /* adjust width to account for margin */
+}
+
+.active-plan {
+  /* Add your styles for the active plan here. For example: */
+  border: 2px solid var(--bs-dark-border-subtle);
+  background-color: var(--bs-dark-bg-subtle);
 }
 
 .price-card h2 {

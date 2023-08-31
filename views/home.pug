@@ -13,7 +13,7 @@ block content
             - var plans = ['Member', 'Alumni']
             each plan, index in plans
                 .col-md-6.my-4
-                    .price-card
+                    .price-card(class=subscription && subscription.items.data[0].price.id == (index === 0 ? memberId : alumniId) ? 'active-plan' : '')
                         h2 #{plan}
                         .d-flex.align-items-center
                             if index === 0
