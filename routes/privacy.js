@@ -3,7 +3,7 @@ const router = express.Router();
 
 module.exports = function() {
     router.get("/", function (req, res) {
-            res.render('privacy');
+        res.render('privacy', { signedIn: !!req.user });
     });
 
     return router;
