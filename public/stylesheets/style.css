@@ -6,6 +6,20 @@
   --bs-breakpoint-xl: 1200px;
   --bs-breakpoint-xxl: 1400px;
   --bs-primary: #2e3192;
+  --bs-primary-rgb: 46,49,146;
+  --bs-primary-text-emphasis: #12143A;
+  --bs-primary-bg-subtle: #D5D6E9;
+  --bs-primary-border-subtle: #ABADD3;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
 }
 
 :root, [data-bs-theme=light] {
@@ -41,21 +55,6 @@
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
   --bs-primary-rgb: 46,49,146;
-  --bs-secondary-rgb: 108,117,125;
-  --bs-success-rgb: 25,135,84;
-  --bs-info-rgb: 13,202,240;
-  --bs-warning-rgb: 255,193,7;
-  --bs-danger-rgb: 220,53,69;
-  --bs-light-rgb: 248,249,250;
-  --bs-dark-rgb: 33,37,41;
-  --bs-primary-text-emphasis: #052c65;
-  --bs-secondary-text-emphasis: #2b2f32;
-  --bs-success-text-emphasis: #0a3622;
-  --bs-info-text-emphasis: #055160;
-  --bs-warning-text-emphasis: #664d03;
-  --bs-danger-text-emphasis: #58151c;
-  --bs-light-text-emphasis: #495057;
-  --bs-dark-text-emphasis: #495057;
   --bs-primary-bg-subtle: #cfe2ff;
   --bs-secondary-bg-subtle: #e2e3e5;
   --bs-success-bg-subtle: #d1e7dd;
@@ -135,6 +134,113 @@
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
 }
 
+.navbar-logo {
+  height: auto;
+  max-height: 40px; /* Adjust as needed */
+  width: auto;
+  max-width: 100%; /* Ensures the logo will scale down if it has to */
+}
+
+.nav-link.active {
+  color: #ffffff; /* Change to the color you want for active links */
+}
+
+.bs-icon {
+  --bs-icon-size: .75rem;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--bs-icon-size);
+  width: calc(var(--bs-icon-size) * 2);
+  height: calc(var(--bs-icon-size) * 2);
+  color: var(--bs-primary);
+}
+
+.bs-icon-xs {
+  --bs-icon-size: 1rem;
+  width: calc(var(--bs-icon-size) * 1.5);
+  height: calc(var(--bs-icon-size) * 1.5);
+}
+
+.bs-icon-sm {
+  --bs-icon-size: 1rem;
+}
+
+.bs-icon-md {
+  --bs-icon-size: 1.5rem;
+}
+
+.bs-icon-lg {
+  --bs-icon-size: 2rem;
+}
+
+.bs-icon-xl {
+  --bs-icon-size: 2.5rem;
+}
+
+.bs-icon.bs-icon-primary {
+  color: var(--bs-white);
+  background: var(--bs-primary);
+}
+
+.bs-icon.bs-icon-primary-light {
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), .2);
+}
+
+.bs-icon.bs-icon-semi-white {
+  color: var(--bs-primary);
+  background: rgba(255, 255, 255, .5);
+}
+
+.bs-icon.bs-icon-rounded {
+  border-radius: .5rem;
+}
+
+.bs-icon.bs-icon-circle {
+  border-radius: 50%;
+}
+
+:root, [data-bs-theme=light] {
+  --bs-primary: #2e3192;
+  --bs-primary-rgb: 46,49,146;
+  --bs-primary-text-emphasis: #12143A;
+  --bs-primary-bg-subtle: #D5D6E9;
+  --bs-primary-border-subtle: #ABADD3;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #2e3192;
+  --bs-btn-border-color: #2e3192;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #272A7C;
+  --bs-btn-hover-border-color: #252775;
+  --bs-btn-focus-shadow-rgb: 224,224,239;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #252775;
+  --bs-btn-active-border-color: #23256E;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #2e3192;
+  --bs-btn-disabled-border-color: #2e3192;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #2e3192;
+  --bs-btn-border-color: #2e3192;
+  --bs-btn-focus-shadow-rgb: 46,49,146;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #2e3192;
+  --bs-btn-hover-border-color: #2e3192;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #2e3192;
+  --bs-btn-active-border-color: #2e3192;
+  --bs-btn-disabled-color: #2e3192;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #2e3192;
+}
+
 .logout-button {
   background: var(--bs-primary);
   border-style: none;
@@ -204,12 +310,6 @@
 .text-muted {
   color: rgba(108,117,125);
 }
-.navbar-logo {
-  height: auto;
-  max-height: 40px; /* Adjust as needed */
-  width: auto;
-  max-width: 100%; /* Ensures the logo will scale down if it has to */
-}
 
 .google-sign-in-button {
   cursor: pointer;
@@ -229,29 +329,6 @@
   background-color: white;
   background-repeat: no-repeat;
   background-position: 12px 11px;
-}
-
-.google-sign-in-button:hover {
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 2px 4px rgba(0, 0, 0, .25);
-}
-
-.google-sign-in-button:active {
-  background-color: #eeeeee;
-}
-
-.google-sign-in-button:active {
-  outline: none;
-  box-shadow:
-          0 -1px 0 rgba(0, 0, 0, .04),
-          0 2px 4px rgba(0, 0, 0, .25),
-          0 0 0 3px #c8dafc;
-}
-
-.google-sign-in-button:disabled {
-  filter: grayscale(100%);
-  background-color: #ebebeb;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
-  cursor: not-allowed;
 }
 
 .signup-button {
@@ -291,10 +368,6 @@
 
 .no-underline {
   text-decoration: none;
-}
-
-.btn-primary {
-  background-color: var(--bs-primary) !important;
 }
 
 .price-card {

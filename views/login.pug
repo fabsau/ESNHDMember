@@ -1,15 +1,10 @@
 extends layout
 
 block content
-    .container.mt-5
-
-    .container-fluid.h-100
-        .text-white.bg-primary.border.rounded.border-0.p-4.py-5
-            .row.h-100
-                .col-md-10.col-xl-8.text-center.d-flex.d-sm-flex.d-md-flex.justify-content-center.align-items-center.mx-auto.justify-content-md-start.align-items-md-center.justify-content-xl-center
-                    div
-                        h1.fw-bold.text-white.mb-3 Welcome
-                        p.mb-4 To manage your Membership payments, please sign in with your @esn-heidelberg.de Account. If you are not registered yet, press the signup button below.
-                        a.no-underline.google-sign-in-button(href="/login") Sign in with Google
-                        p
-                        a.no-underline.btn.btn-danger.signup-button(href="https://forms.gle/QFcwvL79W9VR3ntD7", target="_blank") Signup
+    .card.bg-primary.text-white.rounded.p-4.py-5.my-5
+        h1.fw-bold.text-center.mb-4 Welcome
+        p.text-center.mb-4 To manage your Membership payments, please sign in with your @esn-heidelberg.de Account. If you are not registered yet, please signup with the button below.
+        .d-flex.flex-column.align-items-center
+            a.btn.btn-light.google-sign-in-button(href="/login") Sign in with Google
+            p
+            a.btn.btn-danger.signup-button(href="https://forms.gle/QFcwvL79W9VR3ntD7", target="_blank") Signup

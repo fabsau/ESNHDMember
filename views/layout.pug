@@ -16,21 +16,32 @@ html
         link(rel="stylesheet", href="/stylesheets/style.css")
 
     body(data-bs-theme="light")
-        nav.navbar.navbar-expand-md.bg-body.py-3.sticky-top.navbar-border
+        nav.navbar.navbar-expand-md.bg-dark.py-3.sticky-top.navbar-border(data-bs-theme="dark")
             .container
                 a.navbar-brand.d-flex.align-items-center(href="/home")
-                    img(src="/images/ESN_heidelberg.svg", alt="ESN Heidelberg Logo", class="navbar-logo")
+                    span.bs-icon-sm.bs-icon-rounded.bs-icon-primary.d-flex.justify-content-center.align-items-center.me-2
+                        img(src="/images/ESN_Heidelberg.svg", alt="ESN Heidelberg Logo", class="bi bi-bezier navbar-logo")
                     span &nbsp;ESN Heidelberg Member Portal
                 if signedIn
-                    button.navbar-toggler(data-bs-toggle="collapse", data-bs-target="#navcol-3")
+                    button.navbar-toggler(data-bs-toggle="collapse", data-bs-target="#navcol-5")
                         span.visually-hidden Toggle navigation
                         span.navbar-toggler-icon
-                .collapse.navbar-collapse#navcol-3
-                    ul.navbar-nav.mx-auto
+                .collapse.navbar-collapse#navcol-5
                     if signedIn
-                        form(action="/logout", method="POST")
-                            input(type='hidden', name='_csrf', value=csrfToken)
-                            button.btn.btn-primary.logout-button(type="submit") Logout
+                        ul.navbar-nav.ms-auto
+                            li.nav-item
+                                a.nav-link(href="/home", class=page === 'home' ? 'active' : '') Home
+                            li.nav-item
+                                a.nav-link(href="/admin", class=page === 'admin' ? 'active' : '') Admin
+                            form(action="/logout", method="POST")
+                                input(type='hidden', name='_csrf', value=csrfToken)
+                                button.btn.btn-primary.ms-md-2.logout-button(type="submit") Logout
+                    else
+                        ul.navbar-nav.ms-auto
+                            a.no-underline.btn.btn-primary.ms-md-2(href="/") Login
+
+
+
 
         // Blank content block to be filled by individual pages
         block content
@@ -40,20 +51,13 @@ html
         script(src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js", crossorigin="anonymous")
 
         //- Footer
-        footer.text-center.py-4
-            hr
-            .container
-                .row
-                    .col.text-left
-                        p.text-muted.my-2 © #{new Date().getFullYear()} Erasmus Student Network Heidelberg e.V.
-                    .col.text-end
-                        ul.list-inline.my-2
-                            li.list-inline-item
-                                a.no-underline.link-secondary(href="/imprint") Imprint
-                                a.no-underline.link-secondary &nbsp;|&nbsp;
-                                a.no-underline.link-secondary(href="/privacy") Privacy Policy
-                                a.no-underline.link-secondary &nbsp;|&nbsp;
-                                a.no-underline.link-secondary Version: #{process.env.APP_VERSION}
-                            li.list-inline-item
-                                a(href="https://github.com/fabsau/ESNHDMember")
-                                    img(src="/images/github.svg", alt="GitHub")
+        footer.text-center.bg-dark
+            .container.text-white.py-4.py-lg-5
+                ul.list-inline
+                    li.list-inline-item.me-4
+                        a.no-underline.link-light(href="/imprint") Imprint
+                    li.list-inline-item.me-4
+                        a.no-underline.link-light(href="/privacy") Privacy Policy
+                    li.list-inline-item
+                        a.no-underline.link-light(href="https://github.com/fabsau/ESNHDMember") Version: #{process.env.APP_VERSION}
+                p © #{new Date().getFullYear()} Erasmus Student Network Heidelberg e.V.
