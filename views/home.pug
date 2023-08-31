@@ -13,7 +13,7 @@ block content
             - var plans = ['Member', 'Alumni']
             each plan, index in plans
                 .col-md-6.my-4
-                    .price-card(class=subscription && subscription.items.data[0].price.id == (index === 0 ? memberId : alumniId) ? 'active-plan' : '')
+                    .price-card(class=subscription && subscription.items.data[0].price.id == (index === 0 ? memberId : alumniId) ? 'active-plan': '')
                         h2 #{plan}
                         .d-flex.align-items-center
                             if index === 0
@@ -21,6 +21,7 @@ block content
                             else
                                 p.price(id='alumni-price', class='mb-0') 10€
                             p.period(id=(index === 0 ? 'member-period' : 'alumni-period'), class='text-secondary') (every 6 Months)
+                        .separate-line
                         if index === 0
                             p.description Best for new and existing members
                         else
@@ -43,10 +44,10 @@ block content
                                     input.form-check-input.privacy-checkbox(type='checkbox', name='privacyPolicy', id='privacyPolicy' + (index + 1), required)
                                     label.form-check-label.ml-3.activate-membership(for='privacyPolicy' + (index + 1)) I accept the #[a(href='/privacy') Privacy Policy].
                                 .payment-icons.d-flex.mb-3.justify-content-start
-                                    button.btn.btn-light.active(type='button', name='paymentMethod', class='sepa mr-2', value='SEPA')
+                                    button.btn.btn-light.active(type='button', name='paymentMethod', class='sepa mr-2 payment-option-border')
                                         img(src="/images/bank.svg", alt="SEPA")
                                         | SEPA
-                                    button.btn.btn-light(type='button', name='paymentMethod', class='visa', value='Visa')
+                                    button.btn.btn-light(type='button', name='paymentMethod', class='visa payment-option-border')
                                         img(src="/images/credit-card-fill.svg", alt="Credit Card")
                                         | Credit Card
                                 button.btn.btn-primary Pay
