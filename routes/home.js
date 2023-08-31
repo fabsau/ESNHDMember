@@ -56,7 +56,8 @@ module.exports = function(stripe, isAuthenticated) {
                 plans: plans,
                 memberId: process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS,
                 alumniId: process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS,
-                signedIn: true
+                signedIn: true,
+                page: 'home'
 
             };
             renderOptions.message = req.session.message;
