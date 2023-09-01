@@ -4,11 +4,10 @@ block content
     .container.mt-5
         h1 Admin Page
         br
-        h4 Statistics
         table.table.table-striped
             thead
                 tr
-                    th Statistic
+                    th Statistics
                     th Count
             tbody
                 tr
@@ -26,6 +25,8 @@ block content
                 tr
                     td No Plan
                     td #{stats.noPlan}
+        br
+        br
         .table-responsive
             table#users-table.table.table-striped.table-bordered(data-order='[[ 0, "asc" ]]', data-page-length='100')
                 thead
@@ -58,7 +59,9 @@ block content
                             td
                                 if user.subscription
                                     button.cancel-btn(data-user-email=user.primaryEmail) Cancel
-
+            .d-flex.justify-content-between
+                .dataTables_info.dataTables_info_custom
+                .dataTables_paginate
 
 
     block scripts

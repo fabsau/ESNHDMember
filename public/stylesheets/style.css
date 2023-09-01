@@ -499,3 +499,33 @@ footer {
 html {
   overflow-y: scroll;
 }
+
+.dataTables_wrapper .dataTables_filter {
+  text-align: left;
+}
+
+.dataTables_wrapper .dt-buttons {
+  text-align: center;
+}
+
+.dataTables_wrapper .dataTables_length {
+  text-align: left;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+  text-align: right;
+}
+
+.dataTables_wrapper .dataTables_info {
+  text-align: right;
+}
+
+.dataTables_wrapper .dataTables_info_custom {
+  position: absolute;
+  right: 0;
+  bottom: -1px; /* Adjust this value based on your needs */
+}
+
+.dataTables_wrapper .d-flex.justify-content-between {
+  position: relative;
+}

@@ -3,13 +3,28 @@ $(document).ready(function() {
         "lengthMenu": [[25, 50, 75, 100, 150, 200, -1], [25, 50, 75, 100, 150, 200, "All"]],
         "autoWidth": false,
         "responsive": true,
-        "dom": 'Blfrtip',
+        "dom": "<'row'<'col-sm-12 text-right'i>><'row'<'col-sm-2'f><'col-sm-8 text-center'B><'col-sm-2'l>p>rt<'row'<'col-sm-2'f><'col-sm-8 text-center'B><'col-sm-2'l>p><'row'<'col-sm-12 text-right'i>>",
         "buttons": [
-            'copy',
-            'excel',
-            'csv',
-            'pdf',
-            'print'
+            {
+                "extend": 'copy',
+                "className": 'btn-sm'
+            },
+            {
+                "extend": 'excel',
+                "className": 'btn-sm'
+            },
+            {
+                "extend": 'csv',
+                "className": 'btn-sm'
+            },
+            {
+                "extend": 'pdf',
+                "className": 'btn-sm'
+            },
+            {
+                "extend": 'print',
+                "className": 'btn-sm'
+            }
         ],
         "columnDefs": [
             { type: "string", targets: [2, 3] }
@@ -21,6 +36,7 @@ $(document).ready(function() {
         { column_number: 3, filter_type: "multi_select", select_type: 'select2' }
     ]);
 });
+
 
 $('.cancel-btn').click(function() {
     const userEmail = $(this).data('user-email');
