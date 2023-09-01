@@ -113,7 +113,7 @@ module.exports = (isAuthenticated) => {
             const customerEmailIdMap = await fetchAllCustomers();
 
             let allUsers = [];
-            let stats = { totalUsers: 0, activeSubscriptions: 0, member: 0, alumni: 0, noPlan: 0 };
+            let stats = { totalUsers: 0, activeSubscriptions: 0, member: 0, alumni: 0, cancelled: 0, noPlan: 0 };
             let pageToken;
             do {
                 const users = await fetchUsers(pageToken);
@@ -138,6 +138,7 @@ module.exports = (isAuthenticated) => {
                             if (user.planDisplayName === 'Alumni') stats.alumni++;
                         } else if (user.paymentHistory && user.paymentHistory.length > 0) {
                             user.planDisplayName = 'Cancelled';
+                            stats.cancelled++;
                         } else {
                             user.planDisplayName = 'Never Paid';
                         }
