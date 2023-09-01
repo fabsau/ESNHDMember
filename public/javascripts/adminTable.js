@@ -4,26 +4,29 @@ $(document).ready(function() {
         "autoWidth": false,
         "responsive": true,
         "dom": "<'row'<'col-sm-12 text-right'i>><'row'<'col-sm-2'f><'col-sm-8 text-center'B><'col-sm-2'l>p>rt<'row'<'col-sm-2'f><'col-sm-8 text-center'B><'col-sm-2'l>p><'row'<'col-sm-12 text-right'i>>",
+        "initComplete": function(){
+            $('div.dataTables_filter input').addClass('form-control form-control-sm'); // Adding Bootstrap classes to search input
+        },
         "buttons": [
             {
                 "extend": 'copy',
-                "className": 'btn-sm'
+                "className": 'btn btn-primary btn-sm' // Adding Bootstrap classes to buttons
             },
             {
                 "extend": 'excel',
-                "className": 'btn-sm'
+                "className": 'btn btn-primary btn-sm'
             },
             {
                 "extend": 'csv',
-                "className": 'btn-sm'
+                "className": 'btn btn-primary btn-sm'
             },
             {
                 "extend": 'pdf',
-                "className": 'btn-sm'
+                "className": 'btn btn-primary btn-sm'
             },
             {
                 "extend": 'print',
-                "className": 'btn-sm'
+                "className": 'btn btn-primary btn-sm'
             }
         ],
         "columnDefs": [
