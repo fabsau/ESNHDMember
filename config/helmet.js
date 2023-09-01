@@ -3,9 +3,31 @@ module.exports = function(app, helmet) {
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                scriptSrc: ["'self'", "https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js", "https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js"],
+                scriptSrc: [
+                    "'self'",
+                    "https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js",
+                    "https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js",
+                    "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js",
+                    "https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js",
+                    "https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js",
+                    "https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js",
+                    "https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js",
+                    "https://cdn.datatables.net/colreorder/1.7.0/js/dataTables.colReorder.min.js",
+                    "https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js",
+                    "https://cdnjs.cloudflare.com/ajax/libs/yadcf/0.9.4/jquery.dataTables.yadcf.min.js",
+                    "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+                ],
+                scriptSrcAttr: ["'unsafe-inline'"],
                 imgSrc: ["'self'", "data:"],
-                styleSrc: ["'self'", "https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css", "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"],
+                styleSrc: [
+                    "'self'",
+                    "https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css",
+                    "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css",
+                    "https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css",
+                    "https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css",
+                    "https://cdn.datatables.net/colreorder/1.7.0/css/colReorder.bootstrap5.min.css",
+                    "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+                ],
                 fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
                 frameSrc: ["'self'"],
                 connectSrc: ["'self'"],
