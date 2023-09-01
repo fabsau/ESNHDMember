@@ -6,7 +6,7 @@ const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 
 module.exports = (isAuthenticated) => {
     router.get('/', isAuthenticated, async (req, res) => {
-        if (req.user.ou == process.env.GOOGLE_ADMIN_OU) {
+        if (req.user.ou.startsWith == process.env.GOOGLE_ADMIN_OU) {
             // Define your subscription plan ids
             const planDisplayNames = {
                 [process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS]: 'Member',
