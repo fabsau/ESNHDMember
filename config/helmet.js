@@ -15,7 +15,12 @@ module.exports = function(app, helmet) {
                     "https://cdn.datatables.net/colreorder/1.7.0/js/dataTables.colReorder.min.js",
                     "https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js",
                     "https://cdnjs.cloudflare.com/ajax/libs/yadcf/0.9.4/jquery.dataTables.yadcf.min.js",
-                    "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+                    "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js",
+                    "https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js",
+                    "https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js",
+                    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js",
+                    "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.min.js",
+                    "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
                 ],
                 scriptSrcAttr: ["'unsafe-inline'"],
                 imgSrc: ["'self'", "data:"],

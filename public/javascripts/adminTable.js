@@ -3,8 +3,14 @@ $(document).ready(function() {
         "lengthMenu": [[25, 50, 75, 100, 150, 200, -1], [25, 50, 75, 100, 150, 200, "All"]],
         "autoWidth": false,
         "responsive": true,
-        "dom": 'Blftrip',
-        "buttons": [ 'copy', 'excel', 'pdf', 'print' ],
+        "dom": 'Blfrtip',
+        "buttons": [
+            'copy',
+            'excel',
+            'csv',
+            'pdf',
+            'print'
+        ],
         "columnDefs": [
             { type: "string", targets: [2, 3] }
         ]
