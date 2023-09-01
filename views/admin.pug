@@ -2,31 +2,55 @@ extends layout
 
 block content
     .container.mt-5
-        table#users-table.table.table-striped.table-bordered(data-order='[[ 1, "asc" ]]', data-page-length='100')
+        h1 Admin Page
+        br
+        h4 Statistics
+        table.table.table-striped
             thead
                 tr
-                    th Name
-                    th Joined
-                    th Org Unit
-                    th Member Type
-                    th Next payment
-            tfoot
-                tr
-                    th Name
-                    th Joined
-                    th Org Unit
-                    th Member Type
-                    th Next payment
+                    th Statistic
+                    th Count
             tbody
-                each user in users
+                tr
+                    td Users
+                    td #{stats.totalUsers}
+                tr
+                    td Active Subscriptions
+                    td #{stats.activeSubscriptions}
+                tr
+                    td Member
+                    td #{stats.member}
+                tr
+                    td Alumni
+                    td #{stats.alumni}
+                tr
+                    td No Plan
+                    td #{stats.noPlan}
+        .table-responsive
+            table#users-table.table.table-striped.table-bordered(data-order='[[ 1, "asc" ]]', data-page-length='100')
+                thead
                     tr
-                        td= user.name.fullName
-                        td= user.creationTime.split("T")[0]
-                        - var orgUnitPaths = user.orgUnitPath.split("/")
-                        - var orgUnit = user.orgUnitPath === '/' ? '/' : (orgUnitPaths.length > 2 ? orgUnitPaths[2] : orgUnitPaths[1])
-                        td= orgUnit
-                        td= user.planDisplayName ? user.planDisplayName : 'Not paying'
-                        td= user.subscription ? new Date(user.subscription.current_period_end * 1000).toISOString().split("T")[0] : ''
+                        th Name
+                        th Joined
+                        th Org Unit
+                        th Member Type
+                        th Next payment
+                        th Payment History
+                tbody
+                    each user in users
+                        tr
+                            td= user.name.fullName
+                            td= user.creationTime.split("T")[0]
+                            - var orgUnitPaths = user.orgUnitPath.split("/")
+                            - var orgUnit = user.orgUnitPath === '/' ? '/' : (orgUnitPaths.length > 2 ? orgUnitPaths[2] : orgUnitPaths[1])
+                            td= orgUnit
+                            td= user.planDisplayName ? user.planDisplayName : 'Not paying'
+                            td= user.subscription ? new Date(user.subscription.current_period_end * 1000).toISOString().split("T")[0] : ''
+                            td
+                                if user.paymentHistory
+                                    each invoice in user.paymentHistory
+                                        div= new Date(invoice.created * 1000).toISOString().split("T")[0] + ': ' + invoice.total / 100 + ' ' + invoice.currency.toUpperCase()
+
 
 
     block scripts

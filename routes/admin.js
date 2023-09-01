@@ -6,7 +6,7 @@ const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 
 module.exports = (isAuthenticated) => {
     router.get('/', isAuthenticated, async (req, res) => {
-        if (req.user.ou.startsWith == process.env.GOOGLE_ADMIN_OU) {
+        if (req.user.ou == process.env.GOOGLE_ADMIN_OU) {
             // Define your subscription plan ids
             const planDisplayNames = {
                 [process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS]: 'Member',
@@ -82,6 +82,14 @@ module.exports = (isAuthenticated) => {
                             user.subscription = subscription;
                             user.planId = subscription.items.data[0].price.id;
                             user.planDisplayName = planDisplayNames[user.planId];
+
+                            // Fetch the payment history (invoices) for the customer
+                            const invoices = await stripe.invoices.list({
+                                customer: customerId,
+                            });
+
+                            // Add payment history to the user object
+                            user.paymentHistory = invoices.data;
                         }
                     }
                 }
@@ -90,7 +98,15 @@ module.exports = (isAuthenticated) => {
                 pageToken = users.data.nextPageToken;
             } while (pageToken);
 
-            res.render('admin', { users: allUsers, signedIn: !!req.user, page: 'admin' });
+            const stats = {
+                totalUsers: allUsers.length,
+                activeSubscriptions: allUsers.filter(user => user.subscription).length,
+                member: allUsers.filter(user => user.planDisplayName === 'Member').length,
+                alumni: allUsers.filter(user => user.planDisplayName === 'Alumni').length,
+                noPlan: allUsers.filter(user => !user.subscription).length
+            };
+
+            res.render('admin', { users: allUsers, stats, signedIn: !!req.user, page: 'admin' });
         } else {
             res.status(403).send('Unauthorized');
         }
