@@ -1,0 +1,55 @@
+extends layout
+
+block content
+    .container.mt-5
+        table#users-table.table.table-striped.table-bordered(data-order='[[ 1, "asc" ]]', data-page-length='100')
+            thead
+                tr
+                    th Name
+                    th Joined
+                    th Org Unit
+                    th Member Type
+                    th Next payment
+            tfoot
+                tr
+                    th Name
+                    th Joined
+                    th Org Unit
+                    th Member Type
+                    th Next payment
+            tbody
+                each user in users
+                    tr
+                        td= user.name.fullName
+                        td= user.creationTime.split("T")[0]
+                        - var orgUnitPaths = user.orgUnitPath.split("/")
+                        - var orgUnit = user.orgUnitPath === '/' ? '/' : (orgUnitPaths.length > 2 ? orgUnitPaths[2] : orgUnitPaths[1])
+                        td= orgUnit
+                        td= user.planDisplayName ? user.planDisplayName : 'Not paying'
+                        td= user.subscription ? new Date(user.subscription.current_period_end * 1000).toISOString().split("T")[0] : ''
+
+
+    block scripts
+        script(src="/javascripts/message.js")
+        // JQuery
+        script(src='https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js')
+
+        // DataTables
+        script(src='https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js')
+        script(src='https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js')
+
+        // Buttons
+        script(src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js")
+        script(src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js")
+
+        // ColReorder
+        script(src="https://cdn.datatables.net/colreorder/1.7.0/js/dataTables.colReorder.min.js")
+
+        // Colvis
+        script(src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js")
+
+        //YADCF
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js')
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/yadcf/0.9.4/jquery.dataTables.yadcf.min.js")
+
+        script(src="/javascripts/adminTable.js")
