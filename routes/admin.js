@@ -108,7 +108,8 @@ async function fetchActiveCustomerSubscription(customerId) {
 
 module.exports = (isAuthenticated) => {
     router.get('/', isAuthenticated, async (req, res) => {
-        if (req.user.ou == process.env.GOOGLE_ADMIN_OU) {
+        const baseOU = process.env.BASE_OU;
+        if (req.user.ou.startsWith(baseOU)) {
             const customerSubscriptionsMap = await fetchAllSubscriptions(planDisplayNames);
             const customerEmailIdMap = await fetchAllCustomers();
 
