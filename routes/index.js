@@ -10,8 +10,10 @@ const logoutRoutes = require('./logout');
 const healthcheckRoutes = require('./healthcheck');
 const robotsRoutes = require('./robots');
 const errorRoutes = require('./error');
+const attachRoute = require('../middlewares/attachRoute');
 
 module.exports = function(app, passport, stripe, isAuthenticated) {
+    app.use(attachRoute);
     app.use('/', authRoutes(passport));
     app.use('/home', homeRoutes(stripe, isAuthenticated));
     app.use('/admin', adminRoutes(isAuthenticated));
