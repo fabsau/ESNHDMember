@@ -45,7 +45,7 @@ block content
                             - var orgUnitPaths = user.orgUnitPath.split("/")
                             - var orgUnit = user.orgUnitPath === '/' ? '/' : (orgUnitPaths.length > 2 ? orgUnitPaths[2] : orgUnitPaths[1])
                             td= orgUnit
-                            td= user.planDisplayName ? user.planDisplayName : 'Not paying'
+                            td= user.planDisplayName ? user.planDisplayName : 'Never Paid'
                             td= user.subscription ? new Date(user.subscription.current_period_end * 1000).toISOString().split("T")[0] : ''
                             td
                                 if user.paymentHistory

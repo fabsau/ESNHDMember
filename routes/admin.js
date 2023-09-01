@@ -78,18 +78,33 @@ module.exports = (isAuthenticated) => {
                     if (customerId) {
                         // Get the subscription using the customer id
                         const subscription = customerSubscriptionsMap.get(customerId);
-                        if (subscription) {
-                            user.subscription = subscription;
-                            user.planId = subscription.items.data[0].price.id;
+
+                        // Fetch all subscriptions for the customer
+                        const customerSubscriptions = await stripe.subscriptions.list({ customer: customerId });
+                        const activeSubscription = customerSubscriptions.data.find(sub => sub.status === 'active');
+
+                        // Fetch the payment history (invoices) for the customer
+                        const invoices = await stripe.invoices.list({
+                            customer: customerId,
+                        });
+
+                        // Add payment history to the user object
+                        user.paymentHistory = invoices.data;
+
+                        if (activeSubscription) {
+                            user.subscription = activeSubscription;
+                            user.planId = activeSubscription.items.data[0].price.id;
                             user.planDisplayName = planDisplayNames[user.planId];
-
-                            // Fetch the payment history (invoices) for the customer
-                            const invoices = await stripe.invoices.list({
-                                customer: customerId,
-                            });
-
-                            // Add payment history to the user object
-                            user.paymentHistory = invoices.data;
+                        } else if (user.paymentHistory && user.paymentHistory.length > 0) {
+                            const cancelledSubscription = customerSubscriptions.data.find(sub => sub.ended_at != null);
+                            if (cancelledSubscription) {
+                                const cancellationDate = new Date(cancelledSubscription.ended_at * 1000).toISOString().slice(0, 10);
+                                user.planDisplayName = 'Cancelled - ' + cancellationDate;
+                            } else {
+                                user.planDisplayName = 'Cancelled';
+                            }
+                        } else {
+                            user.planDisplayName = 'Never Paid';
                         }
                     }
                 }
