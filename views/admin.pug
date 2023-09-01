@@ -27,7 +27,7 @@ block content
                     td No Plan
                     td #{stats.noPlan}
         .table-responsive
-            table#users-table.table.table-striped.table-bordered(data-order='[[ 1, "asc" ]]', data-page-length='100')
+            table#users-table.table.table-striped.table-bordered(data-order='[[ 0, "asc" ]]', data-page-length='100')
                 thead
                     tr
                         th Name
@@ -37,6 +37,7 @@ block content
                         th Next payment
                         th Payment History
                         th Manage
+                        th Cancel
                 tbody
                     each user in users
                         tr
@@ -54,6 +55,9 @@ block content
                             td
                                 if user.subscription
                                     button.manage-btn(data-stripe-id=user.subscription.customer) Manage
+                            td
+                                if user.subscription
+                                    button.cancel-btn(data-user-email=user.primaryEmail) Cancel
 
 
 

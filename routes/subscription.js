@@ -70,5 +70,30 @@ module.exports = function(stripe, isAuthenticated) {
         }
     });
 
+    router.post("/admin-cancel-subscription", isAuthenticated, async (req, res) => {
+        const { email } = req.body;
+
+        try {
+            const customers = await stripe.customers.list({ email: email, limit: 1 });
+
+            if (customers.data.length > 0) {
+                const customerId = customers.data[0].id;
+                const subscriptions = await stripe.subscriptions.list({ customer: customerId });
+
+                for (const subscription of subscriptions.data) {
+                    await stripe.subscriptions.cancel(subscription.id);
+                }
+            }
+
+            res.json({ message: 'Cancellation was successful!' });
+
+        } catch (error) {
+            console.error('Error cancelling subscription:', error);
+            res.status(500).json({ message: 'Error cancelling subscription. Please try again.' });
+        }
+    });
+
+
+
     return router;
 };
