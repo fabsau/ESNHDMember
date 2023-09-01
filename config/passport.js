@@ -1,16 +1,42 @@
+const { google } = require('googleapis');
+const admin = google.admin('directory_v1');
+
 module.exports = function(passport, GoogleStrategy, app, session) {
+    const jwtClient = new google.auth.JWT(
+        process.env.GOOGLE_ADMIN_CLIENT_EMAIL,
+        null,
+        process.env.GOOGLE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        ['https://www.googleapis.com/auth/admin.directory.user.readonly'],
+        process.env.GOOGLE_ADMIN_USER
+    );
+
+    google.options({ auth: jwtClient });
+
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: '/auth/google/callback'
-    }, function(accessToken, refreshToken, profile, done) {
+    }, async function(accessToken, refreshToken, profile, done) {
         let { given_name: firstName, family_name: lastName, email } = profile._json;
+
+        // Fetch user's organizational unit
+        let userDirectory;
+        try {
+            userDirectory = await admin.users.get({
+                userKey: email,
+            });
+        } catch (err) {
+            console.log('Error fetching user directory details: ', err);
+            return done(err);
+        }
+
         let user = {
             id: profile.id,
             displayName: profile.displayName,
             givenName: firstName,
             familyName: lastName,
-            email: email
+            email: email,
+            ou: userDirectory.data.orgUnitPath
         };
         return done(null, user);
     }));
