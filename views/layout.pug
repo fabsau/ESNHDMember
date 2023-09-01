@@ -42,7 +42,7 @@ html
                             form(action="/logout", method="POST")
                                 input(type='hidden', name='_csrf', value=csrfToken)
                                 button.btn.btn-primary.ms-md-2.logout-button(type="submit") Logout
-                    else
+                    else if route !== '/'
                         ul.navbar-nav.ms-auto
                             a.no-underline.btn.btn-primary.ms-md-2(href="/") Login
 
