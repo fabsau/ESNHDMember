@@ -15,3 +15,8 @@ $(document).ready(function() {
         { column_number: 3, filter_type: "multi_select", select_type: 'select2' }
     ]);
 });
+$('.manage-btn').click(function() {
+    const customerId = $(this).data('stripe-id');
+    const url = `https://dashboard.stripe.com/customers/${customerId}`;
+    window.open(url, '_blank');
+});

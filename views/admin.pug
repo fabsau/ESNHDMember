@@ -36,6 +36,7 @@ block content
                         th Member Type
                         th Next payment
                         th Payment History
+                        th Manage
                 tbody
                     each user in users
                         tr
@@ -50,6 +51,9 @@ block content
                                 if user.paymentHistory
                                     each invoice in user.paymentHistory
                                         div= new Date(invoice.created * 1000).toISOString().split("T")[0] + ': ' + invoice.total / 100 + ' ' + invoice.currency.toUpperCase()
+                            td
+                                if user.subscription
+                                    button.manage-btn(data-stripe-id=user.subscription.customer) Manage
 
 
 
