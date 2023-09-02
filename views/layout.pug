@@ -3,14 +3,14 @@ html
     head
         // Set title and import necessary stylesheets and scripts
         title ESN Heidelberg Member Portal
-        link(rel="icon", href="/images/favicon.png")
+        link(rel="icon" href="/images/favicon.png")
         meta(charset="utf-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
+        meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
         // Bootstrap CSS
-        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css", crossorigin="anonymous")
+        link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" crossorigin="anonymous")
         // Bootstrap Icons
-        // link(href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css", rel="stylesheet")
-        link(rel='stylesheet', href='https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css')
+        // link(href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css" rel="stylesheet")
+        link(rel='stylesheet' href='https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css')
 
         // DataTables
         link(rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css")
@@ -19,17 +19,17 @@ html
         link(rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css")
 
         // Custom CSS
-        link(rel="stylesheet", href="/stylesheets/style.css")
+        link(rel="stylesheet" href="/stylesheets/style.css")
 
     body(data-bs-theme="light")
         nav.navbar.navbar-expand-md.bg-dark.py-3.sticky-top.navbar-border(data-bs-theme="dark")
             .container
                 a.navbar-brand.d-flex.align-items-center(href="/home")
                     span.bs-icon-sm.bs-icon-rounded.bs-icon-primary.d-flex.justify-content-center.align-items-center.me-2
-                        img(src="/images/ESN_Heidelberg.svg", alt="ESN Heidelberg Logo", class="bi bi-bezier navbar-logo")
+                        img(src="/images/ESN_Heidelberg.svg" alt="ESN Heidelberg Logo" class="bi bi-bezier navbar-logo")
                     span &nbsp;ESN Heidelberg Member Portal
                 if signedIn
-                    button.navbar-toggler(data-bs-toggle="collapse", data-bs-target="#navcol-5")
+                    button.navbar-toggler(data-bs-toggle="collapse" data-bs-target="#navcol-5")
                         span.visually-hidden Toggle navigation
                         span.navbar-toggler-icon
                 .collapse.navbar-collapse#navcol-5
@@ -39,8 +39,8 @@ html
                                 a.nav-link(href="/home", class=page === 'home' ? 'active' : '') Home
                             li.nav-item
                                 a.nav-link(href="/admin", class=page === 'admin' ? 'active' : '') Admin
-                            form(action="/logout", method="POST")
-                                input(type='hidden', name='_csrf', value=csrfToken)
+                            form(action="/logout" method="POST")
+                                input(type='hidden' name='_csrf', value=csrfToken)
                                 button.btn.btn-primary.ms-md-2.logout-button(type="submit") Logout
                     else if route !== '/'
                         ul.navbar-nav.ms-auto
@@ -49,9 +49,9 @@ html
         // Blank content block to be filled by individual pages
         block content
         // Popper.js
-        script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js", crossorigin="anonymous")
+        script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js" crossorigin="anonymous")
         // Bootstrap's JavaScript
-        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js", crossorigin="anonymous")
+        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js" crossorigin="anonymous")
         script(src="/javascripts/mobileLayout.js")
 
         //- Footer

@@ -4,13 +4,13 @@
 const app = require("../app");
 const http = require("./http");
 const https = require("./https");
-const serverUtils = require('./serverUtils');
+const serverUtils = require("./serverUtils");
 
 let port = serverUtils.normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 if (process.env.BEHIND_PROXY === "TRUE") {
-  app.enable('trust proxy');
+  app.enable("trust proxy");
 }
 
 let server;
@@ -21,11 +21,10 @@ if (process.env.ENABLE_HTTPS === "TRUE") {
   server = http.createServer(app);
 }
 
-if(server) {
+if (server) {
   server.listen(port);
-  server.on('error', (error) => serverUtils.onError(error, port));
-  server.on('listening', () => serverUtils.onListening(server));
-}
-else {
-  console.error("Server cannot be initialized. Check your configurations.")
+  server.on("error", (error) => serverUtils.onError(error, port));
+  server.on("listening", () => serverUtils.onListening(server));
+} else {
+  console.error("Server cannot be initialized. Check your configurations.");
 }

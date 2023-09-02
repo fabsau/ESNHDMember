@@ -31,7 +31,7 @@ block content
         br
         br
         .table-responsive
-            table#users-table.table.table-striped.table-bordered(data-order='[[ 0, "asc" ]]', data-page-length='100')
+            table#users-table.table.table-striped.table-bordered(data-order='[[ 0, "asc" ]]' data-page-length='100')
                 thead
                     tr
                         th Name
@@ -51,7 +51,7 @@ block content
                             - var orgUnit = user.orgUnitPath === '/' ? '/' : (orgUnitPaths.length > 2 ? orgUnitPaths[2] : orgUnitPaths[1])
                             td= orgUnit
                             td= user.planDisplayName ? user.planDisplayName : 'Never Paid'
-                            td= user.subscription ? new Date(user.subscription.current_period_end * 1000).toISOString().split("T")[0] : ''
+                            td= user.subscription ? new Date(user.subscription.current_period_end * 1000).toISOString().split("T")[0] : '' 
                             td
                                 if user.paymentHistory
                                     each invoice in user.paymentHistory

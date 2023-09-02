@@ -6,10 +6,10 @@
   --bs-breakpoint-xl: 1200px;
   --bs-breakpoint-xxl: 1400px;
   --bs-primary: #2e3192;
-  --bs-primary-rgb: 46,49,146;
-  --bs-primary-text-emphasis: #12143A;
-  --bs-primary-bg-subtle: #D5D6E9;
-  --bs-primary-border-subtle: #ABADD3;
+  --bs-primary-rgb: 46, 49, 146;
+  --bs-primary-text-emphasis: #12143a;
+  --bs-primary-bg-subtle: #d5d6e9;
+  --bs-primary-border-subtle: #abadd3;
 }
 
 body {
@@ -22,7 +22,8 @@ footer {
   margin-top: auto;
 }
 
-:root, [data-bs-theme=light] {
+:root,
+[data-bs-theme="light"] {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
@@ -54,7 +55,7 @@ footer {
   --bs-danger: #dc3545;
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
-  --bs-primary-rgb: 46,49,146;
+  --bs-primary-rgb: 46, 49, 146;
   --bs-primary-bg-subtle: #cfe2ff;
   --bs-secondary-bg-subtle: #e2e3e5;
   --bs-success-bg-subtle: #d1e7dd;
@@ -71,35 +72,42 @@ footer {
   --bs-danger-border-subtle: #f1aeb5;
   --bs-light-border-subtle: #e9ecef;
   --bs-dark-border-subtle: #adb5bd;
-  --bs-white-rgb: 255,255,255;
-  --bs-black-rgb: 0,0,0;
-  --bs-font-sans-serif: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-  --bs-font-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  --bs-white-rgb: 255, 255, 255;
+  --bs-black-rgb: 0, 0, 0;
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
   --bs-body-font-family: var(--bs-font-sans-serif);
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
   --bs-body-color: #212529;
-  --bs-body-color-rgb: 33,37,41;
+  --bs-body-color-rgb: 33, 37, 41;
   --bs-body-bg: #fff;
-  --bs-body-bg-rgb: 255,255,255;
+  --bs-body-bg-rgb: 255, 255, 255;
   --bs-emphasis-color: #000;
-  --bs-emphasis-color-rgb: 0,0,0;
+  --bs-emphasis-color-rgb: 0, 0, 0;
   --bs-secondary-color: rgba(33, 37, 41, 0.75);
-  --bs-secondary-color-rgb: 33,37,41;
+  --bs-secondary-color-rgb: 33, 37, 41;
   --bs-secondary-bg: #e9ecef;
-  --bs-secondary-bg-rgb: 233,236,239;
+  --bs-secondary-bg-rgb: 233, 236, 239;
   --bs-tertiary-color: rgba(33, 37, 41, 0.5);
-  --bs-tertiary-color-rgb: 33,37,41;
+  --bs-tertiary-color-rgb: 33, 37, 41;
   --bs-tertiary-bg: #f8f9fa;
-  --bs-tertiary-bg-rgb: 248,249,250;
+  --bs-tertiary-bg-rgb: 248, 249, 250;
   --bs-heading-color: inherit;
   --bs-link-color: #0d6efd;
-  --bs-link-color-rgb: 13,110,253;
+  --bs-link-color-rgb: 13, 110, 253;
   --bs-link-decoration: underline;
   --bs-link-hover-color: #0a58ca;
-  --bs-link-hover-color-rgb: 10,88,202;
+  --bs-link-hover-color-rgb: 10, 88, 202;
   --bs-code-color: #d63384;
   --bs-highlight-bg: #fff3cd;
   --bs-border-width: 1px;
@@ -126,12 +134,14 @@ footer {
   --bs-form-invalid-border-color: #dc3545;
 }
 
-*, ::after, ::before {
+*,
+::after,
+::before {
   box-sizing: border-box;
 }
 
 .navbar-border {
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 .navbar-logo {
@@ -146,7 +156,7 @@ footer {
 }
 
 .bs-icon {
-  --bs-icon-size: .75rem;
+  --bs-icon-size: 0.75rem;
   display: flex;
   flex-shrink: 0;
   justify-content: center;
@@ -186,28 +196,29 @@ footer {
 
 .bs-icon.bs-icon-primary-light {
   color: var(--bs-primary);
-  background: rgba(var(--bs-primary-rgb), .2);
+  background: rgba(var(--bs-primary-rgb), 0.2);
 }
 
 .bs-icon.bs-icon-semi-white {
   color: var(--bs-primary);
-  background: rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .bs-icon.bs-icon-rounded {
-  border-radius: .5rem;
+  border-radius: 0.5rem;
 }
 
 .bs-icon.bs-icon-circle {
   border-radius: 50%;
 }
 
-:root, [data-bs-theme=light] {
+:root,
+[data-bs-theme="light"] {
   --bs-primary: #2e3192;
-  --bs-primary-rgb: 46,49,146;
-  --bs-primary-text-emphasis: #12143A;
-  --bs-primary-bg-subtle: #D5D6E9;
-  --bs-primary-border-subtle: #ABADD3;
+  --bs-primary-rgb: 46, 49, 146;
+  --bs-primary-text-emphasis: #12143a;
+  --bs-primary-bg-subtle: #d5d6e9;
+  --bs-primary-border-subtle: #abadd3;
 }
 
 .btn-primary {
@@ -215,12 +226,12 @@ footer {
   --bs-btn-bg: #2e3192;
   --bs-btn-border-color: #2e3192;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #272A7C;
+  --bs-btn-hover-bg: #272a7c;
   --bs-btn-hover-border-color: #252775;
-  --bs-btn-focus-shadow-rgb: 224,224,239;
+  --bs-btn-focus-shadow-rgb: 224, 224, 239;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: #252775;
-  --bs-btn-active-border-color: #23256E;
+  --bs-btn-active-border-color: #23256e;
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #2e3192;
   --bs-btn-disabled-border-color: #2e3192;
@@ -229,7 +240,7 @@ footer {
 .btn-outline-primary {
   --bs-btn-color: #2e3192;
   --bs-btn-border-color: #2e3192;
-  --bs-btn-focus-shadow-rgb: 46,49,146;
+  --bs-btn-focus-shadow-rgb: 46, 49, 146;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #2e3192;
   --bs-btn-hover-border-color: #2e3192;
@@ -247,7 +258,7 @@ footer {
 }
 
 .bs-icon {
-  --bs-icon-size: .75rem;
+  --bs-icon-size: 0.75rem;
   display: flex;
   flex-shrink: 0;
   justify-content: center;
@@ -287,16 +298,16 @@ footer {
 
 .bs-icon.bs-icon-primary-light {
   color: var(--bs-primary);
-  background: rgba(var(--bs-primary-rgb), .2);
+  background: rgba(var(--bs-primary-rgb), 0.2);
 }
 
 .bs-icon.bs-icon-semi-white {
   color: var(--bs-primary);
-  background: rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .bs-icon.bs-icon-rounded {
-  border-radius: .5rem;
+  border-radius: 0.5rem;
 }
 
 .bs-icon.bs-icon-circle {
@@ -308,22 +319,23 @@ footer {
 }
 
 .text-muted {
-  color: rgba(108,117,125);
+  color: rgba(108, 117, 125);
 }
 
 .google-sign-in-button {
   cursor: pointer;
-  transition: background-color .3s, box-shadow .3s;
+  transition: background-color 0.3s, box-shadow 0.3s;
 
   padding: 12px 16px 12px 42px;
   border: none;
   border-radius: 3px;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.25);
 
   color: #757575;
   font-size: 14px;
   font-weight: 500;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 
   background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
   background-color: white;
@@ -333,36 +345,35 @@ footer {
 
 .signup-button {
   cursor: pointer;
-  transition: background-color .3s, box-shadow .3s;
+  transition: background-color 0.3s, box-shadow 0.3s;
 
   padding: 11px 68px;
   border: none;
   border-radius: 3px;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.25);
 
   color: #ffffff;
   font-size: 14px;
   font-weight: 500;
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   text-align: center; /* center the text */
 }
 
 .signup-button:hover {
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 2px 4px rgba(0, 0, 0, .25);
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 .signup-button:active {
   outline: none;
-  box-shadow:
-          0 -1px 0 rgba(0, 0, 0, .04),
-          0 2px 4px rgba(0, 0, 0, .25),
-          0 0 0 3px #c8dafc;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.25),
+    0 0 0 3px #c8dafc;
 }
 
 .signup-button:disabled {
   filter: grayscale(100%);
   background-color: #ebebeb;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.25);
   cursor: not-allowed;
 }
 
@@ -371,7 +382,6 @@ footer {
 }
 
 .price-card {
-
   border: 2px solid var(--bs-dark-border-subtle); /* add or adjust as needed for more contrast */
   border-radius: 6px;
   margin: 0 1em;
