@@ -52,16 +52,32 @@ block content
                                         | Credit Card
                                 button.btn.btn-primary Pay
                         if subscription && subscription.items.data[0].price.id == (index === 0 ? memberId : alumniId)
-                            button.btn.btn-secondary Active Plan
-                            a(class='btn btn-primary', href=customerUrl) Manage Membership
-                            form(action='/cancel-subscription' method='POST')
-                                input(type='hidden' name='_csrf', value=csrfToken)
-                                button.btn.btn-danger(type="submit") Cancel Membership
+                            if subscription.cancel_at_period_end
+                                form(action='/undo-cancel-subscription' method='POST')
+                                    input(type='hidden' name='_csrf', value=csrfToken)
+                                    button.btn.btn-primary(type="submit") Undo Cancellation
+                                    p Your #{plan} membership is cancelled and ESN benefits will dissapear on #{new Date(subscription.current_period_end * 1000).toLocaleDateString()}. Press "Undo Cancellation" to keep your membership active.
+
+                            else
+                                button.btn.btn-secondary Active Plan
+                                a(class='btn btn-primary', href=customerUrl) Manage Membership
+                                form(action='/cancel-subscription' method='POST')
+                                    input(type='hidden' name='_csrf', value=csrfToken)
+                                    button.btn.btn-danger(type="submit") Cancel Membership
                         else if subscription
-                            form(method='POST' action='/change-subscription' id='change-subscription-form')
-                                input(type='hidden' name='newPlanId' id='newPlanId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS : process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS))
-                                input(type='hidden' name='_csrf', value=csrfToken)
-                                button.btn.btn-primary(type='submit') Switch to #{plan}
+                            if subscription.cancel_at_period_end
+                                form(method='POST' action='/change-subscription' id='change-subscription-form')
+                                    input(type='hidden' name='newPlanId' id='newPlanId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS : process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS))
+                                    input(type='hidden' name='_csrf', value=csrfToken)
+                                    button.btn.btn-primary(type='submit') Switch to #{plan}
+                                    p Please note: Your cancellation will be undone and the new fees will be charged from #{new Date(subscription.current_period_end * 1000).toLocaleDateString()} on.
+                            else 
+                                form(method='POST' action='/change-subscription' id='change-subscription-form')
+                                    input(type='hidden' name='newPlanId' id='newPlanId', value=(index === 1 ? process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS : process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS))
+                                    input(type='hidden' name='_csrf', value=csrfToken)
+                                    button.btn.btn-primary(type='submit') Switch to #{plan}
+                                    p Please note: Your new fees will be charged from #{new Date(subscription.current_period_end * 1000).toLocaleDateString()} on, however you will immediately be switched to #{plan}. If you switched by mistake, don't worry, you can switch back free of charge.
+
 
     block scripts
         script(src="/javascripts/message.js")
