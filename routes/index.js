@@ -6,6 +6,7 @@ const purchaseRoutes = require("./purchase");
 const privacyRoutes = require("./privacy");
 const imprintRoutes = require("./imprint");
 const subscriptionRoutes = require("./subscription");
+const webhookRoutes = require("./webhook");
 const logoutRoutes = require("./logout");
 const healthcheckRoutes = require("./healthcheck");
 const robotsRoutes = require("./robots");
@@ -19,6 +20,7 @@ module.exports = function (app, passport, stripe, isAuthenticated) {
   app.use("/admin", adminRoutes(isAuthenticated));
   app.use("/", purchaseRoutes(stripe, isAuthenticated));
   app.use("/", subscriptionRoutes(stripe, isAuthenticated));
+  app.use("/", webhookRoutes(stripe));
   app.use("/privacy", privacyRoutes());
   app.use("/imprint", imprintRoutes());
   app.use("/logout", logoutRoutes());
