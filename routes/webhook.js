@@ -3,6 +3,8 @@ const router = express.Router();
 const { jwtClient } = require("../config/passport");
 const mail = require("../config/mail")(jwtClient);
 const bodyParser = require("body-parser");
+const pug = require("pug");
+const path = require("path");
 
 module.exports = function (stripe) {
   router.use(bodyParser.raw({ type: "application/json" }));
@@ -39,22 +41,35 @@ module.exports = function (stripe) {
       const customerId = session.customer;
 
       // Retrieve customer from Stripe
-      stripe.customers.retrieve(customerId)
-      .then(customer => {
-        const customerEmail = customer.email;
-        console.log("Customer email: ", customerEmail);
+      stripe.customers
+        .retrieve(customerId)
+        .then((customer) => {
+          const customerEmail = customer.email;
+          console.log("Customer email: ", customerEmail);
 
-        // Send a confirmation email to the customer
-        mail.sendEmail(
-        "Checkout Successful",
-        "<p>Your checkout was successful.</p>",
-        customerEmail,
-        );
+          // Compile the source code
+          const compiledFunction = pug.compileFile(
+            path.join(__dirname, "../views/email/invoice.pug"),
+          );
 
-        console.log("Confirmation email sent to: ", customerEmail);
-      }).catch(err => {
-        console.log("Error retrieving customer: ", err);
-      });
+          // Render a set of data
+          const html = compiledFunction({
+            customer: customer,
+            subscription: session.subscription,
+            invoice: session.invoice,
+            amountTotal: session.amount_total,
+            currency: session.currency,
+            paymentStatus: session.payment_status,
+          });
+
+          // Send a confirmation email to the customer
+          mail.sendEmail("Checkout Successful", html, customerEmail);
+
+          console.log("Confirmation email sent to: ", customerEmail);
+        })
+        .catch((err) => {
+          console.log("Error retrieving customer: ", err);
+        });
     }
 
     // Return a response to Stripe
