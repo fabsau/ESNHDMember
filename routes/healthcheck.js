@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const { defaultHandler } = require("./handlers/healthcheckHandlers");
 
-module.exports = function () {
-  router.get("/", (req, res) => {
-    res.sendStatus(200);
-  });
-
+module.exports = () => {
+  router.get("/", defaultHandler);
   return router;
 };

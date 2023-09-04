@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const { defaultHandler } = require("./handlers/imprintHandlers");
 
-module.exports = function () {
-  router.get("/", function (req, res) {
-    res.render("imprint", { signedIn: !!req.user });
-  });
-
+module.exports = () => {
+  router.get("/", defaultHandler);
   return router;
 };

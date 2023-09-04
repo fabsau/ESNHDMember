@@ -17,12 +17,26 @@ const bodyParser = require("body-parser");
 // Importing Webhook routes
 const webhookRoutes = require("./routes/webhook");
 
+// Importing custom modules
+const ensureAuthenticated = require("./middlewares/ensureAuthenticated");
+const rateLimiter = require("./middlewares/rateLimiter");
+const passportConfig = require("./config/passport");
+const helmetConfig = require("./config/helmet");
+
+// Import routes
+const routes = require("./routes/index");
+
 // Initializing express app
 const app = express();
 
 // Setting up views
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
+
+// Applying configurations
+rateLimiter(app);
+helmetConfig(app, helmet);
+passportConfig(passport, GoogleStrategy, app, session);
 
 // Webhook parser
 app.use("/webhook", bodyParser.raw({ type: "*/*" }), webhookRoutes(stripe));
@@ -34,24 +48,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Importing custom modules
-const ensureAuthenticated = require("./middlewares/ensureAuthenticated");
-const rateLimiter = require("./middlewares/rateLimiter")(app);
-const passportConfig = require("./config/passport")(
-  passport,
-  GoogleStrategy,
-  app,
-  session,
-);
-const helmetConfig = require("./config/helmet")(app, helmet);
-
-// Import routes
-const routes = require("./routes/index")(
-  app,
-  passport,
-  stripe,
-  ensureAuthenticated,
-);
+// Applying routes
+routes(app, passport, stripe, ensureAuthenticated);
 
 // Error handling
 app.use((req, res, next) => {
