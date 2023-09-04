@@ -1,31 +1,44 @@
 mixin customerDetails(checkoutSession)
-    h2 Customer Details
+    h3 Customer Details
     p Name: #{checkoutSession.customer_details.name}
     p Email: #{checkoutSession.customer_details.email}
     p Tax Exempt: #{checkoutSession.customer_details.tax_exempt}
 
 mixin paymentDetails(checkoutSession)
-    h2 Payment Details
+    h3 Payment Details
     p Payment Status: #{checkoutSession.payment_status}
     p Payment Method: #{checkoutSession.payment_method_types.join(", ")}
 
 mixin planDetails(plan, title)
-    h2 #{title} Plan Details
-    p Name: #{plan.nickname}
-    p Amount: #{plan.amount / 100} #{plan.currency}
-    p Interval: Every #{plan.interval_count} #{plan.interval}(s)
+    h3 #{title} Plan Details
+    p #{plan.nickname} (#{plan.amount / 100}€ every #{plan.interval_count} #{plan.interval}s)
+
+mixin planNickname(plan)
+    p #{plan.nickname} (#{plan.amount / 100}
+
+mixin planAmount(plan)
+    p (#{plan.amount / 100}€ every #{plan.interval_count} #{plan.interval}s)
 
 mixin subscriptionDetails(subscription)
-    h2 Subscription Details
+    h3 📚 Your Membership Details
     p Subscription ID: #{subscription.id}
 
 mixin cancellationDetails(subscription)
-    h2 Cancellation Details
-    p Cancellation Reason: #{subscription.cancellation_details.reason}
-    p Cancellation Time: #{new Date(subscription.canceled_at * 1000).toLocaleString()}
+    h3 🚫 Cancellation Details
+    table.table
+        tr
+            th Cancelled plan
+            td #{subscription.plan.nickname} (#{subscription.plan.amount / 100}€ every #{subscription.plan.interval_count} #{subscription.plan.interval}s)
+        tr
+            th Cancellation Date and Time
+            td #{new Date(subscription.canceled_at * 1000).toLocaleString()}
+        tr
+            th Membership active until
+            td #{new Date(subscription.cancel_at * 1000).toLocaleString()}
+
 
 mixin billingDetails(subscription)
-    h2 Billing Details
+    h3 Billing Details
     p Billing Cycle Anchor: #{new Date(subscription.billing_cycle_anchor * 1000).toLocaleString()}
     p Current Period Start: #{new Date(subscription.current_period_start * 1000).toLocaleString()}
     p Current Period End: #{new Date(subscription.current_period_end * 1000).toLocaleString()}
@@ -38,3 +51,12 @@ mixin signOff
 
 mixin greeting(name)
     p Hello #{firstName} #{lastName},
+
+mixin moreDetails
+    p 👀 For more details, please sign-in with your @esn-heidelberg.de Google Account at 👉 [ESN Heidelberg Member Portal](https://member.esn-heidelberg.de).
+
+mixin portalLink
+    a.link(href='https://member.esn-heidelberg.de') ESN Heidelberg Member Portal
+
+mixin passwordReset
+    p 💡 If you've forgotten your password, don't worry, you can reset it by emailing us at [vorstand@esn-heidelberg.de](mailto:vorstand@esn-heidelberg.de).

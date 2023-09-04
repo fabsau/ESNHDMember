@@ -57,7 +57,7 @@ module.exports = function sendEmail(
         prevAttributes.cancel_at_period_end === false
       ) {
         mail.sendEmail(
-          "Subscription Cancelled",
+          "ESN Heidelberg Membership cancelled",
           "subscriptionCancelled",
           {
             subscription: newAttributes,

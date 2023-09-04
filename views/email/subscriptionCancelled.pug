@@ -2,12 +2,15 @@ extends layout.pug
 include mixins.pug
 
 block content
-    h1 Subscription Cancelled
-
-    +subscriptionDetails(subscription)
-    +planDetails(plan, 'Current')
+    h3 Your ESN Membership has been cancelled!
+    +greeting
+    p we've received and herby confirm your request to cancel your ESN Membership.
     +cancellationDetails(subscription)
-
-    p Your subscription will remain active until #{new Date(subscription.cancel_at * 1000).toLocaleString()}
-
-    +billingDetails(subscription)
+    h3 📅 Please note
+    ul
+        li You'll remain listed as an official member of ESN Heidelberg until #{new Date(subscription.cancel_at * 1000).toLocaleString()}. After this date, you will be officially removed and your IT-Accesses will be minimized. You'll still be able to sign into this portal should you wish to return.
+        li If your cancellation was made by mistake, you can easily undo it free of charge until #{new Date(subscription.cancel_at * 1000).toLocaleString()} by visiting the&nbsp;
+            +portalLink
+            | &nbsp;and clicking on the "Reactivate" button.
+    br
+    p Your contributions as a volunteer have been invaluable, and we sincerely thank you for your dedication ❤️. Should you ever wish to rejoin us in the future, we'd be more than happy to welcome you back.

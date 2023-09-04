@@ -4,10 +4,9 @@ doctype html
 html
     head
         title Notification Email
+        link(rel="stylesheet", href="styles.css")
     body
         header
-            h1 #{emailTitle}
-            +greeting
         main
             block content
             +signOff
