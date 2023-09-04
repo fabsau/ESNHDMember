@@ -34,3 +34,19 @@ exports.fetchUserSecondaryEmailByEmail = async function (email) {
     return null;
   }
 };
+
+exports.fetchUserNamesByEmail = async function (email) {
+  try {
+    const user = await admin.users.get({
+      userKey: email,
+    });
+
+    return {
+      firstName: user.data.name.givenName,
+      lastName: user.data.name.familyName,
+    };
+  } catch (error) {
+    console.error(`Error fetching user's names by email: ${error}`);
+    return null;
+  }
+};

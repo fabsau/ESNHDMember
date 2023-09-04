@@ -6,6 +6,8 @@ module.exports = function sendEmail(
   customerEmail,
   bccEmail,
   stripeEvent,
+  firstName,
+  lastName,
 ) {
   console.log("Event Type: ", eventType);
   console.log("Customer Email: ", customerEmail);
@@ -16,7 +18,7 @@ module.exports = function sendEmail(
       mail.sendEmail(
         "Charge Failed",
         "chargeFailed",
-        {},
+        { firstName, lastName },
         customerEmail,
         bccEmail,
       );
@@ -25,7 +27,7 @@ module.exports = function sendEmail(
       mail.sendEmail(
         "Payment Source Expiring",
         "sourceExpiring",
-        {},
+        { firstName, lastName },
         customerEmail,
         bccEmail,
       );
@@ -38,6 +40,8 @@ module.exports = function sendEmail(
         {
           subscription,
           plan: subscription.plan,
+          firstName,
+          lastName,
         },
         customerEmail,
         bccEmail,
@@ -58,6 +62,8 @@ module.exports = function sendEmail(
           {
             subscription: newAttributes,
             plan: newAttributes.plan,
+            firstName,
+            lastName,
           },
           customerEmail,
           bccEmail,
@@ -74,6 +80,8 @@ module.exports = function sendEmail(
           {
             subscription: newAttributes,
             plan: newAttributes.plan,
+            firstName,
+            lastName,
           },
           customerEmail,
           bccEmail,
@@ -87,7 +95,7 @@ module.exports = function sendEmail(
         mail.sendEmail(
           "Plan Changed",
           "planChanged",
-          { prevPlan, newPlan },
+          { prevPlan, newPlan, firstName, lastName },
           customerEmail,
           bccEmail,
         );
@@ -97,7 +105,7 @@ module.exports = function sendEmail(
       mail.sendEmail(
         "Payment Failed",
         "paymentFailed",
-        {},
+        { firstName, lastName },
         customerEmail,
         bccEmail,
       );
@@ -111,7 +119,7 @@ module.exports = function sendEmail(
         mail.sendEmail(
           "Subscription Renewing Soon",
           "subscriptionRenewing",
-          { daysUntilDue },
+          { daysUntilDue, firstName, lastName },
           customerEmail,
           bccEmail,
         );
@@ -121,7 +129,7 @@ module.exports = function sendEmail(
       mail.sendEmail(
         "Trial Ending Soon",
         "trialEnding",
-        {},
+        { firstName, lastName },
         customerEmail,
         bccEmail,
       );
@@ -133,6 +141,8 @@ module.exports = function sendEmail(
         "checkoutSuccessful",
         {
           checkoutSession,
+          lastName,
+          firstName,
         },
         customerEmail,
         bccEmail,

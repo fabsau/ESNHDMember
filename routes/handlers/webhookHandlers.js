@@ -1,5 +1,6 @@
 const {
   fetchUserSecondaryEmailByEmail,
+  fetchUserNamesByEmail,
 } = require("../../helpers/googleAdminHelper");
 const sendEmail = require("../../helpers/emailSender");
 
@@ -30,9 +31,18 @@ module.exports = async function (request, response, stripe) {
         const customerEmail = customer.email;
         console.log("Customer Email: ", customerEmail);
         const bccEmail = await fetchUserSecondaryEmailByEmail(customerEmail);
+        const { firstName, lastName } =
+          await fetchUserNamesByEmail(customerEmail);
         console.log("BCC Email: ", bccEmail);
         console.log("Event: ", event);
-        sendEmail(event.type, customerEmail, bccEmail, event);
+        sendEmail(
+          event.type,
+          customerEmail,
+          bccEmail,
+          event,
+          firstName,
+          lastName,
+        );
       })
       .catch((err) => {
         console.log("Error retrieving customer: ", err);
