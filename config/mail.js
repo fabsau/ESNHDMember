@@ -45,7 +45,6 @@ module.exports = function (jwtClient) {
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
-
     try {
       await gmail.users.messages.send({
         auth: jwtClient,
@@ -114,7 +113,7 @@ module.exports = function (jwtClient) {
       "",
       "--foo_bar_baz",
       'Content-Type: text/html; charset="UTF-8"',
-      "Content-Transfer-Encoding: quoted-printable",
+      "Content-Transfer-Encoding: 7bit",
       "",
       body,
     ];
