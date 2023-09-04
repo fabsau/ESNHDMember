@@ -1,40 +1,94 @@
-// mail.js
 const { google } = require("googleapis");
 const gmail = google.gmail("v1");
+const { v1: uuidv1 } = require("uuid");
 
 module.exports = function (jwtClient) {
-  return {
-    async sendEmail(subject, body, to) {
-      const raw = makeBody(to, process.env.GOOGLE_ADMIN_USER, subject, body);
-      const encodedMessage = Buffer.from(raw)
-        .toString("base64")
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_")
-        .replace(/=+$/, "");
+  const sendEmail = async (
+    subject,
+    body,
+    to,
+    cc = "",
+    bcc = "",
+    replyTo = process.env.REPLY_TO_EMAIL,
+    attempts = 3,
+  ) => {
+    const messageId = `<${uuidv1()}.${Date.now()}@${process.env.MAIL_DOMAIN}>`;
 
-      try {
-        await gmail.users.messages.send({
-          auth: jwtClient,
-          userId: "me",
-          requestBody: {
-            raw: encodedMessage,
-          },
-        });
-        console.log("Email sent");
-      } catch (err) {
-        console.log(`Error sending email: ${err}`);
+    const raw = makeBody(
+      to,
+      cc,
+      bcc,
+      replyTo,
+      process.env.GOOGLE_ADMIN_USER,
+      subject,
+      body,
+      messageId,
+    );
+    const encodedMessage = Buffer.from(raw)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    try {
+      await gmail.users.messages.send({
+        auth: jwtClient,
+        userId: "me",
+        requestBody: {
+          raw: encodedMessage,
+        },
+      });
+      console.log(`Email sent to ${to}`);
+    } catch (err) {
+      console.error(
+        `Failed to send email to ${to}. Attempt: ${
+          4 - attempts
+        }. Error: ${err}`,
+      );
+      if (attempts > 1) {
+        console.log(`Retrying to send email to ${to}`);
+        await sendEmail(subject, body, to, cc, bcc, replyTo, attempts - 1);
+      } else {
+        console.log(
+          `Sending failure notification to ${process.env.GOOGLE_ADMIN_USER}`,
+        );
+        await sendEmail(
+          "Email delivery failure",
+          `Failed to send email to ${to}.`,
+          process.env.GOOGLE_ADMIN_USER,
+        );
       }
-    },
+    }
   };
 
-  function makeBody(to, from, subject, body) {
-    const str = [
+  function makeBody(to, cc, bcc, replyTo, from, subject, body, messageId) {
+    let str = [
+      'Content-Type: text/html; charset="UTF-8"',
+      "MIME-Version: 1.0",
       `To: <${to}>`,
       `From: <${from}>`,
       `Subject: ${subject}`,
+      `Message-ID: ${messageId}`,
       "",
       body,
-    ].join("\n");
-    return str;
+    ];
+
+    if (cc) {
+      str.splice(3, 0, `Cc: <${cc}>`);
+    }
+
+    if (bcc) {
+      str.splice(4, 0, `Bcc: <${bcc}>`);
+    }
+
+    if (replyTo) {
+      str.splice(5, 0, `Reply-To: <${replyTo}>`);
+    }
+
+    return str.join("\n");
   }
+
+  return {
+    sendEmail,
+  };
 };

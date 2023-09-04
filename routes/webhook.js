@@ -8,7 +8,7 @@ module.exports = function (stripe) {
   mail.sendEmail(
     "Test email",
     "<p>This is a test email sent on application startup.</p>",
-    "fabio@esn-heidelberg.de",
+    "fabio@sauna.re",
   );
 
   router.post(
