@@ -23,10 +23,15 @@ app.set("view engine", "pug");
 
 // Using middleware
 app.use(logger("dev"));
-// app.use(express.json());  // <-- Remove this line
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// Webhook route
+app.use("/", webhookRoutes(stripe));
+
+// Use express.json() after setting up routes
+app.use(express.json());
 
 // Importing custom modules
 const ensureAuthenticated = require("./middlewares/ensureAuthenticated");
@@ -38,16 +43,17 @@ const passportConfig = require("./config/passport")(
   session,
 );
 const helmetConfig = require("./config/helmet")(app, helmet);
+
+// Apply CSRF Protection middleware here
 const csrfProtection = require("./middlewares/csrfProtection")(app, csurf);
+app.use(csrfProtection);
+
 const routes = require("./routes/index")(
   app,
   passport,
   stripe,
   ensureAuthenticated,
 );
-
-// Use express.json() after setting up routes
-app.use(express.json());
 
 // Error handling
 app.use((req, res, next) => {
