@@ -55,8 +55,8 @@ block content
                             if subscription.cancel_at_period_end
                                 form(action='/undo-cancel-subscription' method='POST')
                                     input(type='hidden' name='_csrf', value=csrfToken)
-                                    button.btn.btn-primary(type="submit") Undo Cancellation
-                                    p Your #{plan} membership is cancelled and ESN benefits will dissapear on #{new Date(subscription.current_period_end * 1000).toLocaleDateString()}. Press "Undo Cancellation" to keep your membership active.
+                                    button.btn.btn-primary(type="submit") Reactivate
+                                    p Your #{plan} membership is cancelled and ESN benefits will dissapear on #{new Date(subscription.current_period_end * 1000).toLocaleDateString()}. Press "Reactivate" to keep your membership active.
 
                             else
                                 button.btn.btn-secondary Active Plan
