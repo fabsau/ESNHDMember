@@ -14,7 +14,9 @@ module.exports = function (jwtClient) {
     replyTo = process.env.REPLY_TO_EMAIL,
     attempts = 3,
   ) => {
-    const messageId = `<${uuidv1()}.${Date.now()}@${process.env.MAIL_DOMAIN}>`;
+    const messageId = `<${uuidv1()}.${Date.now()}@${
+      process.env.GOOGLE_ADMIN_DOMAIN
+    }>`;
 
     const raw = makeBody(
       to,
