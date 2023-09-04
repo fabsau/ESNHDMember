@@ -35,6 +35,7 @@ block content
                 thead
                     tr
                         th Name
+                        th Emails
                         th Joined
                         th Org Unit
                         th Member Type
@@ -46,6 +47,7 @@ block content
                     each user in users
                         tr
                             td= user.name.fullName
+                            td= user.secondaryEmail ? user.secondaryEmail : ''
                             td= user.creationTime.split("T")[0]
                             - var orgUnitPaths = user.orgUnitPath.split("/")
                             - var orgUnit = user.orgUnitPath === '/' ? '/' : (orgUnitPaths.length > 2 ? orgUnitPaths[2] : orgUnitPaths[1])

@@ -13,7 +13,7 @@ async function fetchSubscriptions(planId, startAfterId) {
     });
   } catch (error) {
     console.error(
-      `Error fetching subscriptions for planId ${planId}: ${error}`
+      `Error fetching subscriptions for planId ${planId}: ${error}`,
     );
     return null;
   }
@@ -36,6 +36,7 @@ async function fetchUsers(pageToken) {
       domain: process.env.GOOGLE_ADMIN_DOMAIN,
       maxResults: 100,
       pageToken: pageToken,
+      projection: "full",
     });
   } catch (error) {
     console.error(`Error fetching user list: ${error}`);
@@ -48,7 +49,7 @@ async function fetchCustomerSubscriptions(customerId) {
     return await stripe.subscriptions.list({ customer: customerId });
   } catch (error) {
     console.error(
-      `Error fetching customer subscriptions for customerId ${customerId}: ${error}`
+      `Error fetching customer subscriptions for customerId ${customerId}: ${error}`,
     );
     return null;
   }
@@ -59,7 +60,7 @@ async function fetchInvoices(customerId) {
     return await stripe.invoices.list({ customer: customerId });
   } catch (error) {
     console.error(
-      `Error fetching invoices for customerId ${customerId}: ${error}`
+      `Error fetching invoices for customerId ${customerId}: ${error}`,
     );
     return null;
   }
@@ -75,7 +76,7 @@ async function fetchAllSubscriptions(planDisplayNames) {
       if (!subscriptions) continue;
 
       subscriptions.data.forEach((subscription) =>
-        customerSubscriptionsMap.set(subscription.customer, subscription)
+        customerSubscriptionsMap.set(subscription.customer, subscription),
       );
       hasMore = subscriptions.has_more;
       if (subscriptions.data.length > 0)
@@ -95,7 +96,7 @@ async function fetchAllCustomers() {
 
     customers.data.forEach(
       (customer) =>
-        customer.email && customerEmailIdMap.set(customer.email, customer.id)
+        customer.email && customerEmailIdMap.set(customer.email, customer.id),
     );
     hasMore = customers.has_more;
     if (customers.data.length > 0)
@@ -118,19 +119,40 @@ async function fetchActiveCustomerSubscription(customerId) {
     return customerSubscriptions.data[0];
   } catch (error) {
     console.error(
-      `Error fetching active subscription for customerId ${customerId}: ${error}`
+      `Error fetching active subscription for customerId ${customerId}: ${error}`,
     );
     return null;
   }
 }
 
+async function fetchUserSecondaryEmailByEmail(email) {
+  try {
+    const user = await admin.users.get({
+      userKey: email,
+    });
+
+    const secondaryEmail = user.data.emails.find(
+      (email) =>
+        email.type === "home" ||
+        email.type === "work" ||
+        email.type === "custom" ||
+        email.type === "other",
+    );
+    return secondaryEmail ? secondaryEmail.address : null;
+  } catch (error) {
+    console.error(`Error fetching user's secondary email by email: ${error}`);
+    return null;
+  }
+}
+
+module.exports.fetchUserSecondaryEmailByEmail = fetchUserSecondaryEmailByEmail;
+
 module.exports = (isAuthenticated) => {
   router.get("/", isAuthenticated, async (req, res) => {
     const baseOU = process.env.GOOGLE_ADMIN_BASE_OU;
     if (req.user.ou.startsWith(baseOU)) {
-      const customerSubscriptionsMap = await fetchAllSubscriptions(
-        planDisplayNames
-      );
+      const customerSubscriptionsMap =
+        await fetchAllSubscriptions(planDisplayNames);
       const customerEmailIdMap = await fetchAllCustomers();
 
       let allUsers = [];
@@ -148,6 +170,13 @@ module.exports = (isAuthenticated) => {
         if (!users) continue;
 
         for (let user of users.data.users) {
+          user.secondaryEmail = user.emails.find(
+            (email) =>
+              email.type === "home" ||
+              email.type === "work" ||
+              email.type === "custom" ||
+              email.type === "other",
+          )?.address;
           const customerId = customerEmailIdMap.get(user.primaryEmail);
           if (customerId) {
             const [activeSubscription, invoices] = await Promise.all([

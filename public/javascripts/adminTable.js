@@ -56,17 +56,17 @@ $(".cancel-btn").click(function () {
       var table = $("#users-table").DataTable();
       var rowData = table.row(row).data();
 
-      rowData[3] = userData.planDisplayName
+      rowData[4] = userData.planDisplayName
         ? userData.planDisplayName
         : "Never Paid";
-      rowData[4] = userData.subscription
+      rowData[5] = userData.subscription
         ? new Date(userData.subscription.current_period_end * 1000)
             .toISOString()
             .split("T")[0]
         : "";
       if (!userData.subscription) {
-        rowData[6] = "";
         rowData[7] = "";
+        rowData[8] = "";
       }
       table.row(row).data(rowData).invalidate();
       alert(userData.message); // Display the message text in a popup
