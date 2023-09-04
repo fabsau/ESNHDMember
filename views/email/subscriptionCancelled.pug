@@ -1,1 +1,20 @@
-p Subscription cancelled
+h1 Subscription Cancelled
+
+h2 Subscription Details
+p Subscription ID: #{subscription.id}
+p Plan: #{plan.nickname}
+p Amount: #{plan.amount / 100} #{plan.currency}
+p Interval: Every #{plan.interval_count} #{plan.interval}(s)
+
+h2 Cancellation Details
+p Cancellation Reason: #{subscription.cancellation_details.reason}
+p Cancellation Time: #{new Date(subscription.canceled_at * 1000).toLocaleString()}
+
+p Your subscription will remain active until #{new Date(subscription.cancel_at * 1000).toLocaleString()}
+
+h2 Billing Details
+p Billing Cycle Anchor: #{new Date(subscription.billing_cycle_anchor * 1000).toLocaleString()}
+p Current Period Start: #{new Date(subscription.current_period_start * 1000).toLocaleString()}
+p Current Period End: #{new Date(subscription.current_period_end * 1000).toLocaleString()}
+
+p If you have any questions about your cancellation, please contact us.

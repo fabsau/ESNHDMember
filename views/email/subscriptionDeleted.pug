@@ -1,1 +1,21 @@
-p Subscription deleted
+h1 Subscription Deleted
+
+h2 Subscription Details
+p Subscription ID: #{subscription.id}
+p Plan: #{plan.nickname}
+p Amount: #{plan.amount / 100} #{plan.currency}
+p Interval: Every #{plan.interval_count} #{plan.interval}(s)
+
+h2 Cancellation Details
+p Cancellation Reason: #{subscription.cancellation_details.reason}
+p Cancellation Time: #{new Date(subscription.canceled_at * 1000).toLocaleString()}
+p Subscription End Time: #{new Date(subscription.ended_at * 1000).toLocaleString()}
+
+p Your subscription has been revoked and is no longer active.
+
+h2 Billing Details
+p Billing Cycle Anchor: #{new Date(subscription.billing_cycle_anchor * 1000).toLocaleString()}
+p Last Period Start: #{new Date(subscription.current_period_start * 1000).toLocaleString()}
+p Last Period End: #{new Date(subscription.current_period_end * 1000).toLocaleString()}
+
+p If you have any questions about your cancellation, please contact us.

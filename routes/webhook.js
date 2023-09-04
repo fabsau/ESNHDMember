@@ -55,10 +55,14 @@ module.exports = function (stripe) {
               );
               break;
             case "customer.subscription.deleted":
+              const subscription = event.data.object;
               mail.sendEmail(
                 "Subscription Deleted",
                 "subscriptionDeleted",
-                {},
+                {
+                  subscription,
+                  plan: subscription.plan,
+                },
                 customerEmail,
               );
               break;
@@ -69,11 +73,14 @@ module.exports = function (stripe) {
                 mail.sendEmail(
                   "Subscription Cancelled",
                   "subscriptionCancelled",
-                  {},
+                  {
+                    subscription: newAttributes,
+                    plan: newAttributes.plan,
+                  },
                   customerEmail,
                 );
               }
-              // Check if plan was changed
+              // Upon Plan changing
               else if (prevAttributes.items) {
                 const prevPlan = prevAttributes.items.data[0].plan;
                 const newPlan = newAttributes.items.data[0].plan;
@@ -82,24 +89,6 @@ module.exports = function (stripe) {
                   "Plan Changed",
                   "planChanged",
                   { prevPlan, newPlan },
-                  customerEmail,
-                );
-              } else if (
-                prevAttributes.default_payment_method &&
-                newAttributes.default_payment_method !==
-                  prevAttributes.default_payment_method
-              ) {
-                mail.sendEmail(
-                  "Payment Method Updated",
-                  "paymentMethodUpdated",
-                  {},
-                  customerEmail,
-                );
-              } else {
-                mail.sendEmail(
-                  "Subscription Updated",
-                  "subscriptionUpdated",
-                  {},
                   customerEmail,
                 );
               }
@@ -135,10 +124,13 @@ module.exports = function (stripe) {
               );
               break;
             case "checkout.session.completed":
+              const checkoutSession = event.data.object;
               mail.sendEmail(
                 "Checkout Successful",
                 "checkoutSuccessful",
-                {},
+                {
+                  checkoutSession,
+                },
                 customerEmail,
               );
               break;
