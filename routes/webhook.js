@@ -63,12 +63,45 @@ module.exports = function (stripe) {
               );
               break;
             case "customer.subscription.updated":
-              mail.sendEmail(
-                "Subscription Updated",
-                "subscriptionUpdated",
-                {},
-                customerEmail,
-              );
+              const prevAttributes = event.data.previous_attributes;
+              const newAttributes = event.data.object;
+              if (newAttributes.cancel_at_period_end) {
+                mail.sendEmail(
+                  "Subscription Cancelled",
+                  "subscriptionCancelled",
+                  {},
+                  customerEmail,
+                );
+              } else if (
+                prevAttributes.items &&
+                newAttributes.items.data[0].price.id !==
+                  prevAttributes.items.data[0].price.id
+              ) {
+                mail.sendEmail(
+                  "Plan Changed",
+                  "planChanged",
+                  {},
+                  customerEmail,
+                );
+              } else if (
+                prevAttributes.default_payment_method &&
+                newAttributes.default_payment_method !==
+                  prevAttributes.default_payment_method
+              ) {
+                mail.sendEmail(
+                  "Payment Method Updated",
+                  "paymentMethodUpdated",
+                  {},
+                  customerEmail,
+                );
+              } else {
+                mail.sendEmail(
+                  "Subscription Updated",
+                  "subscriptionUpdated",
+                  {},
+                  customerEmail,
+                );
+              }
               break;
             case "invoice.payment_failed":
               mail.sendEmail(
@@ -79,9 +112,23 @@ module.exports = function (stripe) {
               );
               break;
             case "invoice.upcoming":
+              const daysUntilDue = Math.floor(
+                (new Date(event.data.object.due_date * 1000) - Date.now()) /
+                  (1000 * 60 * 60 * 24),
+              );
+              if (daysUntilDue <= 14) {
+                mail.sendEmail(
+                  "Subscription Renewing Soon",
+                  "subscriptionRenewing",
+                  { daysUntilDue },
+                  customerEmail,
+                );
+              }
+              break;
+            case "customer.subscription.trial_will_end":
               mail.sendEmail(
-                "Upcoming Invoice",
-                "invoiceUpcoming",
+                "Trial Ending Soon",
+                "trialEnding",
                 {},
                 customerEmail,
               );
@@ -97,7 +144,6 @@ module.exports = function (stripe) {
             default:
               console.log(`Unhandled event type ${event.type}`);
           }
-
           console.log(`Email sent for ${event.type} to: `, customerEmail);
         })
         .catch((err) => {
