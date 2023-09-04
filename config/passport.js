@@ -6,7 +6,7 @@ module.exports = function (passport, GoogleStrategy, app, session) {
     process.env.GOOGLE_ADMIN_CLIENT_EMAIL,
     null,
     process.env.GOOGLE_ADMIN_PRIVATE_KEY.replace(/\\n/g, "\n"),
-    ["https://www.googleapis.com/auth/admin.directory.user.readonly"],
+      ["https://www.googleapis.com/auth/admin.directory.user.readonly", "https://www.googleapis.com/auth/gmail.send"],
     process.env.GOOGLE_ADMIN_USER
   );
 
@@ -82,4 +82,5 @@ module.exports = function (passport, GoogleStrategy, app, session) {
 
   app.use(passport.initialize());
   app.use(passport.session());
+  module.exports.jwtClient = jwtClient;
 };
