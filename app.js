@@ -14,12 +14,18 @@ const rateLimit = require("express-rate-limit");
 const createError = require("http-errors");
 const bodyParser = require("body-parser");
 
+// Importing Webhook routes
+const webhookRoutes = require("./routes/webhook");
+
 // Initializing express app
 const app = express();
 
 // Setting up views
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
+
+// Webhook parser
+app.use("/webhook", bodyParser.raw({ type: "*/*" }), webhookRoutes(stripe));
 
 // Using middleware
 app.use(logger("dev"));
