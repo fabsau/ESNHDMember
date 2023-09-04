@@ -8,11 +8,7 @@ module.exports = function (stripe) {
   router.use(bodyParser.raw({ type: "application/json" }));
 
   // Send a test email when the application starts
-  mail.sendEmail(
-    "Test email",
-    "<p>This is a test email sent on application startup.</p>",
-    "fabio@esn-heidelberg.de",
-  );
+  mail.sendEmail("Test email", "testEmail", {}, "fabio@esn-heidelberg.de");
 
   router.post("/webhook", (request, response) => {
     const sig = request.headers["stripe-signature"];
@@ -45,49 +41,56 @@ module.exports = function (stripe) {
             case "charge.failed":
               mail.sendEmail(
                 "Charge Failed",
-                "<p>Your recent charge attempt failed.</p>",
+                "chargeFailed",
+                {},
                 customerEmail,
               );
               break;
             case "customer.source.expiring":
               mail.sendEmail(
                 "Payment Source Expiring",
-                "<p>Your payment source is expiring soon.</p>",
+                "sourceExpiring",
+                {},
                 customerEmail,
               );
               break;
             case "customer.subscription.deleted":
               mail.sendEmail(
                 "Subscription Deleted",
-                "<p>Your subscription has been deleted.</p>",
+                "subscriptionDeleted",
+                {},
                 customerEmail,
               );
               break;
             case "customer.subscription.updated":
               mail.sendEmail(
                 "Subscription Updated",
-                "<p>Your subscription has been updated.</p>",
+                "subscriptionUpdated",
+                {},
                 customerEmail,
               );
               break;
             case "invoice.payment_failed":
               mail.sendEmail(
                 "Payment Failed",
-                "<p>Your recent invoice payment failed.</p>",
+                "paymentFailed",
+                {},
                 customerEmail,
               );
               break;
             case "invoice.upcoming":
               mail.sendEmail(
                 "Upcoming Invoice",
-                "<p>You have an upcoming invoice.</p>",
+                "invoiceUpcoming",
+                {},
                 customerEmail,
               );
               break;
             case "checkout.session.completed":
               mail.sendEmail(
                 "Checkout Successful",
-                "<p>Your checkout was successful.</p>",
+                "checkoutSuccessful",
+                {},
                 customerEmail,
               );
               break;
