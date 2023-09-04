@@ -28,6 +28,7 @@
     "http-errors": "^2.0.0",
     "jquery": "^3.7.1",
     "jszip": "^3.10.1",
+    "mailcomposer": "^4.0.2",
     "morgan": "^1.10.0",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",

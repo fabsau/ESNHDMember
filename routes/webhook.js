@@ -3,6 +3,10 @@ const router = express.Router();
 const { jwtClient } = require("../config/passport");
 const mail = require("../config/mail")(jwtClient);
 const bodyParser = require("body-parser");
+const fetch = require("node-fetch");
+const fs = require("fs");
+const path = require("path");
+const pug = require("pug");
 
 module.exports = function (stripe) {
   router.use(bodyParser.raw({ type: "application/json" }));
@@ -15,44 +19,100 @@ module.exports = function (stripe) {
   );
 
   router.post("/webhook", (request, response) => {
-    const sig = request.headers["stripe-signature"];
-    let event;
-
-    try {
-      event = stripe.webhooks.constructEvent(
-        request.body,
-        sig,
-        process.env.STRIPE_WEBHOOK_SECRET,
-      );
-    } catch (err) {
-      console.log("Error in webhook signature validation: ", err.message);
-      response.status(400).send(`Webhook Error: ${err.message}`);
-      return;
-    }
-
-    console.log("Webhook received: ", event);
+    const event = request.body;
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
 
       // Get customer ID from session
       const customerId = session.customer;
+      const subscriptionId = session.subscription;
 
       // Retrieve customer from Stripe
       stripe.customers
         .retrieve(customerId)
         .then((customer) => {
           const customerEmail = customer.email;
-          console.log("Customer email: ", customerEmail);
 
-          // Send a confirmation email to the customer
-          mail.sendEmail(
-            "Checkout Successful",
-            "<p>Your checkout was successful.</p>",
-            customerEmail,
-          );
+          // Get additional details from the session
+          const amountTotal = session.amount_total;
+          const currency = session.currency;
+          const paymentStatus = session.payment_status;
 
-          console.log("Confirmation email sent to: ", customerEmail);
+          // Get invoice from Stripe
+          stripe.invoices
+            .retrieve(session.invoice)
+            .then((invoice) => {
+              const invoicePdfUrl = invoice.invoice_pdf;
+              const invoicePdfPath = path.join(__dirname, "invoice.pdf");
+
+              // Fetch the PDF and save it to a local file
+              fetch(invoicePdfUrl)
+                .then((res) => res.buffer())
+                .then((buffer) => {
+                  fs.writeFile(invoicePdfPath, buffer, () => {
+                    // Retrieve subscription from Stripe
+                    stripe.subscriptions
+                      .retrieve(subscriptionId)
+                      .then((subscription) => {
+                        // Create the email content
+                        const data = {
+                          customer: customer,
+                          subscription: subscription,
+                          invoice: invoice,
+                          amountTotal: amountTotal,
+                          currency: currency,
+                          paymentStatus: paymentStatus,
+                        };
+
+                        const emailContent = pug.renderFile(
+                          "../email/invoice.pug",
+                          data,
+                        );
+                        // Attach the PDF to the email
+                        mail
+                          .sendEmail(
+                            "Your Invoice",
+                            emailContent,
+                            customerEmail,
+                            null,
+                            null,
+                            null,
+                            null,
+                            [
+                              {
+                                path: invoicePdfPath,
+                                mimetype: "application/pdf",
+                              },
+                            ],
+                          )
+                          .then(() => {
+                            // Delete the PDF file after sending the email
+                            fs.unlink(invoicePdfPath, (err) => {
+                              if (err) {
+                                console.error(
+                                  `Error deleting file ${invoicePdfPath}: `,
+                                  err,
+                                );
+                              }
+                            });
+                          })
+                          .catch((err) => {
+                            console.log("Error sending email: ", err);
+                          });
+                      })
+                      .catch((err) => {
+                        console.log("Error retrieving subscription: ", err);
+                      });
+                  });
+                })
+                .catch((err) => {
+                  console.log("Error downloading invoice PDF: ", err);
+                });
+            })
+            .catch((err) => {
+              console.log("Error retrieving invoice: ", err);
+            });
         })
         .catch((err) => {
           console.log("Error retrieving customer: ", err);

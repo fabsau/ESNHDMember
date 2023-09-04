@@ -13,6 +13,7 @@ module.exports = function (jwtClient) {
     bcc = "",
     replyTo = process.env.REPLY_TO_EMAIL,
     attempts = 3,
+    attachments = [],
   ) => {
     const messageId = `<${uuidv1()}.${Date.now()}@${
       process.env.GOOGLE_ADMIN_DOMAIN
@@ -27,6 +28,7 @@ module.exports = function (jwtClient) {
       subject,
       body,
       messageId,
+      attachments,
     );
     const encodedMessage = Buffer.from(raw)
       .toString("base64")
@@ -70,15 +72,29 @@ module.exports = function (jwtClient) {
     return fs.readFileSync(filePath, "utf8");
   }
 
-  function makeBody(to, cc, bcc, replyTo, from, subject, body, messageId) {
+  function makeBody(
+    to,
+    cc,
+    bcc,
+    replyTo,
+    from,
+    subject,
+    body,
+    messageId,
+    attachments,
+  ) {
     let str = [
-      'Content-Type: text/html; charset="UTF-8"',
+      'Content-Type: multipart/mixed; boundary="foo_bar_baz"',
       "MIME-Version: 1.0",
       `To: <${to}>`,
       `From: <${from}>`,
       `Subject: ${subject}`,
       `Message-ID: ${messageId}`,
       "X-Mailer: ESN Heidelberg Member Portal",
+      "",
+      "--foo_bar_baz",
+      'Content-Type: text/html; charset="UTF-8"',
+      "Content-Transfer-Encoding: quoted-printable",
       "",
       body,
     ];
@@ -94,6 +110,21 @@ module.exports = function (jwtClient) {
     if (replyTo) {
       str.splice(5, 0, `Reply-To: <${replyTo}>`);
     }
+
+    attachments.forEach((attachment) => {
+      let content = fs.readFileSync(attachment.path, { encoding: "base64" });
+      str = str.concat([
+        "",
+        "--foo_bar_baz",
+        `Content-Type: ${attachment.mimetype}`,
+        "Content-Transfer-Encoding: base64",
+        "Content-Disposition: attachment",
+        "",
+        content,
+      ]);
+    });
+
+    str = str.concat(["", "--foo_bar_baz--"]);
 
     return str.join("\n");
   }
