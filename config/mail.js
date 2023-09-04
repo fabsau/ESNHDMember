@@ -1,6 +1,8 @@
 const { google } = require("googleapis");
 const gmail = google.gmail("v1");
 const { v1: uuidv1 } = require("uuid");
+const fs = require("fs");
+const path = require("path");
 
 module.exports = function (jwtClient) {
   const sendEmail = async (
@@ -61,6 +63,11 @@ module.exports = function (jwtClient) {
     }
   };
 
+  function loadEmailTemplate(eventType) {
+    const filePath = path.join(__dirname, "..", "email", `${eventType}.html`);
+    return fs.readFileSync(filePath, "utf8");
+  }
+
   function makeBody(to, cc, bcc, replyTo, from, subject, body, messageId) {
     let str = [
       'Content-Type: text/html; charset="UTF-8"',
@@ -69,6 +76,7 @@ module.exports = function (jwtClient) {
       `From: <${from}>`,
       `Subject: ${subject}`,
       `Message-ID: ${messageId}`,
+      "X-Mailer: ESN Heidelberg Member Portal",
       "",
       body,
     ];
