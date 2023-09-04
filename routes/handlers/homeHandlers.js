@@ -1,34 +1,65 @@
 const stripeHelper = require("../../helpers/stripeHelpers");
 
-module.exports = function (stripe) {
-  return async function (req, res) {
-    try {
-      // Get user data
-      const userData = stripeHelper.getUserData(req.user);
+const allowedSubscriptions = [
+  process.env.SUBSCRIPTION_PRICE_ID_MEMBER,
+  process.env.SUBSCRIPTION_PRICE_ID_ALUMNI,
+];
 
-      // Get Stripe data
-      const stripeData = await stripeHelper.getStripeData(
-        stripe,
-        userData.email,
-        req,
+async function homeHandler(req, res) {
+  const { givenName, familyName, email } = req.user;
+
+  try {
+    const customer = await stripeHelper.getCustomerByEmail(email);
+    let customerUrl;
+    let subscription;
+    let currentPlan;
+
+    if (customer) {
+      const customerId = customer.id;
+      const subscriptions =
+        await stripeHelper.fetchCustomerSubscriptions(customerId);
+
+      if (subscriptions && subscriptions.data.length > 0) {
+        subscription = subscriptions.data[0];
+        currentPlan = subscriptions.data[0].items.data[0].price.id;
+      } else {
+        currentPlan = null;
+      }
+
+      const session = await stripeHelper.createBillingPortalSession(
+        customerId,
+        `${req.protocol}://${req.get("host")}/home`,
       );
 
-      // Set renderOptions
-      const renderOptions = {
-        ...userData,
-        ...stripeData,
-        signedIn: true,
-        page: "home",
-        memberId: process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS,
-        alumniId: process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS,
-      };
-      renderOptions.message = req.session.message;
-      req.session.message = null;
-
-      res.render("home", renderOptions);
-    } catch (error) {
-      console.log("Error retrieving customer:", error);
-      res.redirect("/");
+      customerUrl = session;
     }
-  };
-};
+
+    const plans = await stripeHelper.getPlans(
+      currentPlan,
+      allowedSubscriptions,
+    );
+
+    const renderOptions = {
+      user: req.user,
+      firstName: givenName,
+      lastName: familyName,
+      email: email,
+      customerUrl: customerUrl,
+      subscription: subscription,
+      currentPlan: currentPlan,
+      plans: plans,
+      memberId: process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS,
+      alumniId: process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS,
+      signedIn: true,
+      page: "home",
+    };
+    renderOptions.message = req.session.message;
+    req.session.message = null;
+    res.render("home", renderOptions);
+  } catch (error) {
+    console.log("Error retrieving customer:", error);
+    res.redirect("/");
+  }
+}
+
+module.exports = homeHandler;
