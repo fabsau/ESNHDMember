@@ -3,8 +3,6 @@ const router = express.Router();
 const { jwtClient } = require("../config/passport");
 const mail = require("../config/mail")(jwtClient);
 const bodyParser = require("body-parser");
-const pug = require("pug");
-const path = require("path");
 
 module.exports = function (stripe) {
   router.use(bodyParser.raw({ type: "application/json" }));
@@ -34,42 +32,76 @@ module.exports = function (stripe) {
 
     console.log("Webhook received: ", event);
 
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-
-      // Get customer ID from session
-      const customerId = session.customer;
+    // Check if event.data.object.customer exists
+    if (event.data.object.customer) {
+      const customerId = event.data.object.customer;
 
       // Retrieve customer from Stripe
       stripe.customers
         .retrieve(customerId)
         .then((customer) => {
           const customerEmail = customer.email;
-          console.log("Customer email: ", customerEmail);
+          switch (event.type) {
+            case "charge.failed":
+              mail.sendEmail(
+                "Charge Failed",
+                "<p>Your recent charge attempt failed.</p>",
+                customerEmail,
+              );
+              break;
+            case "customer.source.expiring":
+              mail.sendEmail(
+                "Payment Source Expiring",
+                "<p>Your payment source is expiring soon.</p>",
+                customerEmail,
+              );
+              break;
+            case "customer.subscription.deleted":
+              mail.sendEmail(
+                "Subscription Deleted",
+                "<p>Your subscription has been deleted.</p>",
+                customerEmail,
+              );
+              break;
+            case "customer.subscription.updated":
+              mail.sendEmail(
+                "Subscription Updated",
+                "<p>Your subscription has been updated.</p>",
+                customerEmail,
+              );
+              break;
+            case "invoice.payment_failed":
+              mail.sendEmail(
+                "Payment Failed",
+                "<p>Your recent invoice payment failed.</p>",
+                customerEmail,
+              );
+              break;
+            case "invoice.upcoming":
+              mail.sendEmail(
+                "Upcoming Invoice",
+                "<p>You have an upcoming invoice.</p>",
+                customerEmail,
+              );
+              break;
+            case "checkout.session.completed":
+              mail.sendEmail(
+                "Checkout Successful",
+                "<p>Your checkout was successful.</p>",
+                customerEmail,
+              );
+              break;
+            default:
+              console.log(`Unhandled event type ${event.type}`);
+          }
 
-          // Compile the source code
-          const compiledFunction = pug.compileFile(
-            path.join(__dirname, "../views/email/invoice.pug"),
-          );
-
-          // Render a set of data
-          const html = compiledFunction({
-            customer: customer,
-            subscription: session.subscription,
-            invoice: session.invoice,
-            amountTotal: session.amount_total,
-            currency: session.currency,
-            paymentStatus: session.payment_status,
-          });
-
-          // Send a confirmation email to the customer
-          mail.sendEmail("Checkout Successful", html, customerEmail);
-
-          console.log("Confirmation email sent to: ", customerEmail);
+          console.log(`Email sent for ${event.type} to: `, customerEmail);
         })
         .catch((err) => {
           console.log("Error retrieving customer: ", err);
         });
+    } else {
+      console.log(`${event.type} event without customer id`);
     }
 
     // Return a response to Stripe
