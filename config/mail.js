@@ -123,7 +123,7 @@ module.exports = function (jwtClient) {
       str.splice(3, 0, `Cc: <${cc}>`);
     }
 
-    if (bcc) {
+    if (bcc && bcc !== "") {
       str.splice(4, 0, `Bcc: <${bcc}>`);
     }
 
