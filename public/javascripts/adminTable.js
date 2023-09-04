@@ -36,8 +36,8 @@ $(document).ready(function () {
   });
 
   yadcf.init(table, [
-    { column_number: 2, filter_type: "multi_select", select_type: "select2" },
     { column_number: 3, filter_type: "multi_select", select_type: "select2" },
+    { column_number: 4, filter_type: "multi_select", select_type: "select2" },
   ]);
 });
 
