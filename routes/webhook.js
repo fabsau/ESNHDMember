@@ -35,19 +35,28 @@ module.exports = function (stripe) {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
 
-      // Get the email address of the customer who made the purchase
-      const customerEmail = session.customer_email;
+      // Get customer ID from session
+      const customerId = session.customer;
 
-      console.log("Customer email: ", customerEmail);
+      // Retrieve customer from Stripe
+      stripe.customers
+        .retrieve(customerId)
+        .then((customer) => {
+          const customerEmail = customer.email;
+          console.log("Customer email: ", customerEmail);
 
-      // Send a confirmation email to the customer
-      mail.sendEmail(
-        "Checkout Successful",
-        "<p>Your checkout was successful.</p>",
-        customerEmail,
-      );
+          // Send a confirmation email to the customer
+          mail.sendEmail(
+            "Checkout Successful",
+            "<p>Your checkout was successful.</p>",
+            customerEmail,
+          );
 
-      console.log("Confirmation email sent to: ", customerEmail);
+          console.log("Confirmation email sent to: ", customerEmail);
+        })
+        .catch((err) => {
+          console.log("Error retrieving customer: ", err);
+        });
     }
 
     // Return a response to Stripe
