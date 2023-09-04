@@ -1,4 +1,3 @@
-// Importing required modules
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -11,9 +10,9 @@ const helmet = require("helmet");
 const dotenv = require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const rateLimit = require("express-rate-limit");
+const createError = require("http-errors");
 // const ExpressBrute = require('express-brute');
 // const Ddos = require('ddos');
-const createError = require("http-errors");
 
 // Initializing express app
 const app = express();
@@ -24,7 +23,7 @@ app.set("view engine", "pug");
 
 // Using middleware
 app.use(logger("dev"));
-app.use(express.json());
+// app.use(express.json());  // <-- Remove this line
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
@@ -32,12 +31,11 @@ app.use(express.static(path.join(__dirname, "public")));
 // Importing custom modules
 const ensureAuthenticated = require("./middlewares/ensureAuthenticated");
 const rateLimiter = require("./middlewares/rateLimiter")(app);
-// const ddosProtection = require('./middlewares/ddosProtection')(app);
 const passportConfig = require("./config/passport")(
   passport,
   GoogleStrategy,
   app,
-  session
+  session,
 );
 const helmetConfig = require("./config/helmet")(app, helmet);
 const csrfProtection = require("./middlewares/csrfProtection")(app, csurf);
@@ -45,8 +43,11 @@ const routes = require("./routes/index")(
   app,
   passport,
   stripe,
-  ensureAuthenticated
+  ensureAuthenticated,
 );
+
+// Use express.json() after setting up routes
+app.use(express.json());
 
 // Error handling
 app.use((req, res, next) => {
