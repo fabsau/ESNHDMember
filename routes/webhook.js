@@ -72,15 +72,16 @@ module.exports = function (stripe) {
                   {},
                   customerEmail,
                 );
-              } else if (
-                prevAttributes.items &&
-                newAttributes.items.data[0].price.id !==
-                  prevAttributes.items.data[0].price.id
-              ) {
+              }
+              // Check if plan was changed
+              else if (prevAttributes.items) {
+                const prevPlan = prevAttributes.items.data[0].plan;
+                const newPlan = newAttributes.items.data[0].plan;
+
                 mail.sendEmail(
                   "Plan Changed",
                   "planChanged",
-                  {},
+                  { prevPlan, newPlan },
                   customerEmail,
                 );
               } else if (
