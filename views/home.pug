@@ -50,7 +50,7 @@ block content
                                     button.btn.btn-light(type='button' name='paymentMethod' class='visa payment-option-border')
                                         img(src="/images/credit-card-fill.svg" alt="Credit Card")
                                         | Credit Card
-                                button.btn.btn-primary Pay
+                                button.btn.btn-primary Subscribe
                         if subscription && subscription.items.data[0].price.id == (index === 0 ? memberId : alumniId)
                             if subscription.cancel_at_period_end
                                 form(action='/undo-cancel-subscription' method='POST')

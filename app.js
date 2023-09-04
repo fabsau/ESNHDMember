@@ -1,3 +1,4 @@
+// Importing required modules
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -11,8 +12,7 @@ const dotenv = require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const rateLimit = require("express-rate-limit");
 const createError = require("http-errors");
-// const ExpressBrute = require('express-brute');
-// const Ddos = require('ddos');
+const bodyParser = require("body-parser");
 
 // Initializing express app
 const app = express();
@@ -23,15 +23,10 @@ app.set("view engine", "pug");
 
 // Using middleware
 app.use(logger("dev"));
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
-// Webhook route
-app.use("/", webhookRoutes(stripe));
-
-// Use express.json() after setting up routes
-app.use(express.json());
 
 // Importing custom modules
 const ensureAuthenticated = require("./middlewares/ensureAuthenticated");
@@ -44,10 +39,7 @@ const passportConfig = require("./config/passport")(
 );
 const helmetConfig = require("./config/helmet")(app, helmet);
 
-// Apply CSRF Protection middleware here
-const csrfProtection = require("./middlewares/csrfProtection")(app, csurf);
-app.use(csrfProtection);
-
+// Import routes
 const routes = require("./routes/index")(
   app,
   passport,
