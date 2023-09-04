@@ -3,11 +3,13 @@ const gmail = google.gmail("v1");
 const { v1: uuidv1 } = require("uuid");
 const fs = require("fs");
 const path = require("path");
+const pug = require("pug");
 
 module.exports = function (jwtClient) {
   const sendEmail = async (
     subject,
-    body,
+    templateName,
+    templateData,
     to,
     cc = "",
     bcc = "",
@@ -18,6 +20,14 @@ module.exports = function (jwtClient) {
     const messageId = `<${uuidv1()}.${Date.now()}@${
       process.env.GOOGLE_ADMIN_DOMAIN
     }>`;
+
+    // Load and compile the pug template.
+    const compileTemplate = pug.compileFile(
+      path.join(__dirname, "..", "views", "email", `${templateName}.pug`),
+    );
+
+    // Generate the email body using the template and the provided data.
+    const body = compileTemplate(templateData);
 
     const raw = makeBody(
       to,
@@ -53,14 +63,24 @@ module.exports = function (jwtClient) {
       );
       if (attempts > 1) {
         console.log(`Retrying to send email to ${to}`);
-        await sendEmail(subject, body, to, cc, bcc, replyTo, attempts - 1);
+        await sendEmail(
+          subject,
+          templateName,
+          templateData,
+          to,
+          cc,
+          bcc,
+          replyTo,
+          attempts - 1,
+        );
       } else {
         console.log(
           `Sending failure notification to ${process.env.GOOGLE_ADMIN_USER}`,
         );
         await sendEmail(
           "Email delivery failure",
-          `Failed to send email to ${to}.`,
+          "emailDeliveryFailure", // Assuming this is the name of a template
+          { errorMsg: `Failed to send email to ${to}.` }, // Pass whatever data the template needs
           process.env.GOOGLE_ADMIN_USER,
         );
       }
