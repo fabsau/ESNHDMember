@@ -3,14 +3,12 @@ const router = express.Router();
 const { jwtClient } = require("../config/passport");
 const mail = require("../config/mail")(jwtClient);
 const bodyParser = require("body-parser");
+const { fetchUserSecondaryEmailByEmail } = require("./admin");
 
 module.exports = function (stripe) {
   router.use(bodyParser.raw({ type: "application/json" }));
 
-  // Send a test email when the application starts
-  mail.sendEmail("Test email", "testEmail", {}, "fabio@esn-heidelberg.de");
-
-  router.post("/webhook", (request, response) => {
+  router.post("/webhook", async (request, response) => {
     const sig = request.headers["stripe-signature"];
     let event;
 
@@ -31,12 +29,12 @@ module.exports = function (stripe) {
     // Check if event.data.object.customer exists
     if (event.data.object.customer) {
       const customerId = event.data.object.customer;
-
       // Retrieve customer from Stripe
       stripe.customers
         .retrieve(customerId)
-        .then((customer) => {
+        .then(async (customer) => {
           const customerEmail = customer.email;
+          const bccEmail = await fetchUserSecondaryEmailByEmail(customerEmail);
           switch (event.type) {
             case "charge.failed":
               mail.sendEmail(
@@ -44,6 +42,7 @@ module.exports = function (stripe) {
                 "chargeFailed",
                 {},
                 customerEmail,
+                bccEmail,
               );
               break;
             case "customer.source.expiring":
@@ -52,6 +51,7 @@ module.exports = function (stripe) {
                 "sourceExpiring",
                 {},
                 customerEmail,
+                bccEmail,
               );
               break;
             case "customer.subscription.deleted":
@@ -64,12 +64,18 @@ module.exports = function (stripe) {
                   plan: subscription.plan,
                 },
                 customerEmail,
+                bccEmail,
               );
               break;
             case "customer.subscription.updated":
               const prevAttributes = event.data.previous_attributes;
               const newAttributes = event.data.object;
-              if (newAttributes.cancel_at_period_end) {
+
+              // Upon Subscription cancellation
+              if (
+                newAttributes.cancel_at_period_end &&
+                prevAttributes.cancel_at_period_end === false
+              ) {
                 mail.sendEmail(
                   "Subscription Cancelled",
                   "subscriptionCancelled",
@@ -78,6 +84,23 @@ module.exports = function (stripe) {
                     plan: newAttributes.plan,
                   },
                   customerEmail,
+                  bccEmail,
+                );
+              }
+              // The cancellation has been undone
+              else if (
+                !newAttributes.cancel_at_period_end &&
+                prevAttributes.cancel_at_period_end === true
+              ) {
+                mail.sendEmail(
+                  "Subscription Cancellation Undone",
+                  "subscriptionCancellationUndone",
+                  {
+                    subscription: newAttributes,
+                    plan: newAttributes.plan,
+                  },
+                  customerEmail,
+                  bccEmail,
                 );
               }
               // Upon Plan changing
@@ -90,6 +113,7 @@ module.exports = function (stripe) {
                   "planChanged",
                   { prevPlan, newPlan },
                   customerEmail,
+                  bccEmail,
                 );
               }
               break;
@@ -99,6 +123,7 @@ module.exports = function (stripe) {
                 "paymentFailed",
                 {},
                 customerEmail,
+                bccEmail,
               );
               break;
             case "invoice.upcoming":
@@ -112,6 +137,7 @@ module.exports = function (stripe) {
                   "subscriptionRenewing",
                   { daysUntilDue },
                   customerEmail,
+                  bccEmail,
                 );
               }
               break;
@@ -121,6 +147,7 @@ module.exports = function (stripe) {
                 "trialEnding",
                 {},
                 customerEmail,
+                bccEmail,
               );
               break;
             case "checkout.session.completed":
@@ -132,6 +159,7 @@ module.exports = function (stripe) {
                   checkoutSession,
                 },
                 customerEmail,
+                bccEmail,
               );
               break;
             default:
