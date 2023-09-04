@@ -1,0 +1,14 @@
+include mixins.pug
+
+doctype html
+html
+    head
+        title Notification Email
+    body
+        header
+            h1 #{emailTitle}
+            +greeting
+        main
+            block content
+            +signOff
+        footer

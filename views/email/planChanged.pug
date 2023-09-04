@@ -1,15 +1,10 @@
-h1 Plan Changed
+extends layout.pug
+include mixins.pug
 
-p Your plan has been changed.
+block content
+    h1 Plan Changed
 
-h2 Previous Plan Details
-p Name: #{prevPlan.nickname}
-p Amount: #{prevPlan.amount / 100} #{prevPlan.currency}
-p Interval: Every #{prevPlan.interval_count} #{prevPlan.interval}(s)
+    p Your plan has been changed.
 
-h2 New Plan Details
-p Name: #{newPlan.nickname}
-p Amount: #{newPlan.amount / 100} #{newPlan.currency}
-p Interval: Every #{newPlan.interval_count} #{newPlan.interval}(s)
-
-p Please contact us if you have any questions about this change.
+    +planDetails(prevPlan, 'Previous')
+    +planDetails(newPlan, 'New')

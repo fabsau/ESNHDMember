@@ -1,0 +1,40 @@
+mixin customerDetails(checkoutSession)
+    h2 Customer Details
+    p Name: #{checkoutSession.customer_details.name}
+    p Email: #{checkoutSession.customer_details.email}
+    p Tax Exempt: #{checkoutSession.customer_details.tax_exempt}
+
+mixin paymentDetails(checkoutSession)
+    h2 Payment Details
+    p Payment Status: #{checkoutSession.payment_status}
+    p Payment Method: #{checkoutSession.payment_method_types.join(", ")}
+
+mixin planDetails(plan, title)
+    h2 #{title} Plan Details
+    p Name: #{plan.nickname}
+    p Amount: #{plan.amount / 100} #{plan.currency}
+    p Interval: Every #{plan.interval_count} #{plan.interval}(s)
+
+mixin subscriptionDetails(subscription)
+    h2 Subscription Details
+    p Subscription ID: #{subscription.id}
+
+mixin cancellationDetails(subscription)
+    h2 Cancellation Details
+    p Cancellation Reason: #{subscription.cancellation_details.reason}
+    p Cancellation Time: #{new Date(subscription.canceled_at * 1000).toLocaleString()}
+
+mixin billingDetails(subscription)
+    h2 Billing Details
+    p Billing Cycle Anchor: #{new Date(subscription.billing_cycle_anchor * 1000).toLocaleString()}
+    p Current Period Start: #{new Date(subscription.current_period_start * 1000).toLocaleString()}
+    p Current Period End: #{new Date(subscription.current_period_end * 1000).toLocaleString()}
+
+mixin signOff
+    p
+    p
+    p Best regards,
+    p Your ESN Heidelberg Team
+
+mixin greeting(name)
+    p Hello #{name},

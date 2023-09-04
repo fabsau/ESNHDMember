@@ -1,0 +1,17 @@
+h1 Subscription Cancellation Undone
+
+h2 Subscription Details
+p Subscription ID: #{subscription.id}
+p Plan: #{plan.nickname}
+p Amount: #{plan.amount / 100} #{plan.currency}
+p Interval: Every #{plan.interval_count} #{plan.interval}(s)
+
+h2 Status
+p Your subscription is currently active and will remain so until the end of the current billing period.
+
+h2 Billing Details
+p Billing Cycle Anchor: #{new Date(subscription.billing_cycle_anchor * 1000).toLocaleString()}
+p Current Period Start: #{new Date(subscription.current_period_start * 1000).toLocaleString()}
+p Current Period End: #{new Date(subscription.current_period_end * 1000).toLocaleString()}
+
+p If you have any questions about your subscription, please contact us.

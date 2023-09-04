@@ -1,20 +1,13 @@
-h1 Checkout Successful
+extends layout.pug
+include mixins.pug
 
-h2 Order Details
-p Amount Subtotal: #{checkoutSession.amount_subtotal / 100} #{checkoutSession.currency}
-p Total Amount: #{checkoutSession.amount_total / 100} #{checkoutSession.currency}
+block content
+    h1 Checkout Successful
 
-h2 Customer Details
-p Name: #{checkoutSession.customer_details.name}
-p Email: #{checkoutSession.customer_details.email}
+    h2 Order Details
+    p Amount Subtotal: #{checkoutSession.amount_subtotal / 100} #{checkoutSession.currency}
+    p Total Amount: #{checkoutSession.amount_total / 100} #{checkoutSession.currency}
 
-p Tax Exempt: #{checkoutSession.customer_details.tax_exempt}
-
-h2 Subscription Details
-p Subscription ID: #{checkoutSession.subscription}
-
-h2 Payment Details
-p Payment Status: #{checkoutSession.payment_status}
-p Payment Method: #{checkoutSession.payment_method_types.join(", ")}
-
-p If you have any questions about your order, please contact us.
+    +customerDetails(checkoutSession)
+    +subscriptionDetails(checkoutSession)
+    +paymentDetails(checkoutSession)
