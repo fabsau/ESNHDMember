@@ -23,7 +23,7 @@ mixin subscriptionDetails(subscription)
     h3 📚 Your Membership Details
     p Subscription ID: #{subscription.id}
 
-mixin cancellationDetails(subscription)
+mixin cancellationDetails(subscription, status)
     h3 🚫 Cancellation Details
     table.table
         tr
@@ -31,7 +31,7 @@ mixin cancellationDetails(subscription)
             td #{subscription.plan.nickname} (#{subscription.plan.amount / 100}€ every #{subscription.plan.interval_count} #{subscription.plan.interval}s)
         tr
             td Status:
-            td Cancelled
+            td #{status}
 
 mixin cancellationDate(subscription)
   - let date = new Date(subscription.cancel_at * 1000);

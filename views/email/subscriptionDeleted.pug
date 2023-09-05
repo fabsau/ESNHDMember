@@ -2,16 +2,14 @@ extends layout.pug
 include mixins.pug
 
 block content
-    h1 Subscription Deleted
-
-    +subscriptionDetails(subscription)
-    +planDetails(plan, 'Current')
-    +cancellationDetails(subscription)
-
-    p Subscription End Time: #{new Date(subscription.ended_at * 1000).toLocaleString()}
-
-    p Your subscription has been revoked and is no longer active.
-
-    +billingDetails(subscription)
-
-    p If you have any questions about your cancellation, please contact us.
+    h3 Your ESN Membership has been immediately cancelled!
+    +greeting
+    br
+    +cancellationDetails(subscription, 'Deleted')
+    br
+    h3 📅 Please note
+    ul
+        li Your membership and all associated IT-Accesses have been immediately removed. You will no longer be listed as an official member of ESN Heidelberg. If you wish to return, you'll need to reapply for a new membership.
+        li If this was made by mistake, please contact us as soon as possible.
+    br
+    p Your contributions as a volunteer have been invaluable, and we sincerely thank you for your dedication ❤️.
