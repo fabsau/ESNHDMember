@@ -27,14 +27,15 @@ mixin cancellationDetails(subscription)
     h3 🚫 Cancellation Details
     table.table
         tr
-            th Cancelled plan
+            td Plan:
             td #{subscription.plan.nickname} (#{subscription.plan.amount / 100}€ every #{subscription.plan.interval_count} #{subscription.plan.interval}s)
         tr
-            th Cancellation Date and Time
-            td #{new Date(subscription.canceled_at * 1000).toLocaleString()}
-        tr
-            th Membership active until
-            td #{new Date(subscription.cancel_at * 1000).toLocaleString()}
+            td Status:
+            td Cancelled
+
+mixin cancellationDate(subscription)
+  - let date = new Date(subscription.cancel_at * 1000);
+    | #{('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear()}
 
 
 mixin billingDetails(subscription)
