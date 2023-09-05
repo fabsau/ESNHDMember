@@ -9,19 +9,51 @@ mixin paymentDetails(checkoutSession)
     p Payment Status: #{checkoutSession.payment_status}
     p Payment Method: #{checkoutSession.payment_method_types.join(", ")}
 
-mixin planDetails(plan, title)
-    h3 #{title} Plan Details
-    p #{plan.nickname} (#{plan.amount / 100}€ every #{plan.interval_count} #{plan.interval}s)
+mixin updatedplanName(plan)
+    #{plan.nickname}
+
+mixin updatedplanDetails(plan)
+    #{plan.nickname} (#{plan.amount / 100}€ every #{plan.interval_count} #{plan.interval}s)
 
 mixin planNickname(plan)
-    p #{plan.nickname} (#{plan.amount / 100}
+    #{plan.nickname} (#{plan.amount / 100}€)
 
 mixin planAmount(plan)
     p (#{plan.amount / 100}€ every #{plan.interval_count} #{plan.interval}s)
 
-mixin subscriptionDetails(subscription)
-    h3 📚 Your Membership Details
-    p Subscription ID: #{subscription.id}
+mixin subscriptionDetails(subscription, status)
+    h3 📚 Your updated Membership Details
+    table.table
+        tr
+            td Plan:
+            td #{subscription.plan.nickname} (#{subscription.plan.amount / 100}€ every #{subscription.plan.interval_count} #{subscription.plan.interval}s)
+        tr
+            td Automatic Renewal:
+            td
+                +periodEndDate(subscription)
+        tr
+            td Payment Method:
+            td TODO###
+        tr
+            td Status:
+            td #{status}
+
+mixin switchedDetails(subscription, status)
+    h3 📚 Your updated Membership Details
+    table.table
+        tr
+            td Plan:
+            td #{subscription.plan.nickname} (#{subscription.plan.amount / 100}€ every #{subscription.plan.interval_count} #{subscription.plan.interval}s)
+        tr
+            td Automatic Renewal:
+            td
+                +periodEndDate(subscription)
+        tr
+            td Payment Method:
+            td TODO###
+        tr
+            td Status:
+            td #{status}
 
 mixin cancellationDetails(subscription, status)
     h3 🚫 Cancellation Details
@@ -35,8 +67,11 @@ mixin cancellationDetails(subscription, status)
 
 mixin cancellationDate(subscription)
   - let date = new Date(subscription.cancel_at * 1000);
-    | #{('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear()}
+      | #{('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear()}
 
+mixin periodEndDate(subscription)
+  - let date = new Date(subscription.current_period_end * 1000);
+      | #{('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear()}
 
 mixin billingDetails(subscription)
     h3 Billing Details
@@ -45,8 +80,6 @@ mixin billingDetails(subscription)
     p Current Period End: #{new Date(subscription.current_period_end * 1000).toLocaleString()}
 
 mixin signOff
-    p
-    p
     p Best regards,
     p Your ESN Heidelberg Team
 

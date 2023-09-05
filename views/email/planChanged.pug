@@ -2,9 +2,27 @@ extends layout.pug
 include mixins.pug
 
 block content
-    h1 Plan Changed
-
-    p Your plan has been changed.
-
-    +planDetails(prevPlan, 'Previous')
-    +planDetails(newPlan, 'New')
+    h3 You're now a
+        +updatedplanName(newPlan)
+        | &nbsp;at ESN Heidelberg!
+    +greeting
+    p We hereby confirm your switch to the updated role. You've been successfully switched from
+        +updatedplanDetails(prevPlan)
+        | &nbsp; to&nbsp;
+        +updatedplanDetails(newPlan)
+        | .
+    br
+    // +subscriptionDetails(subscription, 'Switched')
+    br
+    h3 📅 Please note
+    ul
+        li Your new role
+            +updatedplanName(newPlan)
+            | &nbsp;is effective immediately. All your IT-Accesses and membership benefits have been updated to correspond with this new role.
+        li If the switch was made by mistake, you can easily revert it without any additional charges until&nbsp;
+            // +periodEndDate(subscription)
+            | &nbsp; by visiting the&nbsp;
+            +portalLink
+            | &nbsp;and clicking on the "Switch Back" button.
+    br
+    p We're excited to continue having you with us! Your contributions as a volunteer are invaluable, and we sincerely thank you for your dedication ❤️.

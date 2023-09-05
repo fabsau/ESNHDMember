@@ -1,17 +1,20 @@
-h1 Subscription Cancellation Undone
+extends layout.pug
+include mixins.pug
 
-h2 Subscription Details
-p Subscription ID: #{subscription.id}
-p Plan: #{plan.nickname}
-p Amount: #{plan.amount / 100} #{plan.currency}
-p Interval: Every #{plan.interval_count} #{plan.interval}(s)
-
-h2 Status
-p Your subscription is currently active and will remain so until the end of the current billing period.
-
-h2 Billing Details
-p Billing Cycle Anchor: #{new Date(subscription.billing_cycle_anchor * 1000).toLocaleString()}
-p Current Period Start: #{new Date(subscription.current_period_start * 1000).toLocaleString()}
-p Current Period End: #{new Date(subscription.current_period_end * 1000).toLocaleString()}
-
-p If you have any questions about your subscription, please contact us.
+block content
+    h3 Your ESN Membership has been Reactivated! 🎉
+    +greeting
+    p We've received your request and hereby reactivate your ESN Membership.
+    br
+    +subscriptionDetails(subscription, 'Active')
+    br
+    h3 📅 Please note
+    ul
+        li Your reactivation did not incur any additional charges, and everything remains the same as before.
+        li If your reactivation was made by mistake, you can easily cancel it again free of charge until&nbsp;
+            +periodEndDate(subscription)
+            | &nbsp;by visiting the&nbsp;
+            +portalLink
+            | &nbsp;and clicking on the "Cancel" button.
+    br
+    p We're excited to have you back with us! Your contributions as a volunteer are invaluable, and we sincerely thank you for your dedication ❤️.
