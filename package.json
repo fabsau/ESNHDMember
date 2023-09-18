@@ -9,7 +9,7 @@
     "@dr.pogodin/csurf": "^1.13.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.1",
-    "bootstrap-icons": "^1.10.5",
+    "bootstrap-icons": "^1.11.1",
     "cookie-parser": "^1.4.6",
     "datatables.net": "^1.13.6",
     "datatables.net-bs5": "^1.13.6",
