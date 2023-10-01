@@ -1,6 +1,9 @@
 # ESN Heidelberg Member Portal
 The ESN Heidelberg Member Portal is a Node.js web application running on the `Express.js` framework. It's been crafted for the members of ESN Heidelberg to manage their membership payments and integrate with Google Oauth and Stripe. They can handle their membership plans and personal information, while also enabling non-members to join.
 
+https://github.com/fabsau/ESNHDMember/assets/2856122/a4a3d6ca-1118-4dec-9c2f-118ea582d921
+The video demonstrates the core functionality, but please note that due to privacy concerns a preloaded Admin Dashboard is shown.
+
 ## Key Functionality
 
 1. **Authentication**: The application configures Google OAuth for user authentication, allowing users to sign in securely using their ESN Heidelberg Google profiles. It retrieves the email from the user's Google profile and designates it as a Stripe customer.
@@ -8,8 +11,6 @@ The ESN Heidelberg Member Portal is a Node.js web application running on the `Ex
 2. **Secure Payments and Subscriptions**: Leveraging `Stripe` integration, this application facilitates management and handling of payments and subscriptions. Users can comfortably create, change, or cancel their subscriptions via the Stripe Portal.
 
 3. **Security**: Standard security measures are incorporated into the platform, including HTTP header, Content Security Policy (CSP), and Cross-Site Request Forgery (CSRF) protections. Importantly, the server doesn't retain any data, user information is dynamically fetched from Google and Stripe and stored on the users Browser Session.
-
-[![Overview of Functions](https://screen.sauna.re/pora0/yazariJi80.mp4/raw)](https://screen.sauna.re/pora0/yazariJi80.mp4/raw)
 
 ## Table of Contents
 
