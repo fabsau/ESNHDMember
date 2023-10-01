@@ -95,21 +95,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 1. You need to have Node.js and npm installed in your system. You can download Node.js from here: https://nodejs.org/
 
-2. You would also need to create a `.env` file in your project directory and use these variables:
-
-```
-# rename this file to .env
-GOOGLE_CLIENT_ID=              # google cloud credential client id
-GOOGLE_CLIENT_SECRET=          # google cloud credential oauth secret
-SESSION_SECRET=                # generate long secret
-STRIPE_API_KEY=                # your stripe key
-BASE_URL=                      # example.com
-PROTOCOL=                      # http or https
-COOKIE_SECURE=                 # TRUE or FALSE sets cookie source to HTTPS
-COOKIE_SAMESITE_STRICT=        # TRUE or FALSE sets cookie sameSite to strict
-SUBSCRIPTION_PRICE_ID_MEMBER=  # price id of a subscription
-SUBSCRIPTION_PRICE_ID_ALUMNI=  # second price id
-```
+2. You would also need to create a `.env` file in your project directory. See the template-file named `environment_template`
 
 ### Installation <a name="install"></a>
 
