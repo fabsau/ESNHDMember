@@ -37,11 +37,7 @@ docker pull fabsau/esn-hd-member:latest
 ```bash
 docker run -d --name esnmember -p 3000:3000 --env-file .env --restart unless-stopped fabsau/esn-hd-member:latest
 ```
-Replace the `.env` in the `--env-fi
-
-https://github.com/fabsau/ESNHDMember/assets/2856122/777b4c31-b3f4-416e-a966-2390045a39ec
-
-le .env` command with the name of your environment configuration file. You can find the variables below or in the environment_template file
+Replace the `.env` in the `--env-file .env` command with the name of your environment configuration file. You can find the variables below or in the environment_template file
 
 ### Docker Compose
 
