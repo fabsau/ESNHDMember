@@ -1,10 +1,7 @@
 # ESN Heidelberg Member Portal
 The ESN Heidelberg Member Portal is a Node.js web application running on the `Express.js` framework. It's been crafted for the members of ESN Heidelberg to manage their membership payments and integrate with Google Oauth and Stripe. They can handle their membership plans and personal information, while also enabling non-members to join.
 
-
-https://github.com/fabsau/ESNHDMember/assets/2856122/c7fa3c82-522b-4d5a-8112-73e1030301b7
-
-
+https://github.com/fabsau/ESNHDMember/assets/2856122/1874d4cc-b87e-4f50-8219-66b22f643097
 
 The video demonstrates the core functionality, but please note that due to privacy concerns a preloaded Admin Dashboard is shown.
 
