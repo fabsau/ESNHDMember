@@ -1,7 +1,12 @@
 # ESN Heidelberg Member Portal
 The ESN Heidelberg Member Portal is a Node.js web application running on the `Express.js` framework. It's been crafted for the members of ESN Heidelberg to manage their membership payments and integrate with Google Oauth and Stripe. They can handle their membership plans and personal information, while also enabling non-members to join.
 
-https://github.com/fabsau/ESNHDMember/assets/2856122/a4a3d6ca-1118-4dec-9c2f-118ea582d921
+<p align="center">
+  <a href="https://github.com/fabsau/ESNHDMember/assets/2856122/79d65f16-10e2-4854-aa9c-4d86272a5068">
+    <img src="https://github.com/fabsau/ESNHDMember/assets/2856122/4b325729-d5a7-4036-8851-670b71d7f569" width="50%" alt="ESN Heidelberg Member Portal Demo">
+  </a>
+</p>
+
 The video demonstrates the core functionality, but please note that due to privacy concerns a preloaded Admin Dashboard is shown.
 
 ## Key Functionality
@@ -36,7 +41,11 @@ docker pull fabsau/esn-hd-member:latest
 ```bash
 docker run -d --name esnmember -p 3000:3000 --env-file .env --restart unless-stopped fabsau/esn-hd-member:latest
 ```
-Replace the `.env` in the `--env-file .env` command with the name of your environment configuration file. You can find the variables below or in the environment_template file
+Replace the `.env` in the `--env-fi
+
+https://github.com/fabsau/ESNHDMember/assets/2856122/777b4c31-b3f4-416e-a966-2390045a39ec
+
+le .env` command with the name of your environment configuration file. You can find the variables below or in the environment_template file
 
 ### Docker Compose
 
