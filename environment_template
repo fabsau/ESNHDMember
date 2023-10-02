@@ -6,29 +6,39 @@
 PORT=3000 # Port the application listens to (default: 3000)
 SESSION_SECRET=your_session_secret # Replace with a hard-to-guess string (no default)
 BEHIND_PROXY=FALSE # If the application is behind a proxy set to TRUE otherwise FALSE (default: FALSE)
+DEBUG=esnmember:server # debugging namespace (default: esnmember:server)
 
-# SSL Settings
-ENABLE_HTTPS=FALSE # Enables https if set to TRUE. Also enables cookie sameSite to strict and secure (default: FALSE)
-CERT_METHOD= # Options between using LETSENCRYPT (changes applications port to 80/443, above port mapping won't work anymore and it seems to be broken), SELFSIGN, CUSTOM
-LETSENCRYPT_EMAIL=test@example.com
-CERT_DOMAIN=example.com # Domain for the LETSENCRYPT or SELFSIGNED certificate to be used (no default)
-CERT_ALTNAMES=example.com,www.example.com # First Altname needs to be identical to CERT_DOMAIN, comma seperated and does not apply to selfsigned option (no default)
-SELFSIGNED_VALIDITY_DAYS= # default validity in days for the selfsigned certificate (default: 365)
-CUSTOM_CERT_KEY_FILE_PATH= # Set path for a custom key.pem (default: /cert/custom/key.pem)
-CUSTOM_CERT_FILE_PATH= # Set path for a custom cert.pem (default: /cert/custom/cert.pem)
-
-# Google OAuth Credentials
-# Replace with your own OAuth credentials from Google
+# Google Settings
+## OAuth Settings
 GOOGLE_CLIENT_ID=your_google_client_id (no default)
 GOOGLE_CLIENT_SECRET=your_google_client_secret (no default)
+## Admin Dashboard Settings
+GOOGLE_ADMIN_BASE_OU=/BaseOU # Google Admin Base OU for users allowed to the admin dashboard (no default)
+## Service Account Settings for E-Mail Sending
+GOOGLE_ADMIN_CLIENT_EMAIL=example@example.iam.gserviceaccount.com # Google Admin Client Email (no default)
+GOOGLE_ADMIN_PRIVATE_KEY=your_private_key # Google Admin Private Key (no default)
+## Email Settings
+GOOGLE_ADMIN_USER=admin@example.com # Sender email address (no default)
+GOOGLE_ADMIN_DOMAIN=example.com # Domain to be appended in the message id (no default)
+REPLY_TO_EMAIL=info@example.com # email address to be sat as reply-to (no default)
 
 # Stripe Settings
 STRIPE_API_KEY=your_stripe_api_key # Use your own stripe API key (no default)
-SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS=
-SUBSCRIPTION_PRICE_ID_MEMBER_ANNUALLY=
-SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS=
-SUBSCRIPTION_PRICE_ID_ALUMNI_ANNUALLY=
+STRIPE_WEBHOOK_SECRET=your_webhook_secret # Stripe Webhook Secret (no default)
+SUBSCRIPTION_PRICE_ID_MEMBER=your_price_id Subscription price ID plan 1 (no default)
+SUBSCRIPTION_PRICE_ID_ALUMNI=your_price_id Subscription price ID plan 2 (no default)
 TRIAL_LENGTHS_DAYS=180 # Trial duration in days (default: 180)
+
+# SSL Settings
+ENABLE_HTTPS=FALSE # Enables https if set to TRUE. Also enables cookie sameSite to strict and secure (default: FALSE)
+CERT_METHOD=LETSENCRYPT # Options between using LETSENCRYPT (changes applications port to 80/443, above port mapping won't work anymore and it seems to be broken), SELFSIGN, CUSTOM
+LETSENCRYPT_EMAIL=admin@example.com # Email for the LETSENCRYPT certificate to be used (no default)
+CONFIG_DIR=./cert/greenlock # Directory for the LETSENCRYPT certificate to be used (default: ./cert/greenlock)
+CERT_DOMAIN=example.com # Domain for the LETSENCRYPT or SELFSIGNED certificate to be used (no default)
+CERT_ALTNAMES=example.com,www.example.com # First Altname needs to be identical to CERT_DOMAIN, comma seperated and does not apply to selfsigned option (no default)
+SELFSIGNED_VALIDITY_DAYS=365 # default validity in days for the selfsigned certificate (default: 365)
+CUSTOM_CERT_KEY_FILE_PATH=/cert/custom/key.pem # Set path for a custom key.pem (default: /cert/custom/key.pem)
+CUSTOM_CERT_FILE_PATH=/cert/custom/cert.pem # Set path for a custom cert.pem (default: /cert/custom/cert.pem)
 
 # RATE LIMIT SETTINGS
 ENABLE_RATE_LIMITING=FALSE # enable rate limiting by setting to TRUE. (default: FALSE)
