@@ -29,12 +29,12 @@ module.exports = async function (request, response, stripe) {
       .retrieve(customerId)
       .then(async (customer) => {
         const customerEmail = customer.email;
-        console.log("Customer Email: ", customerEmail);
+        // console.log("Customer Email: ", customerEmail);
         const bccEmail = await fetchUserSecondaryEmailByEmail(customerEmail);
         const { firstName, lastName } =
           await fetchUserNamesByEmail(customerEmail);
-        console.log("BCC Email: ", bccEmail);
-        console.log("Event: ", event);
+        // console.log("BCC Email: ", bccEmail);
+        // console.log("Event: ", event);
         sendEmail(
           event.type,
           customerEmail,
