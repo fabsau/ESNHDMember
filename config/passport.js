@@ -6,8 +6,11 @@ module.exports = function (passport, GoogleStrategy, app, session) {
     process.env.GOOGLE_ADMIN_CLIENT_EMAIL,
     null,
     process.env.GOOGLE_ADMIN_PRIVATE_KEY.replace(/\\n/g, "\n"),
-      ["https://www.googleapis.com/auth/admin.directory.user.readonly", "https://www.googleapis.com/auth/gmail.send"],
-    process.env.GOOGLE_ADMIN_USER
+    [
+      "https://www.googleapis.com/auth/admin.directory.user.readonly",
+      "https://www.googleapis.com/auth/gmail.send",
+    ],
+    process.env.GOOGLE_ADMIN_USER,
   );
 
   google.options({ auth: jwtClient });
@@ -46,8 +49,8 @@ module.exports = function (passport, GoogleStrategy, app, session) {
           ou: userDirectory.data.orgUnitPath,
         };
         return done(null, user);
-      }
-    )
+      },
+    ),
   );
 
   passport.serializeUser((user, done) => {
@@ -59,6 +62,7 @@ module.exports = function (passport, GoogleStrategy, app, session) {
   });
 
   const sessionOptions = {
+    name: "__Host-Session",
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
