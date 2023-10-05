@@ -10,8 +10,8 @@ DEBUG=esnmember:server # debugging namespace (default: esnmember:server)
 
 # Google Settings
 ## OAuth Settings
-GOOGLE_CLIENT_ID=your_google_client_id (no default)
-GOOGLE_CLIENT_SECRET=your_google_client_secret (no default)
+GOOGLE_CLIENT_ID=your_google_client_id # (no default)
+GOOGLE_CLIENT_SECRET=your_google_client_secret # (no default)
 ## Admin Dashboard Settings
 GOOGLE_ADMIN_BASE_OU=/BaseOU # Google Admin Base OU for users allowed to the admin dashboard (no default)
 ## Service Account Settings for E-Mail Sending
@@ -25,8 +25,8 @@ REPLY_TO_EMAIL=info@example.com # email address to be sat as reply-to (no defaul
 # Stripe Settings
 STRIPE_API_KEY=your_stripe_api_key # Use your own stripe API key (no default)
 STRIPE_WEBHOOK_SECRET=your_webhook_secret # Stripe Webhook Secret (no default)
-SUBSCRIPTION_PRICE_ID_MEMBER=your_price_id Subscription price ID plan 1 (no default)
-SUBSCRIPTION_PRICE_ID_ALUMNI=your_price_id Subscription price ID plan 2 (no default)
+SUBSCRIPTION_PRICE_ID_MEMBER=your_price_id # Subscription price ID plan 1 (no default)
+SUBSCRIPTION_PRICE_ID_ALUMNI=your_price_id # Subscription price ID plan 2 (no default)
 TRIAL_LENGTHS_DAYS=180 # Trial duration in days (default: 180)
 
 # SSL Settings
