@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("fs-extra");
 const selfsigned = require("selfsigned");
 
 module.exports = {
@@ -10,10 +10,10 @@ module.exports = {
       try {
         sslOptions = {
           key: fs.readFileSync(
-            process.env.CUSTOM_CERT_KEY_FILE_PATH || "./cert/custom/key.pem"
+            process.env.CUSTOM_CERT_KEY_FILE_PATH || "./cert/custom/key.pem",
           ),
           cert: fs.readFileSync(
-            process.env.CUSTOM_CERT_FILE_PATH || "./cert/custom/cert.pem"
+            process.env.CUSTOM_CERT_FILE_PATH || "./cert/custom/cert.pem",
           ),
           port: normalizePort(process.env.PORT || "3000"),
         };
@@ -38,7 +38,8 @@ module.exports = {
       console.log("Certificate not found, generating a new one...");
       const pems = selfsigned.generate(attrs, { days: Number(validityDays) });
 
-      if (!fs.existsSync("/cert/selfsigned")) fs.mkdirSync("./cert/selfsigned");
+      // Use ensureDirSync to create directories if they don't exist
+      fs.ensureDirSync("./cert/selfsigned");
 
       fs.writeFileSync(keyPath, pems.private);
       fs.writeFileSync(certPath, pems.cert);
