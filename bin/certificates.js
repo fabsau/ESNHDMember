@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs");
 const selfsigned = require("selfsigned");
 
 module.exports = {
@@ -26,20 +26,23 @@ module.exports = {
   },
 
   generateCertificates: () => {
-    const keyPath = "./cert/selfsigned/key.pem";
-    const certPath = "./cert/selfsigned/cert.pem";
+    const certDir = "./cert/selfsigned";
+    const keyPath = `${certDir}/key.pem`;
+    const certPath = `${certDir}/cert.pem`;
 
     const validityDays = process.env.SELFSIGNED_VALIDITY_DAYS || 365;
     const commonName = process.env.CERT_DOMAIN || "localhost";
 
     const attrs = [{ name: "commonName", value: commonName }];
 
+    // Create the directory if it doesn't exist
+    if (!fs.existsSync(certDir)) {
+      fs.mkdirSync(certDir, { recursive: true });
+    }
+
     if (!fs.existsSync(certPath)) {
       console.log("Certificate not found, generating a new one...");
       const pems = selfsigned.generate(attrs, { days: Number(validityDays) });
-
-      // Use ensureDirSync to create directories if they don't exist
-      fs.ensureDirSync("./cert/selfsigned");
 
       fs.writeFileSync(keyPath, pems.private);
       fs.writeFileSync(certPath, pems.cert);

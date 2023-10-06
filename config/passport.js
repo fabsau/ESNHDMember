@@ -62,7 +62,7 @@ module.exports = function (passport, GoogleStrategy, app, session) {
   });
 
   const sessionOptions = {
-    name: "__Host-Session",
+    name: process.env.ENABLE_HTTPS === "TRUE" ? "__Host-Session" : "Session",
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
