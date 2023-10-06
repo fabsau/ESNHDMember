@@ -22,7 +22,7 @@ const ensureAuthenticated = require("./middlewares/ensureAuthenticated");
 const rateLimiter = require("./middlewares/rateLimiter");
 const passportConfig = require("./config/passport");
 const helmetConfig = require("./config/helmet");
-const ipSessionBind = require("./middlewares/ipSessionBind");
+// const ipSessionBind = require("./middlewares/ipSessionBind");
 // const validateHost = require("./middlewares/validateHost");
 
 // Import routes
@@ -49,7 +49,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(ipSessionBind);
+// app.use(ipSessionBind);
 // app.use(validateHost());
 
 // Applying routes
