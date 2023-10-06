@@ -10,10 +10,10 @@ module.exports = {
       try {
         sslOptions = {
           key: fs.readFileSync(
-            process.env.CUSTOM_CERT_KEY_FILE_PATH || "./cert/custom/key.pem"
+            process.env.CUSTOM_CERT_KEY_FILE_PATH || "./cert/custom/key.pem",
           ),
           cert: fs.readFileSync(
-            process.env.CUSTOM_CERT_FILE_PATH || "./cert/custom/cert.pem"
+            process.env.CUSTOM_CERT_FILE_PATH || "./cert/custom/cert.pem",
           ),
           port: normalizePort(process.env.PORT || "3000"),
         };
@@ -26,19 +26,23 @@ module.exports = {
   },
 
   generateCertificates: () => {
-    const keyPath = "./cert/selfsigned/key.pem";
-    const certPath = "./cert/selfsigned/cert.pem";
+    const certDir = "./cert/selfsigned";
+    const keyPath = `${certDir}/key.pem`;
+    const certPath = `${certDir}/cert.pem`;
 
     const validityDays = process.env.SELFSIGNED_VALIDITY_DAYS || 365;
     const commonName = process.env.CERT_DOMAIN || "localhost";
 
     const attrs = [{ name: "commonName", value: commonName }];
 
+    // Create the directory if it doesn't exist
+    if (!fs.existsSync(certDir)) {
+      fs.mkdirSync(certDir, { recursive: true });
+    }
+
     if (!fs.existsSync(certPath)) {
       console.log("Certificate not found, generating a new one...");
       const pems = selfsigned.generate(attrs, { days: Number(validityDays) });
-
-      if (!fs.existsSync("/cert/selfsigned")) fs.mkdirSync("./cert/selfsigned");
 
       fs.writeFileSync(keyPath, pems.private);
       fs.writeFileSync(certPath, pems.cert);
