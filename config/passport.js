@@ -76,11 +76,7 @@ module.exports = function (passport, GoogleStrategy, app, session) {
   app.use(session(sessionOptions));
 
   app.use((req, res, next) => {
-    if (req.secure) {
-      sessionOptions.cookie.secure = true; // served over HTTPS
-    } else {
-      sessionOptions.cookie.secure = false; // served over HTTP
-    }
+    sessionOptions.cookie.secure = !!req.secure;
     next();
   });
 
