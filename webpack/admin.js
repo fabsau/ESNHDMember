@@ -9,8 +9,6 @@ import "datatables.net-buttons";
 import "datatables.net-buttons-bs5";
 import "datatables.net-buttons/js/buttons.print.min.js";
 import "datatables.net-buttons/js/buttons.html5.min.js";
-import "pdfmake/build/pdfmake.min.js";
-import "pdfmake/build/vfs_fonts.js";
 import "jszip/dist/jszip.min.js";
 import "datatables.net-colreorder";
 import "datatables.net-buttons/js/buttons.colVis.min.js";
