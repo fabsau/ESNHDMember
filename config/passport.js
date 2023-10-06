@@ -1,6 +1,16 @@
 const { google } = require("googleapis");
 const admin = google.admin("directory_v1");
 
+let sessionName = "Session";
+
+if (process.env.ENABLE_HTTPS === "TRUE") {
+  sessionName = "__Host-Session";
+}
+
+if (process.env.BEHIND_PROXY === "TRUE") {
+  sessionName = "__Host-Session";
+}
+
 module.exports = function (passport, GoogleStrategy, app, session) {
   const jwtClient = new google.auth.JWT(
     process.env.GOOGLE_ADMIN_CLIENT_EMAIL,
@@ -62,7 +72,7 @@ module.exports = function (passport, GoogleStrategy, app, session) {
   });
 
   const sessionOptions = {
-    name: process.env.ENABLE_HTTPS === "TRUE" ? "__Host-Session" : "Session",
+    name: sessionName,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
