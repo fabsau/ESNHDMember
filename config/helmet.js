@@ -36,6 +36,7 @@ module.exports = function (app, helmet) {
           ],
           fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
           frameSrc: ["'self'"],
+          frameAncestors: ["'none'"],
           connectSrc: ["'self'"],
           objectSrc: ["'none'"],
           formAction: ["'self'", "https://checkout.stripe.com"],
@@ -47,7 +48,7 @@ module.exports = function (app, helmet) {
       },
       frameguard: { action: "deny" },
       hidePoweredBy: true,
-    })
+    }),
   );
 
   if (process.env.ENABLE_HTTPS === "TRUE") {
@@ -56,7 +57,7 @@ module.exports = function (app, helmet) {
         maxAge: 31536000,
         includeSubDomains: true,
         preload: true,
-      })
+      }),
     );
   }
 };
