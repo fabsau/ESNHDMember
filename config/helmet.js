@@ -21,11 +21,14 @@ module.exports = function (app, helmet) {
         referrerPolicy: { policy: "no-referrer" },
         xssFilter: true,
         noSniff: true,
+        crossOriginEmbedderPolicy: true,
       },
       frameguard: { action: "deny" },
       hidePoweredBy: true,
     }),
   );
+
+  app.use(helmet.crossOriginEmbedderPolicy());
 
   if (process.env.ENABLE_HTTPS === "TRUE") {
     app.use(
