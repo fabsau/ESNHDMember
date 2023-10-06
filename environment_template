@@ -3,6 +3,7 @@
 ####################################################
 
 # Basic Settings
+ALLOWED_HOSTS=localhost:3000,www.example.com # Comma seperated list of allowed hosts (no default)
 PORT=3000 # Port the application listens to (default: 3000)
 SESSION_SECRET=your_session_secret # Replace with a hard-to-guess string (no default)
 BEHIND_PROXY=FALSE # If the application is behind a proxy set to TRUE otherwise FALSE (default: FALSE)
