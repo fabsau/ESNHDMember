@@ -23,7 +23,7 @@ const rateLimiter = require("./middlewares/rateLimiter");
 const passportConfig = require("./config/passport");
 const helmetConfig = require("./config/helmet");
 const ipSessionBind = require("./middlewares/ipSessionBind");
-const validateHost = require("./middlewares/validateHost");
+// const validateHost = require("./middlewares/validateHost");
 
 // Import routes
 const routes = require("./routes/index");
@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(ipSessionBind);
-app.use(validateHost());
+// app.use(validateHost());
 
 // Applying routes
 routes(app, passport, stripe, ensureAuthenticated);
