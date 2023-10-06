@@ -3,14 +3,15 @@
   "version": "1.0.5",
   "private": true,
   "scripts": {
+    "build": "webpack",
     "start": "node ./bin/www"
   },
   "dependencies": {
     "@dr.pogodin/csurf": "^1.13.0",
     "@popperjs/core": "^2.11.8",
     "body-parser": "^1.20.2",
-    "bootstrap": "^5.3.1",
-    "bootstrap-icons": "^1.10.5",
+    "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.1",
     "cookie-parser": "^1.4.6",
     "datatables.net": "^1.13.6",
     "datatables.net-bs5": "^1.13.6",
@@ -31,6 +32,7 @@
     "jquery": "^3.7.1",
     "jszip": "^3.10.1",
     "mailcomposer": "^4.0.2",
+    "mini-css-extract-plugin": "^2.7.6",
     "morgan": "^1.10.0",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
@@ -39,7 +41,9 @@
     "select2": "^4.0.13",
     "selfsigned": "^2.1.1",
     "stripe": "^13.3.0",
+    "terser-webpack-plugin": "^5.3.9",
     "uuid": "^9.0.0",
+    "webpack": "^5.88.2",
     "yadcf": "^0.9.3"
   },
   "devDependencies": {

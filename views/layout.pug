@@ -1,25 +1,13 @@
 doctype html
 html
     head
-        // Set title and import necessary stylesheets and scripts
         title ESN Heidelberg Member Portal
         link(rel="icon" href="/images/favicon.png")
         meta(charset="utf-8")
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
-        // Bootstrap CSS
-        link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" crossorigin="anonymous")
-        // Bootstrap Icons
-        // link(href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css" rel="stylesheet")
-        link(rel='stylesheet' href='https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css')
+        link(rel="stylesheet" href="/bundle/layout.css")
 
-        // DataTables
-        link(rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css")
-        link(rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css")
-        link(rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.7.0/css/colReorder.bootstrap5.min.css")
-        link(rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css")
-
-        // Custom CSS
-        link(rel="stylesheet" href="/stylesheets/style.css")
+        block styles
 
     body(data-bs-theme="light")
         nav.navbar.navbar-expand-md.bg-dark.py-3.sticky-top.navbar-border(data-bs-theme="dark")
@@ -46,15 +34,10 @@ html
                         ul.navbar-nav.ms-auto
                             a.no-underline.btn.btn-primary.ms-md-2(href="/") Login
 
-        // Blank content block to be filled by individual pages
         block content
-        // Popper.js
-        script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js" crossorigin="anonymous")
-        // Bootstrap's JavaScript
-        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.min.js" crossorigin="anonymous")
-        script(src="/javascripts/mobileLayout.js")
+        script(src="/bundle/layout.js")
 
-        //- Footer
+
         footer.text-center.bg-dark
             .container.text-white.py-4.py-lg-5
                 ul.list-inline
