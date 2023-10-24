@@ -43,7 +43,7 @@
     "stripe": "^13.3.0",
     "terser-webpack-plugin": "^5.3.9",
     "uuid": "^9.0.0",
-    "webpack": "^5.88.2",
+    "webpack": "^5.89.0",
     "yadcf": "^0.9.3"
   },
   "devDependencies": {
