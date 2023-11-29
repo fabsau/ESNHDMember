@@ -78,7 +78,7 @@ module.exports = function (passport, GoogleStrategy, app, session) {
     saveUninitialized: false,
     cookie: {
       httpOnly: true, // The cookie is only accessible by the web server
-      maxAge: 24 * 60 * 60 * 1000, // Cookies will expire in 24 hours
+      maxAge: 1 * 60 * 60 * 1000, // Cookies will expire in 1 hour
       sameSite: "lax", // Protection against CSRF attacks
     },
   };
