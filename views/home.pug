@@ -23,13 +23,16 @@ block content
                             p.period(id=(index === 0 ? 'member-period' : 'alumni-period'), class='text-secondary') (every 6 Months)
                         .separate-line
                         if index === 0
-                            p.description Best for new and existing members
+                            p.description Best for new and existing members.
                         else
-                            p.description For old members that wish to keep contributing
+                            p.description For members that wish to financially support ESN without being active.
                         ul.perks
-                            - var perks = index === 0 ? ['Full Membership'] : ['Full Membership', 'Alumni Benefit 1', 'Alumni Benefit 2']
-                            each perk in perks
-                                li= perk
+                          - var perks = index === 0 ? ['Full Membership', 'Voting Rights'] : ['Alumni Membership', 'No Voting Rights', 'No need for active participation in events']
+                          each perk in perks
+                              if perk === 'No Voting Rights'
+                                  li(class='disadvantage')= ' ' + perk
+                              else
+                                  li(class='advantage')= ' ' + perk
                         if !subscription
                             form(action='/purchase' method='post' id='purchase-form')
                                 input(type='hidden' name='priceId' id='priceId', value=(index === 0 ? process.env.SUBSCRIPTION_PRICE_ID_MEMBER_6MONTHS : process.env.SUBSCRIPTION_PRICE_ID_ALUMNI_6MONTHS))

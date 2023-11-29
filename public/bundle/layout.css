@@ -434,11 +434,18 @@ footer {
   padding-left: 30px;
 }
 
-.price-card .perks li::before {
+.price-card .perks li.advantage::before {
   content: "\2713";
   position: absolute;
   left: 0;
   color: green;
+}
+
+.price-card .perks li.disadvantage::before {
+  content: "\274C";
+  position: absolute;
+  left: 0;
+  color: red;
 }
 
 .price-card .trial-checkbox {
