@@ -54,6 +54,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure
-        run: |
-          az webapp config container set --name esn-member --resource-group ESN --docker-custom-image-name fabsau/esn-hd-member:${{ env.VERSION }} --docker-registry-server-url https://registry.hub.docker.com
+      # - name: Deploy to Azure
+      #  run: |
+      #    az webapp config container set --name esn-member --resource-group ESN --docker-custom-image-name fabsau/esn-hd-member:${{ env.VERSION }} --docker-registry-server-url https://registry.hub.docker.com
