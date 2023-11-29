@@ -8,7 +8,7 @@ PORT=3000 # Port the application listens to (default: 3000)
 SESSION_SECRET=your_session_secret # Replace with a hard-to-guess string (no default)
 BEHIND_PROXY=FALSE # If the application is behind a proxy set to TRUE otherwise FALSE (default: FALSE)
 DEBUG=esnmember:server # debugging namespace (default: esnmember:server)
-
+DEBUG_MODE=FALSE # If set to TRUE the application will output many messages to the console (default: FALSE)
 # Google Settings
 ## OAuth Settings
 GOOGLE_CLIENT_ID=your_google_client_id # (no default)
