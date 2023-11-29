@@ -46,7 +46,9 @@ module.exports = function (passport, GoogleStrategy, app, session) {
             userKey: email,
           });
         } catch (err) {
-          console.log("Error fetching user directory details: ", err);
+          if (process.env.DEBUG_MODE === "TRUE") {
+            console.log("Error fetching user directory details: ", err);
+          }
           return done(err);
         }
 

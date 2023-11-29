@@ -15,7 +15,9 @@ exports.changeSubscription = (stripe) => async (req, res) => {
     };
     res.redirect("/home");
   } catch (error) {
-    console.error("Error switching membership type:", error);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error("Error switching membership type:", error);
+    }
     req.session.message = {
       type: "error",
       text: "Error switching membership type, please refresh the page!",
@@ -37,7 +39,9 @@ exports.cancelSubscription = (stripe) => async (req, res) => {
     };
     res.redirect("/home");
   } catch (error) {
-    console.error("Error cancelling subscription:", error);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error("Error cancelling subscription:", error);
+    }
     req.session.message = {
       type: "error",
       text: "Error cancelling subscription, please refresh the page!",
@@ -59,7 +63,9 @@ exports.undoCancelSubscription = (stripe) => async (req, res) => {
     };
     res.redirect("/home");
   } catch (error) {
-    console.error("Error undoing subscription cancellation:", error);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error("Error undoing subscription cancellation:", error);
+    }
     req.session.message = {
       type: "error",
       text: "Error undoing subscription cancellation, please refresh the page!",
@@ -80,7 +86,9 @@ exports.adminCancelSubscription = (stripe) => async (req, res) => {
         "Cancellation was successful! The user will receive an email confirmation shortly",
     });
   } catch (error) {
-    console.error("Error cancelling subscription:", error);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error("Error cancelling subscription:", error);
+    }
     res.status(500).json({
       message: "Error cancelling subscription. Please try again.",
     });

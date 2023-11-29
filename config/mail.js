@@ -53,15 +53,21 @@ module.exports = function (jwtClient) {
           raw: encodedMessage,
         },
       });
-      console.log(`Email sent to ${to}`);
+      if (process.env.DEBUG_MODE === "TRUE") {
+        console.log(`Email sent to ${to}`);
+      }
     } catch (err) {
-      console.error(
+      if (process.env.DEBUG_MODE === "TRUE") {
+        console.error(
         `Failed to send email to ${to}. Attempt: ${
-          4 - attempts
+        4 - attempts
         }. Error: ${err}`,
-      );
+        );
+      }
       if (attempts > 1) {
-        console.log(`Retrying to send email to ${to}`);
+        if (process.env.DEBUG_MODE === "TRUE") {
+          console.log(`Retrying to send email to ${to}`);
+        }
         await sendEmail(
           subject,
           templateName,
@@ -73,9 +79,11 @@ module.exports = function (jwtClient) {
           attempts - 1,
         );
       } else {
-        console.log(
+        if (process.env.DEBUG_MODE === "TRUE") {
+          console.log(
           `Sending failure notification to ${process.env.GOOGLE_ADMIN_USER}`,
-        );
+          );
+        }
         await sendEmail(
           "Email delivery failure",
           "emailDeliveryFailure", // Assuming this is the name of a template

@@ -9,10 +9,12 @@ module.exports = function sendEmail(
   firstName,
   lastName,
 ) {
-  console.log("Event Type: ", eventType);
-  console.log("Customer Email: ", customerEmail);
-  console.log("BCC Email: ", bccEmail);
-  console.log("Stripe Event: ", stripeEvent);
+  if (process.env.DEBUG_MODE === "TRUE") {
+    console.log("Event Type: ", eventType);
+    console.log("Customer Email: ", customerEmail);
+    console.log("BCC Email: ", bccEmail);
+    console.log("Stripe Event: ", stripeEvent);
+  }
   switch (eventType) {
     case "charge.failed":
       mail.sendEmail(
@@ -149,7 +151,11 @@ module.exports = function sendEmail(
       );
       break;
     default:
-      console.log(`Unhandled event type ${stripeEvent.type}`);
+      if (process.env.DEBUG_MODE === "TRUE") {
+        console.log(`Unhandled event type ${stripeEvent.type}`);
+      }
   }
-  console.log(`Email sent for ${stripeEvent.type} to: `, customerEmail);
+  if (process.env.DEBUG_MODE === "TRUE") {
+    console.log(`Email sent for ${stripeEvent.type} to: `, customerEmail);
+  }
 };

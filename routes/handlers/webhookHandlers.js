@@ -15,13 +15,16 @@ module.exports = async function (request, response, stripe) {
       process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (err) {
-    console.log("Error in webhook signature validation: ", err.message);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.log("Error in webhook signature validation: ", err.message);
+    }
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
 
-  // console.log("Webhook received: ", event);
-
+  if (process.env.DEBUG_MODE === "TRUE") {
+    console.log("Webhook received: ", event);
+  }
   if (event.data.object.customer) {
     const customerId = event.data.object.customer;
 
@@ -29,12 +32,16 @@ module.exports = async function (request, response, stripe) {
       .retrieve(customerId)
       .then(async (customer) => {
         const customerEmail = customer.email;
-        // console.log("Customer Email: ", customerEmail);
+        if (process.env.DEBUG_MODE === "TRUE") {
+          console.log("Customer Email: ", customerEmail);
+        }
         const bccEmail = await fetchUserSecondaryEmailByEmail(customerEmail);
         const { firstName, lastName } =
           await fetchUserNamesByEmail(customerEmail);
-        // console.log("BCC Email: ", bccEmail);
-        // console.log("Event: ", event);
+        if (process.env.DEBUG_MODE === "TRUE") {
+          console.log("BCC Email: ", bccEmail);
+          console.log("Event: ", event);
+        }
         sendEmail(
           event.type,
           customerEmail,
@@ -45,10 +52,14 @@ module.exports = async function (request, response, stripe) {
         );
       })
       .catch((err) => {
-        console.log("Error retrieving customer: ", err);
+        if (process.env.DEBUG_MODE === "TRUE") {
+          console.log("Error retrieving customer: ", err);
+        }
       });
   } else {
-    console.log(`${event.type} event without customer id`);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.log(`${event.type} event without customer id`);
+    }
   }
 
   response.json({ received: true });

@@ -10,7 +10,9 @@ exports.fetchUsers = async function (pageToken) {
       projection: "full",
     });
   } catch (error) {
-    console.error(`Error fetching user list: ${error}`);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error fetching user list: ${error}`);
+    }
     return null;
   }
 };
@@ -30,7 +32,9 @@ exports.fetchUserSecondaryEmailByEmail = async function (email) {
     );
     return secondaryEmail ? secondaryEmail.address : null;
   } catch (error) {
-    console.error(`Error fetching user's secondary email by email: ${error}`);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error fetching user's secondary email by email: ${error}`);
+    }
     return null;
   }
 };
@@ -46,7 +50,9 @@ exports.fetchUserNamesByEmail = async function (email) {
       lastName: user.data.name.familyName,
     };
   } catch (error) {
-    console.error(`Error fetching user's names by email: ${error}`);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error fetching user's names by email: ${error}`);
+    }
     return null;
   }
 };

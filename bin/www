@@ -23,5 +23,7 @@ if (server) {
   server.on("error", (error) => serverUtils.onError(error, port));
   server.on("listening", () => serverUtils.onListening(server));
 } else {
-  console.error("Server cannot be initialized. Check your configurations.");
+  if (process.env.DEBUG_MODE === "TRUE") {
+    console.error("Server cannot be initialized. Check your configurations.");
+  }
 }

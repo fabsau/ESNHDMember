@@ -57,7 +57,9 @@ async function homeHandler(req, res) {
     req.session.message = null;
     res.render("home", renderOptions);
   } catch (error) {
-    console.log("Error retrieving customer:", error);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.log("Error retrieving customer:", error);
+    }
     res.redirect("/");
   }
 }

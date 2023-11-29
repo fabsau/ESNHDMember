@@ -18,7 +18,9 @@ module.exports = {
           port: normalizePort(process.env.PORT || "3000"),
         };
       } catch (error) {
-        console.error("Unable to read HTTPS credentials:", error.message);
+        if (process.env.DEBUG_MODE === "TRUE") {
+          console.error("Unable to read HTTPS credentials:", error.message);
+        }
         return;
       }
     }
@@ -41,14 +43,20 @@ module.exports = {
     }
 
     if (!fs.existsSync(certPath)) {
-      console.log("Certificate not found, generating a new one...");
+      if (process.env.DEBUG_MODE === "TRUE") {
+        console.log("Certificate not found, generating a new one...");
+      }
       const pems = selfsigned.generate(attrs, { days: Number(validityDays) });
 
       fs.writeFileSync(keyPath, pems.private);
       fs.writeFileSync(certPath, pems.cert);
-      console.log("SSL certificate generated...");
+      if (process.env.DEBUG_MODE === "TRUE") {
+        console.log("SSL certificate generated...");
+      }
     } else {
-      console.log("SSL certificate found");
+      if (process.env.DEBUG_MODE === "TRUE") {
+        console.log("SSL certificate found");
+      }
     }
 
     return {

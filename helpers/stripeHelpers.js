@@ -8,9 +8,11 @@ exports.fetchSubscriptions = async function (planId, startAfterId) {
       starting_after: startAfterId,
     });
   } catch (error) {
-    console.error(
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(
       `Error fetching subscriptions for planId ${planId}: ${error}`,
-    );
+      );
+    }
     return null;
   }
 };
@@ -21,7 +23,9 @@ exports.fetchCustomers = async function (startAfterId) {
       starting_after: startAfterId,
     });
   } catch (error) {
-    console.error(`Error fetching customers: ${error}`);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error fetching customers: ${error}`);
+    }
     return null;
   }
 };
@@ -30,9 +34,11 @@ exports.fetchCustomerSubscriptions = async function (customerId) {
   try {
     return await stripe.subscriptions.list({ customer: customerId });
   } catch (error) {
-    console.error(
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(
       `Error fetching customer subscriptions for customerId ${customerId}: ${error}`,
-    );
+      );
+    }
     return null;
   }
 };
@@ -41,9 +47,11 @@ exports.fetchInvoices = async function (customerId) {
   try {
     return await stripe.invoices.list({ customer: customerId });
   } catch (error) {
-    console.error(
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(
       `Error fetching invoices for customerId ${customerId}: ${error}`,
-    );
+      );
+    }
     return null;
   }
 };
@@ -98,9 +106,11 @@ exports.fetchActiveCustomerSubscription = async function (customerId) {
     });
     return customerSubscriptions.data[0];
   } catch (error) {
-    console.error(
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(
       `Error fetching active subscription for customerId ${customerId}: ${error}`,
-    );
+      );
+    }
     return null;
   }
 };
@@ -114,7 +124,9 @@ exports.getCustomerByEmail = async function (email) {
 
     return customer.data.length > 0 ? customer.data[0] : null;
   } catch (error) {
-    console.error(`Error fetching customer by email ${email}: ${error}`);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error fetching customer by email ${email}: ${error}`);
+    }
     return null;
   }
 };
@@ -128,7 +140,9 @@ exports.createBillingPortalSession = async function (customerId, returnUrl) {
 
     return session.url;
   } catch (error) {
-    console.error(`Error creating billing portal session: ${error}`);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error creating billing portal session: ${error}`);
+    }
     return null;
   }
 };
@@ -143,7 +157,9 @@ exports.getPlans = async function (currentPlan, allowedSubscriptions) {
 
     return plans.map((plan) => ({ id: plan.id, nickname: plan.nickname }));
   } catch (error) {
-    console.error(`Error fetching plans: ${error}`);
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error fetching plans: ${error}`);
+    }
     return null;
   }
 };

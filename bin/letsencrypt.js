@@ -10,14 +10,20 @@ module.exports = {
     let cmd = `npx greenlock add --subject ${subject} --altnames ${altnames}`;
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
-        console.error(`error: ${error.message}`);
+        if (process.env.DEBUG_MODE === "TRUE") {
+          console.error(`error: ${error.message}`);
+        }
         return;
       }
       if (stderr) {
-        console.error(`stderr: ${stderr}`);
+        if (process.env.DEBUG_MODE === "TRUE") {
+          console.error(`stderr: ${stderr}`);
+        }
         return;
       }
-      console.log(`stdout: ${stdout}`);
+      if (process.env.DEBUG_MODE === "TRUE") {
+        console.log(`stdout: ${stdout}`);
+      }
     });
     greenlockExpress
       .init({
@@ -27,6 +33,8 @@ module.exports = {
         cluster: false,
       })
       .serve(app);
-    console.log("Greenlock's server started");
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.log("Greenlock's server started");
+    }
   },
 };
