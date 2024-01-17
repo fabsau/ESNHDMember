@@ -20,6 +20,7 @@ GOOGLE_ADMIN_CLIENT_EMAIL=example@example.iam.gserviceaccount.com # Google Admin
 GOOGLE_ADMIN_PRIVATE_KEY=your_private_key # Google Admin Private Key (no default)
 ## Email Settings
 GOOGLE_ADMIN_USER=admin@example.com # Sender email address (no default)
+MAIL_FROM_NAME=sender_name # Name to be used as sender name (no default)
 GOOGLE_ADMIN_DOMAIN=example.com # Domain to be appended in the message id (no default)
 REPLY_TO_EMAIL=info@example.com # email address to be sat as reply-to (no default)
 

@@ -1,5 +1,6 @@
 const { jwtClient } = require("../config/passport");
 const mail = require("../config/mail")(jwtClient);
+const stripeHelpers = require('./stripehelpers.js');
 
 module.exports = function sendEmail(
   eventType,
@@ -18,7 +19,7 @@ module.exports = function sendEmail(
   switch (eventType) {
     case "charge.failed":
       mail.sendEmail(
-        "Charge Failed",
+        "ESN Heidelberg Charge Failed",
         "chargeFailed",
         { firstName, lastName },
         customerEmail,
@@ -27,7 +28,7 @@ module.exports = function sendEmail(
       break;
     case "customer.source.expiring":
       mail.sendEmail(
-        "Payment Source Expiring",
+        "ESN Heidelberg Payment Method Expiring",
         "sourceExpiring",
         { firstName, lastName },
         customerEmail,
@@ -37,7 +38,7 @@ module.exports = function sendEmail(
     case "customer.subscription.deleted":
       const subscription = stripeEvent.data.object;
       mail.sendEmail(
-        "Subscription Deleted",
+        "ESN Heidelberg Membership Deleted",
         "subscriptionDeleted",
         {
           subscription,
@@ -93,19 +94,26 @@ module.exports = function sendEmail(
       else if (prevAttributes.items) {
         const prevPlan = prevAttributes.items.data[0].plan;
         const newPlan = newAttributes.items.data[0].plan;
+        const periodEnd = newAttributes.current_period_end;
+
+        if (process.env.DEBUG_MODE === 'TRUE') {
+          console.log("Previous Plan: ", prevPlan);
+          console.log("New Plan: ", newPlan);
+          console.log("Period End: ", periodEnd);
+        }
 
         mail.sendEmail(
-          "Plan Changed",
-          "planChanged",
-          { prevPlan, newPlan, firstName, lastName },
-          customerEmail,
-          bccEmail,
+        "ESN Heidelberg Membership Plan Updated",
+        "planChanged",
+        { prevPlan, newPlan, periodEnd, firstName, lastName },
+        customerEmail,
+        bccEmail,
         );
       }
       break;
     case "invoice.payment_failed":
       mail.sendEmail(
-        "Payment Failed",
+        "ESN Heidelberg Payment Failed",
         "paymentFailed",
         { firstName, lastName },
         customerEmail,
@@ -119,7 +127,7 @@ module.exports = function sendEmail(
       );
       if (daysUntilDue <= 14) {
         mail.sendEmail(
-          "Subscription Renewing Soon",
+          "ESN Heidelberg Membership Renewing Soon",
           "subscriptionRenewing",
           { daysUntilDue, firstName, lastName },
           customerEmail,
@@ -129,7 +137,7 @@ module.exports = function sendEmail(
       break;
     case "customer.subscription.trial_will_end":
       mail.sendEmail(
-        "Trial Ending Soon",
+        "ESN Heidelberg Trial Ending Soon",
         "trialEnding",
         { firstName, lastName },
         customerEmail,
@@ -138,17 +146,26 @@ module.exports = function sendEmail(
       break;
     case "checkout.session.completed":
       const checkoutSession = stripeEvent.data.object;
-      mail.sendEmail(
-        "Checkout Successful",
+      const customerId = checkoutSession.customer; // assuming checkoutSession contains customer id
+      stripeHelpers.fetchCustomerSubscriptions(customerId)
+      .then(subscriptions => {
+        const relevantSubscription = subscriptions.data[0]; // pick the relevant subscription
+        console.log("Relevant Subscription:", relevantSubscription); // Add this line
+        mail.sendEmail(
+        "ESN Heidelberg Purchase Successful",
         "checkoutSuccessful",
         {
           checkoutSession,
+          subscription: relevantSubscription,
+          plan: relevantSubscription.plan,
           lastName,
           firstName,
         },
         customerEmail,
         bccEmail,
-      );
+        );
+      })
+      .catch(err => console.error(err));
       break;
     default:
       if (process.env.DEBUG_MODE === "TRUE") {

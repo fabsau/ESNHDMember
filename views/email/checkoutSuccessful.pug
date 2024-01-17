@@ -2,12 +2,10 @@ extends layout.pug
 include mixins.pug
 
 block content
-    h1 Checkout Successful
+    h3 🛍️ Checkout Successful
     +greeting
-    h2 Order Details
-    p Amount Subtotal: #{checkoutSession.amount_subtotal / 100} #{checkoutSession.currency}
-    p Total Amount: #{checkoutSession.amount_total / 100} #{checkoutSession.currency}
-
-    +customerDetails(checkoutSession)
-    +subscriptionDetails(checkoutSession)
-    +paymentDetails(checkoutSession)
+    p We hereby confirm your purchase of the #{plan.nickname} Plan at ESN Heidelberg.
+    br
+    +checkoutSuccessfulDetails(checkoutSession, subscription, plan)
+    br
+    p We're excited having you with us! Your contributions as a volunteer are invaluable, and we sincerely thank you for your dedication ❤️.
