@@ -93,13 +93,18 @@ module.exports = function sendEmail(
       else if (prevAttributes.items) {
         const prevPlan = prevAttributes.items.data[0].plan;
         const newPlan = newAttributes.items.data[0].plan;
+        const periodEnd = newAttributes.current_period_end;
 
-        const periodEnd = newAttributes.current_period_end; // Get the end of the current billing period
+        if (process.env.DEBUG_MODE === 'TRUE') {
+          console.log("Previous Plan: ", prevPlan);
+          console.log("New Plan: ", newPlan);
+          console.log("Period End: ", periodEnd);
+        }
 
         mail.sendEmail(
         "ESN Heidelberg Membership Plan Updated",
         "planChanged",
-        { prevPlan, newPlan, periodEnd, firstName, lastName }, // Add the period end here
+        { prevPlan, newPlan, periodEnd, firstName, lastName },
         customerEmail,
         bccEmail,
         );
