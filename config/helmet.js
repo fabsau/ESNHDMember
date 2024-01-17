@@ -11,7 +11,7 @@ module.exports = function (app, helmet) {
           fontSrc: ["'self'", "data:"],
           frameSrc: ["'none'"],
           frameAncestors: ["'none'"],
-          connectSrc: ["'none'"],
+          connectSrc: ["'self'"],
           objectSrc: ["'none'"],
           formAction: ["'self'"],
           upgradeInsecureRequests: [],
