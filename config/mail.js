@@ -114,7 +114,7 @@ module.exports = function (jwtClient) {
       'Content-Type: multipart/mixed; boundary="foo_bar_baz"',
       "MIME-Version: 1.0",
       `To: <${to}>`,
-      `From: <${from}>`,
+      `From: ${process.env.MAIL_FROM_NAME} <${from}>`,
       `Subject: ${subject}`,
       `Message-ID: ${messageId}`,
       "X-Mailer: ESN Heidelberg Member Portal",
