@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    .container.mt-5
+        .row
+            .col-lg-10.offset-lg-1
+                h1.mb-3 Signup
+                form(action="/signup" method="POST")
+                    input(type='hidden', name='_csrf', value=csrfToken)
+                    .form-group
+                        label(for="firstName") First Name
+                        input#firstName.form-control(name="firstName", type="text", placeholder="First Name", required)
+                    .form-group
+                        label(for="lastName") Last Name
+                        input#lastName.form-control(name="lastName", type="text", placeholder="Last Name", required)
+                    .form-group
+                        label(for="email") Email
+                        input#email.form-control(name="email", type="email", placeholder="Email", required)
+                    .form-group
+                        label(for="mobile") Mobile
+                        input#mobile.form-control(name="mobile", type="tel", placeholder="+491234567890", required)
+                    p
+                    .form-group.form-check
+                        input#agreesToPrivacy.form-check-input(type='checkbox', name="agreesToPrivacy", required)
+                        label.form-check-label(for="agreesToPrivacy") I accept the privacy conditions
+                    p
+                    button.btn.btn-primary(type="submit") Sign Up

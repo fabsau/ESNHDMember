@@ -1,6 +1,7 @@
 const createError = require("http-errors");
 const authRoutes = require("./auth");
 const homeRoutes = require("./home");
+const signupRoutes = require("./signup");
 const adminRoutes = require("./admin");
 const purchaseRoutes = require("./purchase");
 const privacyRoutes = require("./privacy");
@@ -20,6 +21,7 @@ module.exports = function (app, passport, stripe, isAuthenticated) {
   app.use("/", webhookRoutes(stripe));
   app.use("/", csrfProtection, authRoutes(passport));
   app.use("/home", csrfProtection, homeRoutes(stripe, isAuthenticated));
+  app.use("/signup", csrfProtection, signupRoutes());
   app.use("/admin", csrfProtection, adminRoutes(isAuthenticated));
   app.use("/", csrfProtection, purchaseRoutes(stripe, isAuthenticated));
   app.use("/", csrfProtection, subscriptionRoutes(stripe, isAuthenticated));
