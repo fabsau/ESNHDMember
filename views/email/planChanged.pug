@@ -5,13 +5,12 @@ block content
     h3 You're now a&nbsp;
         = newPlan.nickname
         | &nbsp;at ESN Heidelberg!
-
+    +greeting
     p We hereby confirm your switch to #{newPlan.nickname}. You've been successfully switched from&nbsp;
         = prevPlan.nickname
         | &nbsp;(#{prevPlan.amount / 100}#{prevPlan.currency === 'eur' ? '€' : prevPlan.currency} every #{prevPlan.interval_count} #{prevPlan.interval}s)&nbsp;to&nbsp;
         = newPlan.nickname
         | &nbsp;(#{newPlan.amount / 100}#{newPlan.currency === 'eur' ? '€' : newPlan.currency} every #{newPlan.interval_count} #{newPlan.interval}s).
-
     br
     h3 📝 Please note
     ul
