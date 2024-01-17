@@ -1,1 +1,17 @@
-p Bro your visa is about to expire
+extends layout.pug
+
+block content
+    +greeting(event.data.object.customer)
+    p Our records show that your default payment method is set to expire soon.
+
+    mixin sourceDetails(event)
+        h3 Details
+        table.table
+            tr
+                td Card:
+                td #{event.data.object.card.brand} ending in #{event.data.object.card.last4}
+            tr
+                td Expiry:
+                td #{event.data.object.card.exp_month}/#{event.data.object.card.exp_year}
+        p To avoid unnecessary charges, please update your payment method #[strong as soon as possible] by visiting #[a.link(href='https://member.esn-heidelberg.de') the Member Portal] and after login in, clicking on "Manage Membership".
+        p PS: This email was never tested, so if you receive it, please let us know if it looks good or not. ###@TODO

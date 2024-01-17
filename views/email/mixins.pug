@@ -82,6 +82,15 @@ mixin billingDetails(subscription)
 mixin signOff
     p Best regards,
     p Your ESN Heidelberg Team
+    hr(style='margin: 10px 0')
+
+mixin signature
+    .signature-section
+        p Erasmus Student Network Heidelberg e.V.
+        p Postfach 12 04 31
+        p 69066 Heidelberg
+        img(src="/images/ESNLogo.png" alt="ESN Logo" style='width: 200px;')
+
 
 mixin greeting(name)
     p Hello #{firstName} #{lastName},

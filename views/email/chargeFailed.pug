@@ -1,1 +1,23 @@
-p Charge Failed ###TODO
+extends layout.pug
+
+block content
+    +greeting
+
+    p We regret to inform you that your recent payment attempt was unsuccessful. Here are the details:
+
+    +chargeDetails(event)
+
+    p To rectify this situation, please visit #[a.link(href='https://member.esn-heidelberg.de') our website] to update your payment information as soon as possible.
+
+mixin chargeDetails(event)
+    h3 Charge Details
+    table.table
+        tr
+            td Amount:
+            td #{event.data.object.amount / 100}€
+        tr
+            td Failure Code:
+            td #{event.data.object.failure_code}
+        tr
+            td Failure Message:
+            td #{event.data.object.failure_message}

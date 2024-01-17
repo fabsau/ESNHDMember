@@ -3,7 +3,7 @@ include mixins.pug
 
 block content
     h1 Checkout Successful
-
+    +greeting
     h2 Order Details
     p Amount Subtotal: #{checkoutSession.amount_subtotal / 100} #{checkoutSession.currency}
     p Total Amount: #{checkoutSession.amount_total / 100} #{checkoutSession.currency}
