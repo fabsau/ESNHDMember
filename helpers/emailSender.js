@@ -1,5 +1,6 @@
 const { jwtClient } = require("../config/passport");
 const mail = require("../config/mail")(jwtClient);
+const stripeHelpers = require('./stripehelpers.js');
 
 module.exports = function sendEmail(
   eventType,
@@ -145,17 +146,26 @@ module.exports = function sendEmail(
       break;
     case "checkout.session.completed":
       const checkoutSession = stripeEvent.data.object;
-      mail.sendEmail(
+      const customerId = checkoutSession.customer; // assuming checkoutSession contains customer id
+      stripeHelpers.fetchCustomerSubscriptions(customerId)
+      .then(subscriptions => {
+        const relevantSubscription = subscriptions.data[0]; // pick the relevant subscription
+        console.log("Relevant Subscription:", relevantSubscription); // Add this line
+        mail.sendEmail(
         "ESN Heidelberg Purchase Successful",
         "checkoutSuccessful",
         {
           checkoutSession,
+          subscription: relevantSubscription,
+          plan: relevantSubscription.plan,
           lastName,
           firstName,
         },
         customerEmail,
         bccEmail,
-      );
+        );
+      })
+      .catch(err => console.error(err));
       break;
     default:
       if (process.env.DEBUG_MODE === "TRUE") {
