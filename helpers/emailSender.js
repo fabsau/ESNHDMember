@@ -1,6 +1,6 @@
 const { jwtClient } = require("../config/passport");
 const mail = require("../config/mail")(jwtClient);
-const stripeHelpers = require('../helpers/stripehelpers.js');
+const stripeHelpers = require("./stripeHelpers.js");
 
 module.exports = function sendEmail(
   eventType,
