@@ -268,3 +268,27 @@ exports.adminCancelSubscription = async (stripe, customerId) => {
     await stripe.subscriptions.cancel(subscription.id);
   }
 };
+
+exports.fetchPaymentMethod = async function (paymentMethodId) {
+  try {
+    return await stripe.paymentMethods.retrieve(paymentMethodId);
+  } catch (error) {
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error fetching payment method ${paymentMethodId}: ${error}`);
+    }
+    return null;
+  }
+};
+
+exports.fetchCustomerDefaultSubscription = async function (customerId) {
+  try {
+    const subscriptions = await stripe.subscriptions.list({ customer: customerId });
+    // Assuming the first subscription is the default one
+    return subscriptions.data[0];
+  } catch (error) {
+    if (process.env.DEBUG_MODE === "TRUE") {
+      console.error(`Error fetching customer subscriptions for customerId ${customerId}: ${error}`);
+    }
+    return null;
+  }
+};

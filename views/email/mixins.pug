@@ -40,6 +40,34 @@ mixin checkoutSuccessfulDetails(checkoutSession, subscription, plan)
             td Trial Days:
             td #{subscription.trial_end ? Math.floor((subscription.trial_end * 1000 - Date.now()) / (1000 * 60 * 60 * 24)) : 'No trial'}
 
+mixin paymentMethodDetails(oldPaymentMethod, newPaymentMethod, subscription, plan)
+    table.table
+        tr
+            td Previous Payment Method:
+            if oldPaymentMethod.card
+                td #{oldPaymentMethod.card.brand.charAt(0).toUpperCase() + oldPaymentMethod.card.brand.slice(1)} ending in #{oldPaymentMethod.card.last4} and expiring on #{oldPaymentMethod.card.exp_month}/#{oldPaymentMethod.card.exp_year}
+            else if oldPaymentMethod.sepa_debit
+                td SEPA Debit with IBAN ending in #{oldPaymentMethod.sepa_debit.last4}
+        tr
+            td New Payment Method:
+            if newPaymentMethod.card
+                td #{newPaymentMethod.card.brand.charAt(0).toUpperCase() + newPaymentMethod.card.brand.slice(1)} ending in #{newPaymentMethod.card.last4} and expiring on #{newPaymentMethod.card.exp_month}/#{newPaymentMethod.card.exp_year}
+            else if newPaymentMethod.sepa_debit
+                td SEPA Debit with IBAN ending in #{newPaymentMethod.sepa_debit.last4}
+        tr
+            td Plan:
+            td #{plan.nickname} (#{plan.amount / 100}€ every #{plan.interval_count} #{plan.interval}s)
+        tr
+            td Automatic Renewal:
+            td #{subscription.cancel_at_period_end ? 'No' : 'Yes'}
+        tr
+            td Renewal Date:
+            - let date = new Date(subscription.current_period_end * 1000);
+            td #{('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear()}
+        tr
+            td Trial Days:
+            td #{subscription.trial_end ? Math.floor((subscription.trial_end * 1000 - Date.now()) / (1000 * 60 * 60 * 24)) : 'No trial'}
+
 mixin subscriptionDetails(subscription, status)
     h3 📚 Your updated Membership Details
     table.table

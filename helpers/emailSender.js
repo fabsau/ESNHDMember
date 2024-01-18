@@ -11,6 +11,7 @@ module.exports = function sendEmail(
   lastName,
 ) {
   if (process.env.DEBUG_MODE === "TRUE") {
+    console.log("Stripe Event Type: ", stripeEvent.type);
     console.log("Event Type: ", eventType);
     console.log("Customer Email: ", customerEmail);
     console.log("BCC Email: ", bccEmail);
@@ -34,6 +35,49 @@ module.exports = function sendEmail(
         customerEmail,
         bccEmail,
       );
+      break;
+    case "customer.updated":
+      if (process.env.DEBUG_MODE === 'TRUE') {
+        console.log("Event 'customer.updated' triggered");
+        console.log("Previous Attributes:", stripeEvent.data.previous_attributes);
+      }
+      if (
+      stripeEvent.data.previous_attributes &&
+      stripeEvent.data.previous_attributes.invoice_settings &&
+      stripeEvent.data.previous_attributes.invoice_settings.default_payment_method
+      ) {
+        if (process.env.DEBUG_MODE === 'TRUE') {
+          console.log("Entered 'if' Payment changed statement");
+        }
+        const oldPaymentMethodId = stripeEvent.data.previous_attributes.invoice_settings.default_payment_method;
+        const newPaymentMethodId = stripeEvent.data.object.invoice_settings.default_payment_method;
+        const customerId = stripeEvent.data.object.id;
+
+        Promise.all([
+          stripeHelpers.fetchPaymentMethod(oldPaymentMethodId),
+          stripeHelpers.fetchPaymentMethod(newPaymentMethodId),
+          stripeHelpers.fetchCustomerDefaultSubscription(customerId),
+        ])
+        .then(([oldPaymentMethod, newPaymentMethod, subscription]) => {
+          const plan = subscription.plan;
+
+          mail.sendEmail(
+          "ESN Heidelberg Default Payment Method Updated",
+          "paymentMethodUpdated",
+          {
+            firstName,
+            lastName,
+            oldPaymentMethod,
+            newPaymentMethod,
+            plan,
+            subscription,
+          },
+          customerEmail,
+          bccEmail,
+          );
+        })
+        .catch(err => console.error(err));
+      }
       break;
     case "customer.subscription.deleted":
       const subscription = stripeEvent.data.object;
@@ -146,11 +190,13 @@ module.exports = function sendEmail(
       break;
     case "checkout.session.completed":
       const checkoutSession = stripeEvent.data.object;
-      const customerId = checkoutSession.customer; // assuming checkoutSession contains customer id
+      const customerId = checkoutSession.customer;
       stripeHelpers.fetchCustomerSubscriptions(customerId)
       .then(subscriptions => {
-        const relevantSubscription = subscriptions.data[0]; // pick the relevant subscription
-        console.log("Relevant Subscription:", relevantSubscription); // Add this line
+        const relevantSubscription = subscriptions.data[0];
+        if (process.env.DEBUG_MODE === 'TRUE') {
+          console.log("Relevant Subscription:", relevantSubscription);
+        }
         mail.sendEmail(
         "ESN Heidelberg Purchase Successful",
         "checkoutSuccessful",
