@@ -25,8 +25,8 @@ module.exports = async function (request, response, stripe) {
   if (process.env.DEBUG_MODE === "TRUE") {
     console.log("Webhook received: ", event);
   }
-  if (event.data.object.customer) {
-    const customerId = event.data.object.customer;
+  if (event.data.object.customer || event.type === 'customer.updated') {
+    const customerId = event.type === 'customer.updated' ? event.data.object.id : event.data.object.customer;
 
     stripe.customers
       .retrieve(customerId)

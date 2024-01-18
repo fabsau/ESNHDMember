@@ -1,5 +1,10 @@
-p ESN Heidelberg Member Portal
-p Success: Your Payment method has been sucessfully updated
+extends layout.pug
+include mixins.pug
 
-p PS:
-p This E-Mail is not yet styled and properly configured. However the payment method has been updated and hopefully one day the Admin finds to code this mail.
+block content
+    h3 💳 Payment Method Updated
+    +greeting
+    p Your ESN Membership default payment method has been updated!
+    +paymentMethodDetails(oldPaymentMethod, newPaymentMethod, subscription, plan)
+    br
+    p We're excited having you with us! Your contributions as a volunteer are invaluable, and we sincerely thank you for your dedication ❤️.
