@@ -13,7 +13,7 @@ module.exports = function (app, helmet) {
           frameAncestors: ["'none'"],
           connectSrc: ["'self'"],
           objectSrc: ["'none'"],
-          formAction: ["'self'"],
+          formAction: ["'self'", "https://checkout.stripe.com"],
           upgradeInsecureRequests: [],
           blockAllMixedContent: [],
           baseUri: ["'none'"],
