@@ -1,0 +1,17 @@
+services:
+  esnhdmember:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: esnhdmember
+    hostname: esnhdmember
+    env_file:
+      - .env
+    ports:
+      - 33000:33000
+    networks:
+      - esnhdmember
+
+networks:
+  esnhdmember:
+    driver: bridge
